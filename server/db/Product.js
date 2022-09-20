@@ -24,6 +24,9 @@ const Product = db.define('product', {
     desc:{
         type: Sequelize.TEXT,
     },
+    type: {
+        type: Sequelize.STRING
+    },
     tagId:{
         type: Sequelize.INTEGER,
     }

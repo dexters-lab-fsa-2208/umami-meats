@@ -19,16 +19,16 @@ const seed = async () => {
 				Tag.create(tag);
 			})
 		);
-		// await Promise.all(
-        //     orders.map((order) => {
-		// 		Order.create(order);
-		// 	})
-		// );
-		// await Promise.all(
-		// 	lineItems.map((lineItem) => {
-		// 		LineItem.create(lineItem);
-		// 	})
-		// );
+		await Promise.all(
+            orders.map((order) => {
+				Order.create(order);
+			})
+		);
+		await Promise.all(
+			lineItems.map((lineItem) => {
+				LineItem.create(lineItem);
+			})
+		);
 		
     } catch (e) {
         console.log(e);
