@@ -4,7 +4,7 @@ const products = [
         price: 299.99,
         grade: "A5",
         qty: 30,
-        img: "https://www.123rf.com/photo_109282566_raw-kobe-wagyu-beef-steaks-in-a-plate.html",
+        img: "https://previews.123rf.com/images/daboost/daboost1809/daboost180900128/109282566-raw-kobe-wagyu-beef-steaks-in-a-plate.jpg",
         desc: "Kobe Beef from the Japanese Province of Kobe, the best of the best of wagyu",
         type: "steak",
         tagName: "japanese"
