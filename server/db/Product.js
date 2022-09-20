@@ -1,4 +1,5 @@
 const db = require('./db');
+const Tag = require('./Tag');
 const { Sequelize } = db;
 
 const Product = db.define('product', {
@@ -27,8 +28,15 @@ const Product = db.define('product', {
     type: {
         type: Sequelize.STRING
     },
-    tagId:{
-        type: Sequelize.INTEGER,
+    // tagId:{
+    //     type: Sequelize.INTEGER,
+    // },
+    tagName:{
+        type: Sequelize.STRING,
+        references: {
+        model: Tag,
+        key: "tagName"
+    }
     }
 })
 
