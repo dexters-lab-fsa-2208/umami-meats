@@ -1,12 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { Order, LineItem } from "../../../server/db";
+import { Order, LineItem, Product } from "../../server/db";
 
 export default async function handler(req, res) {
     try {
       const orders = await Order.findAll({
         include: [
             {
-                model: LineItem
+                model: LineItem,
+                include: Product
             }
         ]
       });

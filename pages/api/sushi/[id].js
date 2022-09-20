@@ -1,11 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { Tag, Product } from "../../../../server/db";
+import { Product, Tag } from "../../../../server/db";
 
 export default async function handler(req, res) {
     try {
-      const steak = await Product.findOne({
+        const { id } = req.query;
+      const sushi = await Product.findOne({
         where: {
-            id: req.params.id
+            id: id,
+            type: "sushi"
         },
         include: [
             {
@@ -13,8 +15,8 @@ export default async function handler(req, res) {
             }
         ]
       });
-      console.log(steak)
-      res.json(steak);
+      console.log(sushi)
+      res.json(sushi);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
