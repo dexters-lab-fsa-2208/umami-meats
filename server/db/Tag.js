@@ -2,9 +2,9 @@ const db = require('./db');
 const { Sequelize } = db;
 
 const Tag = db.define('tag', {
-    name:{
+    tagName:{
         type: Sequelize.STRING,
-        allowNull: false
+        unique: true
     }
 })
 

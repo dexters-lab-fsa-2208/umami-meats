@@ -1,15 +1,18 @@
 const tags = [
     {
-        name: "beef"
+        tagName: "beef"
     },
     {
-        name: "sushi"
+        tagName: "sushi"
     },
     {
-        name: "japanese"
+        tagName: "japanese"
     },
     {
-        name: "american"
+        tagName: "american"
+    },
+    {
+        tagName: "tuna"
     }
 ];
 

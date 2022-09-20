@@ -2,6 +2,7 @@
 import { Product } from "../../server/db";
 
 export default async function handler(req, res) {
+  if (req.method === "GET") {
     try {
       const products = await Product.findAll();
       console.log(products)
@@ -9,5 +10,15 @@ export default async function handler(req, res) {
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
-  // res.status(200).json();
+  }
+    if (req.method === 'POST') {
+      try {
+        console.log(req.body);
+        const product = await Product.create(req.body);
+        res.status(201).json(product);
+      }
+      catch (err) {
+        res.status(500).json({ error: err.message });
+      }
+    }
 }

@@ -20,21 +20,12 @@ export default async function handler(req, res) {
   }
   if (req.method === 'POST') {
     try {
-      order = await Order.create(req.body);
-      res.json(order);
+      const order = await Order.create(req.body);
+      res.status(201).json(order);
     }
     catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
-  //TODO: FIND STATUS CODE & CHECK REQ.PARAMS || REQ.BODY
-  if (req.method === 'DELETE') {
-    try {
-      order = Order.delete(req.params.order);
-      res.status().json(order);
-    }
-    catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  }
+
 }

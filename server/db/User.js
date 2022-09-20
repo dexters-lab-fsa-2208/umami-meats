@@ -1,4 +1,5 @@
-const { db, Order, LineItem } = require('./db');
+const { Order, LineItem } = require('../db');
+const db = require('./db');
 const { Sequelize } = db;
 //jwt auth imported here
 
