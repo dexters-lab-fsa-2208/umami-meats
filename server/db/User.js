@@ -1,4 +1,4 @@
-const db = require('./db');
+const { db, Order, LineItem } = require('./db');
 const { Sequelize } = db;
 //jwt auth imported here
 
@@ -29,9 +29,10 @@ User.prototype.getCart = async function(){
         include: [
             {
                 model: Order,
+                isCart: true,
                 include: [
                     {
-                        model: ListItem
+                        model: LineItem
                     }
                 ]
             }
