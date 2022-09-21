@@ -67,13 +67,19 @@ const ProductName = styled.p`
 
 export default function Index() {
 	const { data: products, isLoading } = useGetProductsQuery();
+	let user;
+	
+	if (typeof window !== 'undefined') {
+		console.log('we are running on the client')
+		user = JSON.parse(window.localStorage.getItem('user'))
+	} else {
+		console.log('we are running on the server');
+	}
+	// console.log(user.id);
+	const [addOrder] = useCreateOrderMutation();
 
-	const addToCart = (productId) => {
-		useCreateOrderMutation({
-			userId: userId,
-			productId: productId,
-			qty: qty,
-		});
+	const addToCart = (productId, qty) => {
+		addLineItem(orderId, productId, qty);
 	};
 
 	return (

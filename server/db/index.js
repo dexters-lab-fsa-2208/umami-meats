@@ -11,7 +11,7 @@ const { DataTypes } = require('sequelize');
 
 //line item is the product and the amount of said product
 
-User.hasMany(Order, {foreignKey: 'id'});
+User.hasMany(Order);
 // Tag.hasMany(Product);
 Product.hasMany(Tag
 //     , {
