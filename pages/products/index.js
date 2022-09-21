@@ -98,7 +98,7 @@ export default function Index() {
 				) : (
 					products.map((product) => (
 						<Link
-							href={`api/${
+							href={`${
 								product.type === 'steak'
 									? product.type + 's'
 									: product.type
