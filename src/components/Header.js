@@ -1,17 +1,18 @@
 import Link from "next/link";
 import styled from "styled-components";
 import { FaShoppingCart, FaUser, FaSearch, FaWrench } from "react-icons/fa";
+import { GiMeatCleaver } from "react-icons/gi";
 
 const HeaderContainer = styled.div`
   color: white;
-  height: 10%;
-
+  height: 7em;
   h1, p {
     :hover {
         color: lightgray;    
     }
   }
 `;
+
 const HeaderTop = styled.div`
   height: 2em;
   background-color: black;
@@ -28,7 +29,7 @@ const HeaderTop = styled.div`
   }
 `;
 const HeaderMain = styled.div`
-  height: 4em;
+  height: 5em;
   background-color: darkred;
 
   display: flex;
@@ -40,6 +41,11 @@ export default function Header() {
   return (
     <HeaderContainer>
       <HeaderTop>
+        <FaWrench />
+        <Link href="/admin">
+          <p>Administrator Tools</p>
+        </Link>
+
         <FaUser />
         <Link href="/account">
           <p>Account</p>
@@ -52,7 +58,7 @@ export default function Header() {
 
       <HeaderMain>
         <Link href="/">
-          <h1>Logo</h1>
+          <GiMeatCleaver size="2.4em" />
         </Link>
 
         <Link href="/steaks">
@@ -63,7 +69,7 @@ export default function Header() {
           <h1>Sushi</h1>
         </Link>
 
-        <FaSearch />
+        <FaSearch size="1.9em" />
       </HeaderMain>
     </HeaderContainer>
   );
