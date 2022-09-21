@@ -1,7 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { FaPhone, FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa';
-import { useGetProductsQuery, useCreateOrderMutation } from '../../src/redux/reducers/apiSlice';
+import {
+	useGetProductsQuery,
+	useCreateOrderMutation,
+} from '../../src/redux/reducers/apiSlice';
 import Link from 'next/link';
 
 const tags = [
@@ -48,7 +51,6 @@ const Product = styled.div`
 	justify-content: center;
 	align-items: center;
 	button {
-
 	}
 `;
 const ProductImage = styled.img`
@@ -66,9 +68,13 @@ const ProductName = styled.p`
 export default function Index() {
 	const { data: products, isLoading } = useGetProductsQuery();
 
-  const addToCart = (productId) => {
-    useCreateOrderMutation({userId: userId, productId: productId, qty: qty});
-  }
+	const addToCart = (productId) => {
+		useCreateOrderMutation({
+			userId: userId,
+			productId: productId,
+			qty: qty,
+		});
+	};
 
 	return (
 		<BodyContainer>
@@ -98,7 +104,11 @@ export default function Index() {
 									{product.name}{' '}
 									<span>{product.price + '/lb'}</span>
 								</ProductName>
-								<button onClick={()=>addToCart(product.id, qty)}>Add To Cart</button>
+								<button
+									onClick={() => addToCart(product.id, qty)}
+								>
+									Add To Cart
+								</button>
 							</Product>
 						</Link>
 					))
