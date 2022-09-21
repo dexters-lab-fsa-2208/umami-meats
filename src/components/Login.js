@@ -5,26 +5,21 @@ import authService from '../services/auth.service';
 
 
 const Login = () => {
-
     const { login } = authService;
 
     const emailRef = useRef();
     const passwordRef = useRef();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    // const navigate = useNavigate();
 
     async function handleSubmit(e) {
         e.preventDefault();
         const credentials = {email: emailRef.current.value, password: passwordRef.current.value}
 
-
         try {
-            setError('')
+            setError('');
             setLoading(true);
-            console.log(credentials);
-            await login(credentials)
-            // navigate('/dashboard')
+            await login(credentials);
         } catch {
             setError('Failed to sign in')
         }

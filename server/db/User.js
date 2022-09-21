@@ -20,7 +20,7 @@ const User = db.define('user', {
 
 //create authentication
 User.prototype.generateToken = function () {
-	return { token: this.id };
+	return this.id;
 };
 
 User.byToken = async (token) => {
@@ -46,10 +46,10 @@ User.authenticate = async ({ email, password }) => {
 			password,
 		},
 	});
-
 	if (user) {
 		return user;
 	}
+	
 	const error = Error('Bad Credentials');
 	error.status = 401;
 	throw error;
