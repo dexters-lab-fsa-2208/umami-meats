@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 // import { Link, useNavigate } from 'react-router-dom';
+import Router from 'next/router';
 import authService from '../services/auth.service';
 // import { User } from '../../server/db';
 
@@ -20,6 +21,7 @@ const Login = () => {
             setError('');
             setLoading(true);
             await login(credentials);
+            Router.push('/account');
         } catch {
             setError('Failed to sign in')
         }
