@@ -2,6 +2,8 @@ const { Order, LineItem } = require('../db');
 const db = require('./db');
 const { Sequelize } = db;
 //jwt auth imported here
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const User = db.define('user', {
 	email: {
@@ -19,14 +21,20 @@ const User = db.define('user', {
 });
 
 //create authentication
-User.prototype.generateToken = function () {
-	return this.id;
+User.prototype.generateToken = async function () {
+	try {
+		const token = jwt.sign({ id: this.id }, process.env.JWT);
+		console.log(token);
+		return token;
+	} catch (error) {
+		console.error(error);
+	}
 };
-
 User.byToken = async (token) => {
 	try {
-		const user = await User.findByPk(token);
-		if (user) {
+		let payload = jwt.verify(token, process.env.JWT);
+		if (payload) {
+			const user = await User.findByPk(payload.id);
 			return user;
 		}
 		const error = Error('Bad Credentials');
@@ -40,20 +48,26 @@ User.byToken = async (token) => {
 };
 
 User.authenticate = async ({ email, password }) => {
-	const user = await User.findOne({
-		where: {
-			email,
-			password,
-		},
-	});
-	if (user) {
+	const user = await User.findOne({ where: { email } });
+	const isPasswordValid = await bcrypt.compare(
+		password,
+		user.dataValues.password
+	);
+	if (isPasswordValid) {
 		return user;
+	} else {
+		console.log('password invalid');
 	}
-	
+
 	const error = Error('Bad Credentials');
 	error.status = 401;
 	throw error;
 };
+
+User.beforeCreate(async (user) => {
+	const hashedPassword = await bcrypt.hash(user.password, 5);
+	user.password = hashedPassword;
+});
 
 User.prototype.getCart = async function () {
 	const user = User.findOne({
