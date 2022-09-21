@@ -4,11 +4,14 @@ import { useGetSingleSteakQuery, useGetSingleSushiQuery } from "../../src/redux/
 
 const MainProductContainer = styled.div`
     max-width: 100%;
-    margin: 1em;
+    margin: 0 1em;
 
     > p {
         text-align: center;
         font-style: italic;
+        margin: 0.4em;
+    }
+    .desc {
         margin-top: 0.5em;
     }
 `;
@@ -28,22 +31,27 @@ const ProductInfoRight = styled.div`
     justify-content: space-between;
 `;
 const BuyProductContainer = styled.div`
+    text-align: center;
+    
     display: flex;
     flex-direction: column;
     .qty {
-        /* margin-top: 0.5em; */
         display: flex;
         button {
             height: 1.8em;
             width: 1.8em;
-            text-align: center;
 
             border: 0.1em solid gray;
             border-radius: 50%;
         }
         p {
+            width: 1.5em;
             margin: 0 0.4em;
         }
+    }
+    .cartBtn {
+        max-width: 80%;
+        margin-top: 0.5em;
     }
 `;
 
@@ -58,11 +66,26 @@ export default function SingleItemView({ type, id }) {
     const data = response.data;
     
     const [currentQty, setCurrentQty] = React.useState(1);
+    const incrementAmt = (num) => {
+        setCurrentQty(currentQty + num);
+    }
+
+    const printAvailability = () => {
+        // this number can be changed
+        if (data.qty > 10) {
+            return "in stock!"
+        } else if (data.qty <= 0) {
+            return "out of stock!";
+        } else {
+            return `${data.qty} left in stock!`
+        }
+    }
 
     return(<>
         {data ? (
             <>
                 <MainProductContainer>
+                    <p><i>{"availability: " + printAvailability()}</i></p>
                     <ProductContainerTop>
                         <img src={data.img}/>
 
@@ -78,12 +101,16 @@ export default function SingleItemView({ type, id }) {
                                     <p>{currentQty}</p>
                                     <button onClick={() => incrementAmt(1)}>+</button>
                                 </div>
+
+                                <button className="cartBtn">Add To Cart</button>
                             </BuyProductContainer>
                         </ProductInfoRight>
                     </ProductContainerTop>
 
-                    <p>{data.desc}</p>
+                    <p className="desc">{data.desc}</p>
                 </MainProductContainer>
+                
+                {/* Recommended Products can go down here if we have time */}
             </>
         ) : (<p>Loading content</p>)}
     </>)
