@@ -2,30 +2,23 @@ import axios from 'axios';
 
 class AuthService {
 	async login(credentials) {
-		console.log(credentials);
-		const { data: token } = await axios.post('api/auth/login', credentials);
-		console.log(token);
-		if (token) {
-			tokenNum = token.token
-			try{
-			const {data: user} = await axios.get('api/auth/login', {
-				headers: {
-					authorization: `${tokenNum}`,
-				},
-			});
-			window.localStorage.setItem('user', user);
-			console.log(user);
+		try {
+			// creates token if user is valid
+			const { data: token } = await axios.post('api/auth/login', credentials);
+			// verifies if token is valid
+			if (token) {
+				const {data: user} = await axios.get('api/auth/login', {
+					headers: {
+						authorization: `${token}`,
+					},
+				});
+				user.token = token;
+				localStorage.setItem('user', JSON.stringify(user));
+				console.log('successfully logged in');
+			}
 		} catch (err) {
 			console.error(err);
 		}
-		}
-		// .then((response) => {
-		// 	if (response.data.accessToken) {
-		// 		localStorage.setItem('user', JSON.stringify(response.data));
-		// 	}
-
-		// 	return response.data;
-		// });
 	}
 
 	logout() {
