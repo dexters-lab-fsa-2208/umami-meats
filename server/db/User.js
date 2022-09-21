@@ -1,4 +1,4 @@
-const { Order, LineItem } = require('../db');
+const { Order, LineItem, Product } = require('../db');
 const db = require('./db');
 const { Sequelize } = db;
 //jwt auth imported here
@@ -34,14 +34,22 @@ User.byToken = async (token) => {
 	try {
 		let payload = jwt.verify(token, process.env.JWT);
 		if (payload) {
-			const user = await User.findByPk(payload.id);
+			console.log('payload', payload);
+			const user = await User.findOne({
+				where: {
+					id: payload.id
+				},
+				include: Order
+
+				
+				});
 			return user;
 		}
 		const error = Error('Bad Credentials');
 		error.status = 401;
 		throw error;
-	} catch {
-		const error = Error('Bad Credentials');
+	} catch (err) {
+		const error = Error(err);
 		error.status = 401;
 		throw error;
 	}

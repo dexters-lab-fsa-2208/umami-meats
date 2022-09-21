@@ -14,17 +14,17 @@ const seed = async () => {
 				User.create(user);
 			})
 		);
-		// await Promise.all(
-        //     orders.map((order) => {
-		// 		Order.create(order);
-		// 	})
-		// );
+		
 		await Promise.all(
             products.map((product) => {
 				Product.create(product);
 			})
 		);
-		
+		// await Promise.all(
+        //     orders.map((order) => {
+		// 		Order.create(order);
+		// 	})
+		// );
 		// await Promise.all(
 		// 	lineItems.map((lineItem) => {
 		// 		LineItem.create(lineItem);

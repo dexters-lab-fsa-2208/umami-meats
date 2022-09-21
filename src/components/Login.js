@@ -21,7 +21,7 @@ const Login = () => {
             setError('');
             setLoading(true);
             await login(credentials);
-            Router.push('/account');
+            // Router.push('/account');
         } catch {
             setError('Failed to sign in')
         }
