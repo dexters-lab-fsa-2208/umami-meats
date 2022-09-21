@@ -19,36 +19,52 @@ const CarouselItem = styled.div`
   }
 `;
 
+const ListContainer = styled.div`
+  margin: 1em 0;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+`;
+const ListItemContainer = styled.div`
+  width: 10em;
+  height: 15em;
+  
+  img {
+    border: 1px solid black;
+    width: 100%;
+    height: 66%;
+    object-fit: cover;
+  }
+`;
+
 export default function HomePage() {
   const { data, isLoading } = useGetProductsQuery();
   console.log(data);
 
+  const formatName = (string) => {
+    if (string.length > 18) {
+      return (string.slice(0,16) + "...");
+    } else {
+      return string;
+    }
+  }
+
   const [carouselIdx, setCarouselIdx] = React.useState(1);
 
-  const carouselScroll = (direction) => {
-    if (direction === "back") {
-      if (carouselIdx === 1) {
-        setCarouselIdx(5);
-      } else {
-        setCarouselIdx(carouselIdx - 1)
-      }
+  const carouselScroll = (idx) => {
+    if (carouselIdx <= 1 && idx < 0) {
+      setCarouselIdx(5);
+    } else if (carouselIdx >= 5 && idx > 0) {
+      setCarouselIdx(1);
     } else {
-      if (carouselIdx === 5) {
-        setCarouselIdx(1);
-      } else {
-        setCarouselIdx(carouselIdx + 1);
-      }
+      setCarouselIdx(carouselIdx + idx);
     }
   };
 
   React.useEffect(() => {
-    let interval = setInterval(carouselScroll, 5000);
+    let interval = setInterval(() => carouselScroll(1), 5000);
     return () => clearInterval(interval);
   })
-
-  const moveCarousel = (direction) => {
-    carouselScroll(direction);
-  };
 
   return (
     <>
@@ -57,7 +73,7 @@ export default function HomePage() {
           data.map((itm, idx) => (
             <CarouselItem
               key={idx}
-              style={{ transform: `translate(${carouselIdx * -100}%` }}
+              style={{transform: `translate(${carouselIdx * -100}%`, transition: "0.25s"}}
             >
               {/* <>{itm.name}</> */}
               <img src={itm.img} />
@@ -67,8 +83,19 @@ export default function HomePage() {
           <p>Loading content</p>
         )}
       </CarouselContainer>
-      <button onClick={() => moveCarousel("back")}>prev carousel item</button>
-      <button onClick={() => moveCarousel()}>next carousel item</button>
+      {/* tmp buttons */}
+      <button onClick={() => carouselScroll(-1)}>prev carousel item</button>
+      <button onClick={() => carouselScroll(1)}>next carousel item</button>
+
+      <ListContainer>
+          {data?.map((itm) => {
+            return (<ListItemContainer id={itm.id}>
+              <img src={itm.img} />
+              <p><b>{formatName(itm.name)}</b></p>
+              <p><i>${itm.price}</i></p>
+            </ListItemContainer>)
+          })}
+      </ListContainer>
     </>
   );
 }
