@@ -5,7 +5,7 @@ import authService from '../src/services/auth.service';
 // import { User } from '../../server/db';
 import { useDispatch } from 'react-redux';
 
-const Login = () => {
+const Signup = () => {
 	const { register } = authService;
 
 	const emailRef = useRef();
@@ -93,4 +93,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default Signup;
