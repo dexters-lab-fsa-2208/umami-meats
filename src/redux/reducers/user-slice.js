@@ -5,6 +5,7 @@ const userSlice = createSlice({
   initialState: {
     user: null,
     isLoggedIn: false,
+    usersCart: [],
   },
   reducers: {
     storeUser: (state, action) => {
@@ -13,6 +14,9 @@ const userSlice = createSlice({
     },
     removeUser: (state) => {
       (state.user = null), (state.isLoggedIn = false);
+    },
+    getUsersCart: (state, action) => {
+      state.usersCart = action.payload;
     },
   },
 });

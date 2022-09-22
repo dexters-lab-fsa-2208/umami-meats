@@ -89,13 +89,11 @@ export const apiSlice = createApi({
       providesTags: ["sushi"],
     }),
     updateSushi: builder.mutation({
-      query: (payload) => {
-        return {
-          url: `/sushi/${payload.id}`,
-          method: "PUT",
-          body: payload.data,
-        };
-      },
+      query: (payload) => ({
+        url: `/sushi/${payload.id}`,
+        method: "PUT",
+        body: payload.data,
+      }),
       invalidatesTags: ["sushi"],
     }),
     deleteSushi: builder.mutation({
