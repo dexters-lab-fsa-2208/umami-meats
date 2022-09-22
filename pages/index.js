@@ -138,7 +138,7 @@ export default function HomePage() {
           <ListContainer>
             {data?.map((itm) => {
               return (
-                <ListItemContainer id={itm.id}>
+                <ListItemContainer key={itm.id}>
                   <img src={itm.img} />
                   <p>
                     <b>{formatName(itm.name)}</b>
