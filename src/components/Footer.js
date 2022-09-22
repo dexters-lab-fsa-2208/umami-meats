@@ -1,6 +1,6 @@
 import Link from "next/link";
 import styled from "styled-components";
-import { FaPhone } from "react-icons/fa";
+import { FaPhone, FaWrench } from "react-icons/fa";
 
 const FooterContainer = styled.div`
   position: fixed;
@@ -29,6 +29,11 @@ const FooterContainer = styled.div`
 export default function Footer() {
   return (
     <FooterContainer>
+      <FaWrench />
+      <Link href="/admin">
+        <p>Administrator Tools</p>
+      </Link>
+
       <FaPhone />
       <Link href="/contact">
         <p>Contact</p>
