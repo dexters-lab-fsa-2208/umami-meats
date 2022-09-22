@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+import { RemoveSSRFromComponent } from "../../src/utils";
 
 const AccountDetails = styled.div`
     margin: 1em;
@@ -37,6 +37,15 @@ const PreviousOrders = styled.div`
                     font-style: italic;
                 }
             }
+            .rightInfo {
+                text-align: right;
+                .price {
+                    font-weight: bold;
+                }
+                .date {
+                    font-style: italic;
+                }
+            }
 
             &:nth-child(odd) {
                 background-color: lightgray;
@@ -45,23 +54,26 @@ const PreviousOrders = styled.div`
     }
 `;
 
-function Account() {
+function ViewAccount() {
     let user = JSON.parse(localStorage.getItem("user"));
     // 'user' does not have orders attached yet, so i have input some dummy data
     let orders = [{
         id: "5A89JA",
         price: "458.58",
-        items: [0, 0, 0, 0]
+        items: [0, 0, 0, 0],
+        date: "2/1/22"
     },
     {
         id: "8N20DA",
         price: "120.09",
-        items: [0]
+        items: [0],
+        date: "11/29/21",
     },
     {
         id: "1GADJB",
         price: "6718.77",
-        items: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        items: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        date: "4/12/21"
     }];
 
     return (<>
@@ -75,7 +87,9 @@ function Account() {
             </>}
         </AccountDetails>
         {/* this button can link to new page, or open a form here - undecided */}
-        <EditAccountBtn>Edit Account Details</EditAccountBtn>
+        <Link href="/account/edit">
+            <EditAccountBtn>Edit Account Details</EditAccountBtn>
+        </Link>
 
         <LineDivider />
 
@@ -85,13 +99,16 @@ function Account() {
                 {user ? <>
                     {orders.map((order) => {
                         return (
-                            <div className="singleOrder">
+                            <div className="singleOrder" key={order.id}>
                                 {/* clicking orderId should link to order page */}
                                 <div className="leftInfo">
                                     <p className="order">{`Order ${order.id}`}</p>
                                     <p className="itemCt">{`${order.items.length} items`}</p>
                                 </div>
-                                <p>${order.price}</p>
+                                <div className="rightInfo">
+                                    <p className="price">${order.price}</p>
+                                    <p className="date">{order.date}</p>
+                                </div>
                             </div>
                         )
                     })}
@@ -103,6 +120,5 @@ function Account() {
     </>)
 }
 
-// disabling server-side-rendering, since the data is acquired from localStorage
-// might export this to use separately, since many components might need it
-export default dynamic(() => Promise.resolve(Account), {ssr: false});
+// disabling server-side-rendering, since data is acquired from localStorage
+export default RemoveSSRFromComponent(ViewAccount);
