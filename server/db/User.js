@@ -18,6 +18,10 @@ const User = db.define('user', {
 	lastName: {
 		type: Sequelize.STRING,
 	},
+	isAdmin: {
+		type: Sequelize.BOOLEAN,
+		defaultValue: false,
+	}
 });
 
 //create authentication
@@ -38,10 +42,7 @@ User.byToken = async (token) => {
 			const user = await User.findOne({
 				where: {
 					id: payload.id
-				},
-				include: Order
-
-				
+				}
 				});
 			return user;
 		}

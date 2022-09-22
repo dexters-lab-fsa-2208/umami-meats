@@ -3,25 +3,36 @@ const users = [
         email: 'john@gmail.com',
         password: '12345678',
         firstName: 'John',
-        lastName: 'Doe'
+        lastName: 'Doe',
+        isAdmin: false,
     },
     {
         email: "byoon@gmail.com",
         password: "87654321",
         firstName: "Brandon",
-        lastName: "Yoon"
+        lastName: "Yoon",
+        isAdmin: true
     },
     {
         email: "dannyjmargolin@gmail.com",
         password: "123456",
         firstName: "Danny",
-        lastName: "Margolin"
+        lastName: "Margolin",
+        isAdmin: true
     },
     {
         email: "jake69@gmail.com",
         password: "654321",
         firstName: "Jake",
-        lastName: "Lohman"
+        lastName: "Lohman",
+        isAdmin: true
+    },
+    {
+        email: "drew@gmail.com",
+        password: "ilikemap",
+        firstName: "Drew",
+        lastName: "Dobson",
+        isAdmin: false,
     }
 ];
 

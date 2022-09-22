@@ -16,6 +16,7 @@ export const apiSlice = createApi({
     "order",
     "products",
     "product",
+    "tags",
   ],
   endpoints: (builder) => ({
     // users
@@ -80,7 +81,7 @@ export const apiSlice = createApi({
 
     // sushi query
     getSushi: builder.query({
-      query: () => "/sushis",
+      query: () => "/sushi",
       providesTags: ["sushis"],
     }),
     getSingleSushi: builder.query({
@@ -133,6 +134,10 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ["steaks"],
     }),
+    getTags: builder.query({
+      query: () => "/tags",
+      providesTags: ["tags"],
+    }),
   }),
 });
 
@@ -154,4 +159,5 @@ export const {
   useGetSingleSushiQuery,
   useUpdateSushiMutation,
   useDeleteSushiMutation,
+  useGetTagsQuery,
 } = apiSlice;

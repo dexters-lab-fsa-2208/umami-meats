@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FaPhone, FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa';
 import {
@@ -8,10 +8,11 @@ import {
 import Link from 'next/link';
 
 const tags = [
-	{ name: 'tuna' },
-	{ name: 'beef' },
-	{ name: 'japanese' },
-	{ name: 'american' },
+	{ tagName: 'tuna' },
+	{ tagName: 'beef' },
+	{ tagName: 'japanese' },
+	{ tagName: 'american' },
+    { tagName: 'sushi' }
 ];
 const BodyContainer = styled.div`
 	display: flex;
@@ -65,9 +66,16 @@ const ProductName = styled.p`
 	}
 `;
 
-export default function Index() {
-	const { data: products, isLoading } = useGetProductsQuery();
+export default function Products({products, isLoading}) {
+	// const { data: products, isLoading } = useGetProductsQuery();
 	let user;
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [filtered, setFiltered] = useState(false);
+
+    useEffect(() => {
+        setFilteredProducts(products);
+    },[])
+
 	
 	if (typeof window !== 'undefined') {
 		console.log('we are running on the client')
@@ -82,21 +90,32 @@ export default function Index() {
 		addLineItem(orderId, productId, qty);
 	};
 
+    const tagFilter = (tag) => {
+        console.log(tag);
+        setFiltered(true);
+        setFilteredProducts(products?.filter(product => product.tagName === tag));
+        console.log(filteredProducts);
+    }
+
 	return (
 		<BodyContainer>
 			<TagContainer>
 				{tags.map((tag) => (
-					<TagName>
-						{tag.name.charAt(0).toUpperCase() + tag.name.slice(1)}
+					<TagName onClick={(e)=>tagFilter(tag.tagName)}>
+						{tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
 					</TagName>
 				))}
 			</TagContainer>
+            {//TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
+            }
 			<ProductsContainer>
-				<ProductTitle>Our Products</ProductTitle>
+				<ProductTitle>Our {products && products[0].type === 'steak'
+									? products[0].type.charAt(0).toUpperCase() + products[0].type.slice(1) + 's'
+									: products && products[0].type.charAt(0).toUpperCase() + products[0].type.slice(1)}</ProductTitle>
 				{isLoading ? (
 					<div>Loading...</div>
 				) : (
-					products.map((product) => (
+					(filtered ? filteredProducts: products).map((product) => (
 						<Link
 							href={`${
 								product.type === 'steak'
