@@ -1,4 +1,5 @@
 import React from "react";
+import Router from "next/router";
 import styled from "styled-components";
 import { useUpdateUserMutation } from "../../src/redux/reducers/apiSlice";
 import { RemoveSSRFromComponent } from "../../src/utils";
@@ -32,6 +33,7 @@ const EditPageContainer = styled.div`
     }
     > p {
         margin: 0.3em 0;
+        width: fit-content;
     }
     .passHidden {
         text-decoration: underline
@@ -47,52 +49,78 @@ const UpdatePasswordContainer = styled.div`
 function EditAccount() {
     // might be a good idea to verify their token before allowing them to access this page
     let user = JSON.parse(localStorage.getItem("user"));
+    const emptyPassForm = {
+        newPassword: "",
+        confirmPassword: "",
+    }
 
-    const [form, setForm] = React.useState(user);
+    const [mainForm, setMainForm] = React.useState(user);
+    const [pwForm, setPwForm] = React.useState(emptyPassForm);
     const [pwDisplay, setPwDisplay] = React.useState(false);
+
     const [editUser] = useUpdateUserMutation();
 
-    const togglePwDisplay = () => {
-        setPwDisplay(true);
-    }
-
-    const handleChange = (e) => {
-        const updatedForm = {...form};
+    const handleFormChange = (e) => {
+        const updatedForm = {...mainForm};
         updatedForm[e.target.name] = e.target.value;
-        setForm(updatedForm);
+        setMainForm(updatedForm);
     }
-    const handleSubmit = async (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
-        const payload = {
-            id: form.id,
-            data: {...form},
-        };
-        await editUser(payload);
+        const response = await editUser({
+            id: mainForm.id,
+            data: {...mainForm},
+        });
+        // 'editUser' returns an object with 'data:{}' or 'error:{}'
+        if (response.error) {
+            alert(`Error updating data: ${response.error.data.error}`)
+        } else if (response.data) {
+            alert(`User data successfully updated`);
+        }
     }
 
-    const handlePasswordChange = () => {
-
+    const handlePasswordChange = (e) => {
+        const updatedForm = {...pwForm};
+        updatedForm[e.target.name] = e.target.value;
+        setPwForm(updatedForm);
     }
-    const handlePasswordSubmit = () => {
-
+    const handlePasswordSubmit = async (e) => {
+        e.preventDefault();
+        if (pwForm.newPassword !== pwForm.confirmPassword) {
+            alert("Passwords do not match, please try again");
+            setPwForm(emptyPassForm);
+        } else {
+            let response = await editUser({
+                id: mainForm.id,
+                data: { password: pwForm.newPassword }
+            })
+            // 'editUser' returns an object with 'data:{}' or 'error:{}'
+            if (response.error) {
+                alert(`Error updating data: ${response.error.data.error}`)
+            } else if (response.data) {
+                alert(`User password successfully updated`);
+                setPwForm(emptyPassForm);
+                setPwDisplay(false);
+            }
+        }
     }
 
     return(<>
         <EditPageContainer>
             <h2>Edit account info</h2>
             {user ? <>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleFormSubmit}>
                     <label>
                         First Name:
-                        <input type="text" value={form.firstName} onChange={handleChange} name="firstName"/>
+                        <input type="text" value={mainForm.firstName} onChange={handleFormChange} name="firstName"/>
                     </label>
                     <label>
                         Last Name:
-                        <input type="text" value={form.lastName} onChange={handleChange} name="lastName"/>
+                        <input type="text" value={mainForm.lastName} onChange={handleFormChange} name="lastName"/>
                     </label>
                     <label>
                         Email:
-                        <input type="text" value={form.email} onChange={handleChange} name="email"/>
+                        <input type="text" value={mainForm.email} onChange={handleFormChange} name="email"/>
                     </label>
                     <button type="submit">Submit</button>
                 </form>
@@ -105,11 +133,11 @@ function EditAccount() {
                 <form onSubmit={handlePasswordSubmit}>
                     <label>
                         New password:
-                        <input type="password" onChange={handlePasswordChange} name="password"/>
+                        <input type="password" value={pwForm.newPassword} onChange={handlePasswordChange} name="newPassword"/>
                     </label>
                     <label>
                         Confirm new password:
-                        <input type="password" onChange={handlePasswordChange} name="confirmPassword"/>
+                        <input type="password" value={pwForm.confirmPassword} onChange={handlePasswordChange} name="confirmPassword"/>
                     </label>
                     <button type="submit">Update Password</button>
                     <button onClick={() => setPwDisplay(false)}>Cancel</button>
