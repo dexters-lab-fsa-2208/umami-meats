@@ -1,46 +1,53 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from "react";
 // import { Link, useNavigate } from 'react-router-dom';
-import Router from 'next/router';
-import authService from '../services/auth.service';
+import Router from "next/router";
+import authService from "../services/auth.service";
 // import { User } from '../../server/db';
-
+import { useDispatch } from "react-redux";
 
 const Login = () => {
-    const { login } = authService;
+  const { login } = authService;
 
-    const emailRef = useRef();
-    const passwordRef = useRef();
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    async function handleSubmit(e) {
-        e.preventDefault();
-        const credentials = {email: emailRef.current.value, password: passwordRef.current.value}
+  const dispatch = useDispatch();
 
-        try {
-            setError('');
-            setLoading(true);
-            await login(credentials);
-            // Router.push('/account');
-        } catch {
-            setError('Failed to sign in')
-        }
-        setLoading(false)
-        
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const credentials = {
+      email: emailRef.current.value,
+      password: passwordRef.current.value,
+    };
+
+    try {
+      setError("");
+      setLoading(true);
+      await login(credentials);
+      // Router.push('/account');
+      if (typeof window !== "undefined") {
+        let user = JSON.parse(window.localStorage.getItem("user"));
+      }
+    } catch {
+      setError("Failed to sign in");
     }
+    setLoading(false);
+  }
 
-	return (
+  return (
     <>
-    <div>
-        <form  onSubmit={handleSubmit}>
-            <label>Username: </label>
-            <input type='text' ref={emailRef}></input>
-            <label>Password: </label>
-            <input type='password' ref={passwordRef}></input>
-            <button type='submit'>Log In</button>
+      <div>
+        <form onSubmit={handleSubmit}>
+          <label>Username: </label>
+          <input type="text" ref={emailRef}></input>
+          <label>Password: </label>
+          <input type="password" ref={passwordRef}></input>
+          <button type="submit">Log In</button>
         </form>
-    </div>
-    {/* <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
+      </div>
+      {/* <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
             <div className="w-100" style={{ maxWidth: '400px'}}>
         <Card>
             <Card.Body>
@@ -68,7 +75,7 @@ const Login = () => {
         </div>
         </Container> */}
     </>
-    );
+  );
 };
 
 export default Login;

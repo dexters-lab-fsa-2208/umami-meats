@@ -16,6 +16,8 @@ export const apiSlice = createApi({
     "order",
     "products",
     "product",
+    "tags",
+    "lineItems",
   ],
   endpoints: (builder) => ({
     // users
@@ -80,7 +82,7 @@ export const apiSlice = createApi({
 
     // sushi query
     getSushi: builder.query({
-      query: () => "/sushis",
+      query: () => "/sushi",
       providesTags: ["sushis"],
     }),
     getSingleSushi: builder.query({
@@ -88,13 +90,11 @@ export const apiSlice = createApi({
       providesTags: ["sushi"],
     }),
     updateSushi: builder.mutation({
-      query: (payload) => {
-        return {
-          url: `/sushi/${payload.id}`,
-          method: "PUT",
-          body: payload.data,
-        };
-      },
+      query: (payload) => ({
+        url: `/sushi/${payload.id}`,
+        method: "PUT",
+        body: payload.data,
+      }),
       invalidatesTags: ["sushi"],
     }),
     deleteSushi: builder.mutation({
@@ -116,22 +116,51 @@ export const apiSlice = createApi({
       providesTags: ["steak"],
     }),
     updateSteak: builder.mutation({
-      query: (payload) => {
-        return {
-          url: `/steaks/${payload.id}`,
-          method: "PUT",
-          body: payload.data,
-        };
-      },
+      query: (payload) => ({
+        url: `/steaks/${payload.id}`,
+        method: "PUT",
+        body: payload.data,
+      }),
       invalidatesTags: ["steak"],
     }),
     deleteSteak: builder.mutation({
       query: (id) => ({
         url: `/steaks/${id}`,
         method: "DELETE",
-        credentials: "include",
       }),
       invalidatesTags: ["steaks"],
+    }),
+    getTags: builder.query({
+      query: () => "/tags",
+      providesTags: ["tags"],
+    }),
+    //lINE ITEMS
+    getLineItems: builder.query({
+      query: () => "/lineItems",
+      prodivesTags: ["lineItems"],
+    }),
+    createLineItem: builder.mutation({
+      query: (payload) => ({
+        url: "/lineItems",
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["lineItems"],
+    }),
+    updateLineItem: builder.mutation({
+      query: (payload) => ({
+        url: "/lineItems",
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["lineItems"],
+    }),
+    deleteLineItem: builder.mutation({
+      query: (payload) => ({
+        url: "/lineItems",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["lineItems"],
     }),
   }),
 });
@@ -154,4 +183,9 @@ export const {
   useGetSingleSushiQuery,
   useUpdateSushiMutation,
   useDeleteSushiMutation,
+  useGetTagsQuery,
+  useGetLineItemsQuery,
+  useCreateLineItemMutation,
+  useUpdateLineItemMutation,
+  useDeleteLineItemMutation,
 } = apiSlice;

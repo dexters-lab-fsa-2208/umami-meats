@@ -4,10 +4,13 @@ class AuthService {
 	async login(credentials) {
 		try {
 			// creates token if user is valid
-			const { data: token } = await axios.post('api/auth/login', credentials);
+			const { data: token } = await axios.post(
+				'api/auth/login',
+				credentials
+			);
 			// verifies if token is valid
 			if (token) {
-				const {data: user} = await axios.get('api/auth/login', {
+				const { data: user } = await axios.get('api/auth/login', {
 					headers: {
 						authorization: `${token}`,
 					},
@@ -25,12 +28,25 @@ class AuthService {
 		localStorage.removeItem('user');
 	}
 
-	register(username, email, password) {
-		return axios.post(API_URL + 'signup', {
-			username,
-			email,
-			password,
-		});
+	async register({email, password, firstName, lastName, address}) {
+		try {
+			const {data: user} = await axios.post('api/users', {
+				email,
+				password,
+        firstName,
+        lastName,
+        address
+			});
+      console.log(user);
+			const cart = await axios.post('api/orders', {
+				userId: user.id,
+				isCart: true,
+				address,
+			});
+      return user
+		} catch (err) {
+			console.error(err);
+		}
 	}
 
 	getCurrentUser() {
