@@ -58,7 +58,7 @@ const products = [
         img: "https://www.citarella.com/media/catalog/product/cache/0a1f163765072c838f99d363b77c89e0/k/u/kumamoto_1.jpg",
         desc: "Kumamoto Oysters are deep-cupped with petite meats, have a mild brininess, sweet flavor and a honeydew finish. They are a favorite for both new oyster eaters and connoisseurs.",
         type: "sushi",
-        tagName: null
+        tagName: "shellfish"
     }
 ];
 
