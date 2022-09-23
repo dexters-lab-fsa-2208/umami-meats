@@ -78,6 +78,11 @@ User.beforeCreate(async (user) => {
 	user.password = hashedPassword;
 });
 
+User.beforeUpdate(async (user) => {
+	const hashedPassword = await bcrypt.hash(user.password, 5);
+	user.password = hashedPassword;
+});
+
 User.prototype.getCart = async function () {
 	const user = User.findOne({
 		where: {

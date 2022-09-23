@@ -1,6 +1,6 @@
 import Link from "next/link";
 import styled from "styled-components";
-import { FaShoppingCart, FaUser, FaSearch, FaWrench } from "react-icons/fa";
+import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
 import { useSelector } from "react-redux";
 
@@ -46,13 +46,8 @@ export default function Header() {
   return (
     <HeaderContainer>
       <HeaderTop>
-        <FaWrench />
-        <Link href="/admin">
-          <p>Administrator Tools</p>
-        </Link>
-
         <FaUser />
-        <Link href="/account">
+        <Link href="/account/view">
           <p>Account</p>
         </Link>
         <Link href="/cart">
@@ -65,9 +60,10 @@ export default function Header() {
       </HeaderTop>
 
       <HeaderMain>
-        <Link href="/">
+        {/* commented out the link due to console error 'functional components cannot be links' */}
+        {/* <Link href="/"> */}
           <GiMeatCleaver size="2.4em" />
-        </Link>
+        {/* </Link> */}
 
         <Link href="/steaks">
           <h1>Steaks</h1>
