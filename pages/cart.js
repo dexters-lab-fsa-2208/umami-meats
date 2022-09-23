@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 const Container = styled.div`
   display: flex;
@@ -153,6 +154,7 @@ function Cart() {
           </PaymentMethodContainer>
         </Checkout>
       </Middle>
+      <Link href={'/checkout'}><button>Temp Checkout Button</button></Link>
     </Container>
   );
 }

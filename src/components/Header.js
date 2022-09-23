@@ -61,9 +61,9 @@ export default function Header() {
 
       <HeaderMain>
         {/* commented out the link due to console error 'functional components cannot be links' */}
-        {/* <Link href="/"> */}
+        <Link href="/">
           <GiMeatCleaver size="2.4em" />
-        {/* </Link> */}
+        </Link>
 
         <Link href="/steaks">
           <h1>Steaks</h1>
