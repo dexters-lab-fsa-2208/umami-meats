@@ -1,9 +1,8 @@
 import React, { useRef, useState } from "react";
-// import { Link, useNavigate } from 'react-router-dom';
 import Router from "next/router";
 import authService from "../services/auth.service";
-// import { User } from '../../server/db';
 import { useDispatch } from "react-redux";
+import { storeUser } from "../redux/reducers/user-slice";
 
 const Login = () => {
   const { login } = authService;
@@ -28,7 +27,7 @@ const Login = () => {
       await login(credentials);
       // Router.push('/account');
       if (typeof window !== "undefined") {
-        let user = JSON.parse(window.localStorage.getItem("user"));
+        dispatch(storeUser(JSON.parse(window.localStorage.getItem("user"))));
       }
     } catch {
       setError("Failed to sign in");
