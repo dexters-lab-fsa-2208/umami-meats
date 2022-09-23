@@ -1,14 +1,16 @@
 import Link from "next/link";
 import styled from "styled-components";
-import { FaShoppingCart, FaUser, FaSearch, FaWrench } from "react-icons/fa";
+import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
+import { useSelector } from "react-redux";
 
 const HeaderContainer = styled.div`
   color: white;
   height: 7em;
-  h1, p {
+  h1,
+  p {
     :hover {
-        color: lightgray;    
+      color: lightgray;
     }
   }
 `;
@@ -37,29 +39,31 @@ const HeaderMain = styled.div`
   align-items: center;
 `;
 
+//COMPONENT STARTS HERE
 export default function Header() {
+  const { cart } = useSelector((state) => state.cart);
+
   return (
     <HeaderContainer>
       <HeaderTop>
-        <FaWrench />
-        <Link href="/admin">
-          <p>Administrator Tools</p>
-        </Link>
-
         <FaUser />
-        <Link href="/account">
+        <Link href="/account/view">
           <p>Account</p>
         </Link>
-        <FaShoppingCart />
         <Link href="/cart">
-          <p>Cart</p>
+          <div>
+            {" "}
+            <FaShoppingCart />
+            <p>{cart.length}Cart</p>
+          </div>
         </Link>
       </HeaderTop>
 
       <HeaderMain>
-        <Link href="/">
+        {/* commented out the link due to console error 'functional components cannot be links' */}
+        {/* <Link href="/"> */}
           <GiMeatCleaver size="2.4em" />
-        </Link>
+        {/* </Link> */}
 
         <Link href="/steaks">
           <h1>Steaks</h1>

@@ -8,6 +8,9 @@ import {
 	useGetTagsQuery
 } from '../../src/redux/reducers/apiSlice';
 import Link from 'next/link';
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/reducers/cart-slice";
+
 
 // const tags = [
 // 	{ tagName: 'tuna' },
@@ -19,9 +22,6 @@ import Link from 'next/link';
 const BodyContainer = styled.div`
 	display: flex;
 `;
-// const Filter = styled.div`
-//   width: 15%;
-// `;
 
 const TagContainer = styled.div`
 	// width: 100%;
@@ -68,31 +68,25 @@ const ProductName = styled.p`
 	}
 `;
 
+
 export default function Products({products, isLoading}) {
 	// const { data: products, isLoading } = useGetProductsQuery();
-	let user;
+	  
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [filtered, setFiltered] = useState(false);
+    
+    const [user, setUser] = useState("");
 
-	const {data: tags, isSuccess} = useGetTagsQuery()
+	  const {data: tags, isSuccess} = useGetTagsQuery()
+    const dispatch = useDispatch();
 
-    useEffect(() => {
-        setFilteredProducts(products);
-    },[])
-
-	
-	if (typeof window !== 'undefined') {
-		console.log('we are running on the client')
-		user = JSON.parse(window.localStorage.getItem('user'))
-	} else {
-		console.log('we are running on the server');
-	}
-	// console.log(user.id);
-	const [addOrder] = useCreateOrderMutation();
-
-	const addToCart = (productId, qty) => {
-		addLineItem(orderId, productId, qty);
-	};
+  useEffect(() => {
+    setFilteredProducts(products);
+    if (typeof window !== "undefined") {
+      setUser(JSON.parse(window.localStorage.getItem("user")));
+    } else {
+    }
+  }, [products]);
 
     const tagFilter = (tag) => {
         console.log(tag);
@@ -100,6 +94,7 @@ export default function Products({products, isLoading}) {
         setFilteredProducts(products?.filter(product => product.tagName === tag));
         console.log(filteredProducts);
     }
+
 
 	return (
 		<BodyContainer>
@@ -128,16 +123,25 @@ export default function Products({products, isLoading}) {
 									{product.name}{' '}
 									<span>{product.price + '/lb'}</span>
 								</ProductName>
+                </Link>
 								<button
-									onClick={() => addToCart(product.id, qty)}
-								>
-									Add To Cart
-								</button>
-							</Product>
-						</Link>
-					))
-				)}
-			</ProductsContainer>
-		</BodyContainer>
+                onClick={() =>
+                  dispatch(
+                    addToCart({
+                      name: product.name,
+                      image: product.img,
+                      price: product.price,
+                      quantity: 1,
+                    })
+                  )
+                }
+              >
+                Add To Cart
+              </button>
+            </Product>
+          ))
+        )}
+      </ProductsContainer>
+    </BodyContainer>
 	);
 }
