@@ -6,5 +6,5 @@ export default function SingleSteakView() {
     const router = useRouter();
     const { id } = router.query;
 
-    return <SingleItemView type="steak" id={id} />
+    return <SingleItemView type="steaks" id={id} />
 }

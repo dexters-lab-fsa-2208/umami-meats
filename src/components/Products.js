@@ -4,17 +4,18 @@ import { FaPhone, FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa';
 import {
 	useGetProductsQuery,
 	useCreateOrderMutation,
-	useCreateLineItemMutation
+	useCreateLineItemMutation,
+	useGetTagsQuery
 } from '../../src/redux/reducers/apiSlice';
 import Link from 'next/link';
 
-const tags = [
-	{ tagName: 'tuna' },
-	{ tagName: 'beef' },
-	{ tagName: 'japanese' },
-	{ tagName: 'american' },
-    { tagName: 'sushi' }
-];
+// const tags = [
+// 	{ tagName: 'tuna' },
+// 	{ tagName: 'beef' },
+// 	{ tagName: 'japanese' },
+// 	{ tagName: 'american' },
+//     { tagName: 'sushi' }
+// ];
 const BodyContainer = styled.div`
 	display: flex;
 `;
@@ -73,6 +74,8 @@ export default function Products({products, isLoading}) {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [filtered, setFiltered] = useState(false);
 
+	const {data: tags, isSuccess} = useGetTagsQuery()
+
     useEffect(() => {
         setFilteredProducts(products);
     },[])
@@ -101,7 +104,7 @@ export default function Products({products, isLoading}) {
 	return (
 		<BodyContainer>
 			<TagContainer>
-				{tags.filter(tag => tag.tagType === products[0].type).map((tag) => (
+				{(products && products.length && isSuccess) && tags.filter(tag => tag.tagType === products[0].type).map((tag) => (
 					<TagName onClick={(e)=>tagFilter(tag.tagName)}>
 						{tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
 					</TagName>
@@ -109,20 +112,15 @@ export default function Products({products, isLoading}) {
 			</TagContainer>
             {//TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
             }
+			{products && console.log(products)}
 			<ProductsContainer>
-				<ProductTitle>Our {products && products[0].type === 'steak'
-									? products[0].type.charAt(0).toUpperCase() + products[0].type.slice(1) + 's'
-									: products && products[0].type.charAt(0).toUpperCase() + products[0].type.slice(1)}</ProductTitle>
+				<ProductTitle>Our {(products && products.length) && products[0].type.charAt(0).toUpperCase() + products[0].type.slice(1)}</ProductTitle>
 				{isLoading ? (
 					<div>Loading...</div>
 				) : (
 					(filtered ? filteredProducts: products).map((product) => (
 						<Link
-							href={`${
-								product.type === 'steak'
-									? product.type + 's'
-									: product.type
-							}/${product.id}`}
+							href={`${product.type}/${product.id}`}
 						>
 							<Product>
 								<ProductImage src={product.img} />
