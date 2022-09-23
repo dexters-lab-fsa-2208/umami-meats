@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 import { FaPhone, FaWrench } from "react-icons/fa";
 
 const FooterContainer = styled.div`
@@ -26,17 +27,37 @@ const FooterContainer = styled.div`
   }
 `;
 
+// this should probably be in a separate folder (because header is also using it)
+const LinkContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 export default function Footer() {
+  const user = useSelector(state => state.user);
+
+  if (user.user?.isAdmin) {
+    console.log('user is admin')
+    // should verify their token here before giving access to admin tools
+  }
+
   return (
     <FooterContainer>
-      <FaWrench />
-      <Link href="/admin">
-        <p>Administrator Tools</p>
-      </Link>
+      {user.user?.isAdmin ?
+        <Link href="/admin">
+          <LinkContainer>
+            <FaWrench />
+            <p>Administrator Tools</p>
+          </LinkContainer>
+        </Link>
+      : <></>
+      }
 
-      <FaPhone />
       <Link href="/contact">
-        <p>Contact</p>
+        <LinkContainer>
+          <FaPhone />
+          <p>Contact</p>
+        </LinkContainer>
       </Link>
     </FooterContainer>
   );

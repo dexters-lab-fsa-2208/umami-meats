@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import Router from "next/router";
 import styled from "styled-components";
@@ -66,6 +67,9 @@ function Header() {
   }
 
   const handleLogout = () => {
+    // dispatch(clearCart())
+    // need the cart to automatically submit to db - currently it is only in redux store
+
     dispatch(removeUser());
     localStorage.removeItem("user");
     Router.push('/');
@@ -130,6 +134,5 @@ function Header() {
   );
 }
 
-export default RemoveSSRFromComponent(Header);
-
 // disabling SSR for the header, because its contents depend on the localStorage
+export default RemoveSSRFromComponent(Header);
