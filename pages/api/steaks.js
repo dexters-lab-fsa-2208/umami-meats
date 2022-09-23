@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     try {
       const steaks = await Product.findAll({
         where: {
-          type: "steak"
+          type: "steaks"
         },
         include: Tag
       });

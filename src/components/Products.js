@@ -1,18 +1,24 @@
-
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import Link from "next/link";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import { FaPhone, FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa';
+import {
+	useGetProductsQuery,
+	useCreateOrderMutation,
+	useCreateLineItemMutation,
+	useGetTagsQuery
+} from '../../src/redux/reducers/apiSlice';
+import Link from 'next/link';
 import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/reducers/cart-slice";
 
 
-const tags = [
-	{ tagName: 'tuna' },
-	{ tagName: 'beef' },
-	{ tagName: 'japanese' },
-	{ tagName: 'american' },
-    { tagName: 'sushi' }
-];
+// const tags = [
+// 	{ tagName: 'tuna' },
+// 	{ tagName: 'beef' },
+// 	{ tagName: 'japanese' },
+// 	{ tagName: 'american' },
+//     { tagName: 'sushi' }
+// ];
 const BodyContainer = styled.div`
 	display: flex;
 `;
@@ -62,11 +68,17 @@ const ProductName = styled.p`
 	}
 `;
 
-export default function Products({ products, isLoading }) {
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [filtered, setFiltered] = useState(false);
-  const [user, setUser] = useState("");
-  const dispatch = useDispatch();
+
+export default function Products({products, isLoading}) {
+	// const { data: products, isLoading } = useGetProductsQuery();
+	  
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [filtered, setFiltered] = useState(false);
+    
+    const [user, setUser] = useState("");
+
+	  const {data: tags, isSuccess} = useGetTagsQuery()
+    const dispatch = useDispatch();
 
   useEffect(() => {
     setFilteredProducts(products);
@@ -83,46 +95,36 @@ export default function Products({ products, isLoading }) {
         console.log(filteredProducts);
     }
 
-  return (
-    <BodyContainer>
-      <TagContainer>
-        {tags.map((tag) => (
-          <TagName onClick={(e) => tagFilter(tag.tagName)} key={tag.id}>
-            {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
-          </TagName>
-        ))}
-      </TagContainer>
-      {
-        //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
-      }
-      <ProductsContainer>
-        <ProductTitle>
-          Our{" "}
-          {products && products[0].type === "steak"
-            ? products[0].type.charAt(0).toUpperCase() +
-              products[0].type.slice(1) +
-              "s"
-            : products &&
-              products[0].type.charAt(0).toUpperCase() +
-                products[0].type.slice(1)}
-        </ProductTitle>
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          (filtered ? filteredProducts : products).map((product) => (
-            <Product key={product.id}>
-              {" "}
-              <Link
-                href={`${
-                  product.type === "steak" ? product.type + "s" : product.type
-                }/${product.id}`}
-              >
-                <ProductImage src={product.img} />
-              </Link>
-              <ProductName>
-                {product.name} <span>{product.price + "/lb"}</span>
-              </ProductName>
-              <button
+
+	return (
+		<BodyContainer>
+			<TagContainer>
+				{(products && products.length && isSuccess) && tags.filter(tag => tag.tagType === products[0].type).map((tag) => (
+					<TagName onClick={(e)=>tagFilter(tag.tagName)}>
+						{tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
+					</TagName>
+				))}
+			</TagContainer>
+            {//TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
+            }
+			{products && console.log(products)}
+			<ProductsContainer>
+				<ProductTitle>Our {(products && products.length) && products[0].type.charAt(0).toUpperCase() + products[0].type.slice(1)}</ProductTitle>
+				{isLoading ? (
+					<div>Loading...</div>
+				) : (
+					(filtered ? filteredProducts: products).map((product) => (
+						<Link
+							href={`${product.type}/${product.id}`}
+						>
+							<Product>
+								<ProductImage src={product.img} />
+								<ProductName>
+									{product.name}{' '}
+									<span>{product.price + '/lb'}</span>
+								</ProductName>
+                </Link>
+								<button
                 onClick={() =>
                   dispatch(
                     addToCart({
@@ -141,5 +143,5 @@ export default function Products({ products, isLoading }) {
         )}
       </ProductsContainer>
     </BodyContainer>
-  );
+	);
 }

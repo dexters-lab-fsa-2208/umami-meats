@@ -9,7 +9,7 @@ export default async function handler(req, res) {
       const steak = await Product.findOne({
         where: {
             id: id,
-            type: "steak"
+            type: "steaks"
         },
         include: [
             {
