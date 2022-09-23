@@ -1,9 +1,29 @@
 import React, { useRef, useState } from "react";
-// import { Link, useNavigate } from 'react-router-dom';
 import Router from "next/router";
+import styled from "styled-components";
 import authService from "../services/auth.service";
-// import { User } from '../../server/db';
 import { useDispatch } from "react-redux";
+import { storeUser } from "../redux/reducers/user-slice";
+
+const LoginFormContainer = styled.div`
+  margin: 1em;
+  form {
+    display: flex;
+    flex-direction: column;
+    label {
+      margin-top: 0.5em;
+      display: flex;
+      justify-content: space-between;
+      input {
+        width: 17em;
+      }
+    }
+    button {
+      width: fit-content;
+      margin: 0.7em auto;
+    }
+  }
+`;
 
 const Login = () => {
   const { login } = authService;
@@ -26,9 +46,9 @@ const Login = () => {
       setError("");
       setLoading(true);
       await login(credentials);
-      // Router.push('/account');
       if (typeof window !== "undefined") {
-        let user = JSON.parse(window.localStorage.getItem("user"));
+        dispatch(storeUser(JSON.parse(window.localStorage.getItem("user"))));
+        Router.push('/');
       }
     } catch {
       setError("Failed to sign in");
@@ -37,44 +57,20 @@ const Login = () => {
   }
 
   return (
-    <>
-      <div>
-        <form onSubmit={handleSubmit}>
-          <label>Username: </label>
-          <input type="text" ref={emailRef}></input>
-          <label>Password: </label>
-          <input type="password" ref={passwordRef}></input>
-          <button type="submit">Log In</button>
-        </form>
-      </div>
-      {/* <Container className="d-flex align-items-center justify-content-center" style={{ minHeight: '100vh' }}>
-            <div className="w-100" style={{ maxWidth: '400px'}}>
-        <Card>
-            <Card.Body>
-                <h2 className="text-center bm-4">Log In</h2>
-                {error && <Alert variant='danger'>{error}</Alert>}
-                <Form onSubmit={handleSubmit}>
-                    <Form.Group id='email'>
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" ref={emailRef} required />
-                    </Form.Group>
-                    <Form.Group id='password'>
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" ref={passwordRef} required />
-                    </Form.Group>
-                    <Button disabled={loading} className="w-100" type="submit">Log In</Button>
-                </Form>
-                <div className="w-100 text-center mt-3">
-                    <Link to='/forgot-password'>Forgot Password?</Link>
-                </div>
-            </Card.Body>
-        </Card>
-        <div className="w-100 text-center mt-2">
-            Need an account? <Link to='/signup'>Sign Up</Link>
-        </div>
-        </div>
-        </Container> */}
-    </>
+    <LoginFormContainer>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <label>Username: 
+          <input type="text" ref={emailRef} />
+        </label>
+
+        <label>Password:
+          <input type="password" ref={passwordRef} />
+        </label>
+
+        <button type="submit">Log In</button>
+      </form>
+    </LoginFormContainer>
   );
 };
 

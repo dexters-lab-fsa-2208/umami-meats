@@ -19,53 +19,55 @@ import { addToCart } from '../redux/reducers/cart-slice';
 //     { tagName: 'sushi' }
 // ];
 const BodyContainer = styled.div`
-	display: flex;
+  display: flex;
 `;
 
 const TagContainer = styled.div`
-	// width: 100%;
-	// width 200px;
-	display: flex;
-	flex-direction: column;
+  // width: 100%;
+  // width 200px;
+  display: flex;
+  flex-direction: column;
 `;
 const TagName = styled.p`
-	width: 100%;
+  width: 100%;
 `;
 
 const ProductsContainer = styled.div`
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-evenly;
-	// margin-left: 15%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  // margin-left: 15%;
 `;
 
 const ProductTitle = styled.h2`
-	flex: 2 2 200%;
-	text-align: center;
+  flex: 2 2 200%;
+  text-align: center;
 `;
 
 const Product = styled.div`
-	width: 150px;
-	height: 200px;
-	flex: 1 1 auto;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	button {
-	}
+  width: 150px;
+  height: 200px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  button {
+  }
 `;
 const ProductImage = styled.img`
-	width: 150px;
-	height: 150px;
+  width: 150px;
+  height: 150px;
 `;
 const ProductName = styled.p`
-	text-align: center;
-	font-size: 12px;
-	span {
-		color: red;
-	}
+  text-align: center;
+  font-size: 12px;
+  span {
+    color: red;
+  }
 `;
+
+// COMPONENT STARTS HERE
 
 export default function Products({ products, isLoading }) {
 	// const { data: products, isLoading } = useGetProductsQuery();
