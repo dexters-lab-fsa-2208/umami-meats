@@ -5,12 +5,11 @@ import {
 	useGetProductsQuery,
 	useCreateOrderMutation,
 	useCreateLineItemMutation,
-	useGetTagsQuery
+	useGetTagsQuery,
 } from '../../src/redux/reducers/apiSlice';
 import Link from 'next/link';
-import { useDispatch } from "react-redux";
-import { addToCart } from "../redux/reducers/cart-slice";
-
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../redux/reducers/cart-slice';
 
 // const tags = [
 // 	{ tagName: 'tuna' },
@@ -68,80 +67,94 @@ const ProductName = styled.p`
 	}
 `;
 
-
-export default function Products({products, isLoading}) {
+export default function Products({ products, isLoading }) {
 	// const { data: products, isLoading } = useGetProductsQuery();
-	  
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [filtered, setFiltered] = useState(false);
-    
-    const [user, setUser] = useState("");
 
-	  const {data: tags, isSuccess} = useGetTagsQuery()
-    const dispatch = useDispatch();
+	const [filteredProducts, setFilteredProducts] = useState([]);
+	const [filtered, setFiltered] = useState(false);
 
-  useEffect(() => {
-    setFilteredProducts(products);
-    if (typeof window !== "undefined") {
-      setUser(JSON.parse(window.localStorage.getItem("user")));
-    } else {
-    }
-  }, [products]);
+	const [user, setUser] = useState('');
 
-    const tagFilter = (tag) => {
-        console.log(tag);
-        setFiltered(true);
-        setFilteredProducts(products?.filter(product => product.tagName === tag));
-        console.log(filteredProducts);
-    }
+	const { data: tags, isSuccess } = useGetTagsQuery();
+	const dispatch = useDispatch();
 
+	useEffect(() => {
+		setFilteredProducts(products);
+		if (typeof window !== 'undefined') {
+			setUser(JSON.parse(window.localStorage.getItem('user')));
+		} else {
+		}
+	}, [products]);
+
+	const tagFilter = (tag) => {
+		console.log(tag);
+		setFiltered(true);
+		setFilteredProducts(
+			products?.filter((product) => product.tagName === tag)
+		);
+		console.log(filteredProducts);
+	};
 
 	return (
 		<BodyContainer>
 			<TagContainer>
-				{(products && products.length && isSuccess) && tags.filter(tag => tag.tagType === products[0].type).map((tag) => (
-					<TagName onClick={(e)=>tagFilter(tag.tagName)}>
-						{tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
-					</TagName>
-				))}
+				{products &&
+					products.length &&
+					isSuccess &&
+					tags
+						.filter((tag) => tag.tagType === products[0].type)
+						.map((tag) => (
+							<TagName onClick={(e) => tagFilter(tag.tagName)}>
+								{tag.tagName.charAt(0).toUpperCase() +
+									tag.tagName.slice(1)}
+							</TagName>
+						))}
 			</TagContainer>
-            {//TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
-            }
+			{
+				//TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
+			}
 			{products && console.log(products)}
 			<ProductsContainer>
-				<ProductTitle>Our {(products && products.length) && products[0].type.charAt(0).toUpperCase() + products[0].type.slice(1)}</ProductTitle>
+				<ProductTitle>
+					Our{' '}
+					{products &&
+						products.length &&
+						products[0].type.charAt(0).toUpperCase() +
+							products[0].type.slice(1)}
+				</ProductTitle>
 				{isLoading ? (
 					<div>Loading...</div>
 				) : (
-					(filtered ? filteredProducts: products).map((product) => (
-						<Link
-							href={`${product.type}/${product.id}`}
-						>
-							<Product>
+					(filtered ? filteredProducts : products).map((product) => (
+						<Product>
+							<Link href={`${product.type}/${product.id}`}>
 								<ProductImage src={product.img} />
+								</Link>
+								<Link href={`${product.type}/${product.id}`}>
 								<ProductName>
 									{product.name}{' '}
 									<span>{product.price + '/lb'}</span>
 								</ProductName>
-                </Link>
-								<button
-                onClick={() =>
-                  dispatch(
-                    addToCart({
-                      name: product.name,
-                      image: product.img,
-                      price: product.price,
-                      quantity: 1,
-                    })
-                  )
-                }
-              >
-                Add To Cart
-              </button>
-            </Product>
-          ))
-        )}
-      </ProductsContainer>
-    </BodyContainer>
+								</Link>
+							
+							<button
+								onClick={() =>
+									dispatch(
+										addToCart({
+											name: product.name,
+											image: product.img,
+											price: product.price,
+											quantity: 1,
+										})
+									)
+								}
+							>
+								Add To Cart
+							</button>
+						</Product>
+					))
+				)}
+			</ProductsContainer>
+		</BodyContainer>
 	);
 }
