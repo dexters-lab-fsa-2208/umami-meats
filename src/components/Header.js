@@ -2,13 +2,15 @@ import Link from "next/link";
 import styled from "styled-components";
 import { FaShoppingCart, FaUser, FaSearch, FaWrench } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
+import { useSelector } from "react-redux";
 
 const HeaderContainer = styled.div`
   color: white;
   height: 7em;
-  h1, p {
+  h1,
+  p {
     :hover {
-        color: lightgray;    
+      color: lightgray;
     }
   }
 `;
@@ -37,7 +39,10 @@ const HeaderMain = styled.div`
   align-items: center;
 `;
 
+//COMPONENT STARTS HERE
 export default function Header() {
+  const { cart } = useSelector((state) => state.cart);
+
   return (
     <HeaderContainer>
       <HeaderTop>
@@ -50,9 +55,12 @@ export default function Header() {
         <Link href="/account">
           <p>Account</p>
         </Link>
-        <FaShoppingCart />
         <Link href="/cart">
-          <p>Cart</p>
+          <div>
+            {" "}
+            <FaShoppingCart />
+            <p>{cart.length}Cart</p>
+          </div>
         </Link>
       </HeaderTop>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   display: flex;
@@ -12,70 +13,123 @@ const Middle = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 3em 1.5em 3em 0em
-    ${
-      "" /* margin-left: 3em;
-  margin-right: 3em; */
-    };
+  margin-left: 1.5em;
+  margin-right: 1.5em;
+  margin-top: 1.5em;
 `;
 
 const ProductsContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 11.5em;
+  margin-right: 1.5em;
 `;
 
 const Products = styled.div`
   display: flex;
   flex-direction: row;
+  width: 100%;
+  margin-bottom: 1em;
 `;
 
-const ProductImage = styled.div``;
+const Image = styled.img`
+  width: 3.25em;
+  height: 3.25em;
+  padding-right: 0.35em;
+`;
 
-const NameandX = styled.div``;
+const DetailsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const NameandX = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
 
 const ProductName = styled.div``;
 
-const IncrementAndPrice = styled.div``;
+const IncrementAndPrice = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+`;
 
-const QuantityButton = styled.div``;
+const IncrementContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+`;
+
+const QuantityButton = styled.div`
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  cursor: pointer;
+`;
 
 const Quantity = styled.div``;
 
 const Checkout = styled.div`
   display: flex;
   flex-direction: column;
+  width: 10.5em;
 `;
 
-const CheckoutHeaders = styled.div``;
+const CheckoutHeaders = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
 
 const Total = styled.div``;
 
 const CheckoutButton = styled.div``;
 
-const TotalContainer = styled.div``;
+const TotalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
-const PaymentMethodContainer = styled.div``;
+const PaymentMethodContainer = styled.div`
+  padding-top: 2.5em;
+`;
 
 // COMPONENT STARTS HERE
 
 function Cart() {
+  const { cart } = useSelector((state) => state.cart);
+  console.log(cart);
   return (
     <Container>
       <CartHeader>Cart 6</CartHeader>
       <Middle>
         <ProductsContainer>
-          <Products>
-            <ProductImage src="/public/sushi.webp" alt="sushi" />
-            <NameandX>
-              <ProductName>SUSHI</ProductName>
-              <button>X</button>
-            </NameandX>
-            <IncrementAndPrice>
-              <QuantityButton>-</QuantityButton>
-              <Quantity>4</Quantity>
-              <QuantityButton>+</QuantityButton>
-            </IncrementAndPrice>
-          </Products>
+          {cart &&
+            cart.map((product) => (
+              <Products key={cart.indexOf(product) - 1}>
+                <Image src={product.image} alt="sushi" />
+                <DetailsContainer>
+                  {" "}
+                  <NameandX>
+                    <ProductName>{product.name}</ProductName>
+                    <button>X</button>
+                  </NameandX>
+                  <IncrementAndPrice>
+                    <IncrementContainer>
+                      <QuantityButton>-</QuantityButton>
+                      <Quantity>{product.quantity}</Quantity>
+                      <QuantityButton>+</QuantityButton>
+                    </IncrementContainer>
+
+                    <Total>${product.price * product.quantity}</Total>
+                  </IncrementAndPrice>
+                </DetailsContainer>
+              </Products>
+            ))}
         </ProductsContainer>
         <Checkout>
           Checkout
