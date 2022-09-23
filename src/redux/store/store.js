@@ -5,9 +5,9 @@ import cartSlice from "../reducers/cart-slice";
 import userSlice from "../reducers/user-slice";
 
 export const store = configureStore({
-  cart: cartSlice.reducer,
-  user: userSlice.reducer,
   reducer: {
+    cart: cartSlice.reducer,
+    user: userSlice.reducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

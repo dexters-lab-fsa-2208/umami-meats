@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { FaPhone, FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa';
-import {
-	useGetProductsQuery,
-	useCreateOrderMutation,
-	useCreateLineItemMutation
-} from '../../src/redux/reducers/apiSlice';
-import Link from 'next/link';
+
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/reducers/cart-slice";
+
 
 const tags = [
 	{ tagName: 'tuna' },
@@ -18,9 +16,6 @@ const tags = [
 const BodyContainer = styled.div`
 	display: flex;
 `;
-// const Filter = styled.div`
-//   width: 15%;
-// `;
 
 const TagContainer = styled.div`
 	// width: 100%;
@@ -67,29 +62,19 @@ const ProductName = styled.p`
 	}
 `;
 
-export default function Products({products, isLoading}) {
-	// const { data: products, isLoading } = useGetProductsQuery();
-	let user;
-    const [filteredProducts, setFilteredProducts] = useState([]);
-    const [filtered, setFiltered] = useState(false);
+export default function Products({ products, isLoading }) {
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filtered, setFiltered] = useState(false);
+  const [user, setUser] = useState("");
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        setFilteredProducts(products);
-    },[])
-
-	
-	if (typeof window !== 'undefined') {
-		console.log('we are running on the client')
-		user = JSON.parse(window.localStorage.getItem('user'))
-	} else {
-		console.log('we are running on the server');
-	}
-	// console.log(user.id);
-	const [addOrder] = useCreateOrderMutation();
-
-	const addToCart = (productId, qty) => {
-		addLineItem(orderId, productId, qty);
-	};
+  useEffect(() => {
+    setFilteredProducts(products);
+    if (typeof window !== "undefined") {
+      setUser(JSON.parse(window.localStorage.getItem("user")));
+    } else {
+    }
+  }, [products]);
 
     const tagFilter = (tag) => {
         console.log(tag);
@@ -98,48 +83,63 @@ export default function Products({products, isLoading}) {
         console.log(filteredProducts);
     }
 
-	return (
-		<BodyContainer>
-			<TagContainer>
-				{tags.filter(tag => tag.tagType === products[0].type).map((tag) => (
-					<TagName onClick={(e)=>tagFilter(tag.tagName)}>
-						{tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
-					</TagName>
-				))}
-			</TagContainer>
-            {//TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
-            }
-			<ProductsContainer>
-				<ProductTitle>Our {products && products[0].type === 'steak'
-									? products[0].type.charAt(0).toUpperCase() + products[0].type.slice(1) + 's'
-									: products && products[0].type.charAt(0).toUpperCase() + products[0].type.slice(1)}</ProductTitle>
-				{isLoading ? (
-					<div>Loading...</div>
-				) : (
-					(filtered ? filteredProducts: products).map((product) => (
-						<Link
-							href={`${
-								product.type === 'steak'
-									? product.type + 's'
-									: product.type
-							}/${product.id}`}
-						>
-							<Product>
-								<ProductImage src={product.img} />
-								<ProductName>
-									{product.name}{' '}
-									<span>{product.price + '/lb'}</span>
-								</ProductName>
-								<button
-									onClick={() => addToCart(product.id, qty)}
-								>
-									Add To Cart
-								</button>
-							</Product>
-						</Link>
-					))
-				)}
-			</ProductsContainer>
-		</BodyContainer>
-	);
+  return (
+    <BodyContainer>
+      <TagContainer>
+        {tags.map((tag) => (
+          <TagName onClick={(e) => tagFilter(tag.tagName)} key={tag.id}>
+            {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
+          </TagName>
+        ))}
+      </TagContainer>
+      {
+        //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
+      }
+      <ProductsContainer>
+        <ProductTitle>
+          Our{" "}
+          {products && products[0].type === "steak"
+            ? products[0].type.charAt(0).toUpperCase() +
+              products[0].type.slice(1) +
+              "s"
+            : products &&
+              products[0].type.charAt(0).toUpperCase() +
+                products[0].type.slice(1)}
+        </ProductTitle>
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          (filtered ? filteredProducts : products).map((product) => (
+            <Product key={product.id}>
+              {" "}
+              <Link
+                href={`${
+                  product.type === "steak" ? product.type + "s" : product.type
+                }/${product.id}`}
+              >
+                <ProductImage src={product.img} />
+              </Link>
+              <ProductName>
+                {product.name} <span>{product.price + "/lb"}</span>
+              </ProductName>
+              <button
+                onClick={() =>
+                  dispatch(
+                    addToCart({
+                      name: product.name,
+                      image: product.img,
+                      price: product.price,
+                      quantity: 1,
+                    })
+                  )
+                }
+              >
+                Add To Cart
+              </button>
+            </Product>
+          ))
+        )}
+      </ProductsContainer>
+    </BodyContainer>
+  );
 }

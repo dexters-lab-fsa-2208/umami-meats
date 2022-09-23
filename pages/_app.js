@@ -2,7 +2,6 @@ import "../styles/globals.css";
 import { Provider } from "react-redux";
 import { apiSlice } from "../src/redux/reducers/apiSlice";
 import { store } from "../src/redux/store/store";
-
 import styled from "styled-components";
 import { Header, Footer } from "../src/components";
 
@@ -13,6 +12,7 @@ const MainContainer = styled.div`
     margin: 0;
     user-select: none;
   }
+  background-color: gray;
 `;
 
 function App({ Component, pageProps }) {
