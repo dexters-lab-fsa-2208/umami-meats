@@ -81,6 +81,26 @@ const products = [
         tagName: "tuna"
     },
     {
+        name: "King Salmon",
+        price: 84.99,
+        grade: "AAA",
+        qty: 300,
+        img: "https://cdn.shopify.com/s/files/1/0523/1414/4937/products/Fillet-sq_600x600.jpg?v=1634072449",
+        desc: "The delicacy of sushi, O-toro is the fatty belly of the tuna",
+        type: "sushi",
+        tagName: "salmon"
+    },
+    {
+        name: "Atlantic Salmon",
+        price: 74.99,
+        grade: "AA",
+        qty: 300,
+        img: "https://catalinaop.com/wp-content/uploads/2020/12/wjnKaV9-scaled-2.jpg",
+        desc: "The delicacy of sushi, O-toro is the fatty belly of the tuna",
+        type: "sushi",
+        tagName: "salmon"
+    },
+    {
         name: "Kumamoto Oysters",
         price: 49.99,
         grade: "AAA",
@@ -89,7 +109,27 @@ const products = [
         desc: "Kumamoto Oysters are deep-cupped with petite meats, have a mild brininess, sweet flavor and a honeydew finish. They are a favorite for both new oyster eaters and connoisseurs.",
         type: "sushi",
         tagName: "shellfish"
-    }
+    },
+    {
+        name: "Uni (Sea Urchin)",
+        price: 169.99,
+        grade: "AAA",
+        qty: 500,
+        img: "https://tastecooking.com/wp-content/uploads/2018/12/10.13_uni.jpg",
+        desc: "Uni is a world-class delicacy—and one of the more unexpected foods to come from Japan. Sometimes referred to as the sea urchin's roe, or eggs, uni is actually the creature's gonads (reproductive glands), and the edible portion of the spiny sea urchin.",
+        type: "sushi",
+        tagName: "shellfish"
+    },
+    {
+        name: "Hotate (Scallop)",
+        price: 169.99,
+        grade: "AAA",
+        qty: 500,
+        img: "https://www.umai-aomori.com/wp-content/uploads/2019/02/scallop.jpg",
+        desc: "Sashimi-grade hotate scallops caught in The Sea of Okhotsk, northeast of Hokkaido prefecture.",
+        type: "sushi",
+        tagName: "shellfish"
+    },
 ];
 
 module.exports = products;

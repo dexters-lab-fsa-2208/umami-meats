@@ -12,7 +12,6 @@ const MainContainer = styled.div`
     margin: 0;
     user-select: none;
   }
-  background-color: gray;
 `;
 
 function App({ Component, pageProps }) {
