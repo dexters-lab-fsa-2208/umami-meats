@@ -91,13 +91,13 @@ export default function HomePage() {
     }
   };
 
-  const [carouselIdx, setCarouselIdx] = React.useState(1);
+  const [carouselIdx, setCarouselIdx] = React.useState(0);
 
   const carouselScroll = (idx) => {
-    if (carouselIdx <= 1 && idx < 0) {
-      setCarouselIdx(5);
-    } else if (carouselIdx >= 5 && idx > 0) {
-      setCarouselIdx(1);
+    if (carouselIdx <= 0 && idx < 0) {
+      setCarouselIdx(data.length-1);
+    } else if (carouselIdx >= data.length-1 && idx > 0) {
+      setCarouselIdx(0);
     } else {
       setCarouselIdx(carouselIdx + idx);
     }
@@ -112,9 +112,9 @@ export default function HomePage() {
     <>
       {data ? (
         <>
-          <Link href={`/${data[carouselIdx].type}/${carouselIdx}`}>
             <CarouselContainer>
               {data.map((itm, idx) => (
+                <Link href={`/${itm.type}/${itm.id}`}>
                 <CarouselItem
                   key={idx}
                   style={{
@@ -124,10 +124,9 @@ export default function HomePage() {
                 >
                   {/* <>{itm.name}</> */}
                   <img src={itm.img} />
-                </CarouselItem>
+                </CarouselItem></Link>
               ))}
             </CarouselContainer>
-          </Link>
           <CarouselButton onClick={() => carouselScroll(-1)} className="left">
             {"<"}
           </CarouselButton>
@@ -138,7 +137,7 @@ export default function HomePage() {
           <ListContainer>
             {data?.map((itm) => {
               return (
-                <ListItemContainer key={itm.id}>
+                <Link href={`/${itm.type}/${itm.id}`}><ListItemContainer key={itm.id}>
                   <img src={itm.img} />
                   <p>
                     <b>{formatName(itm.name)}</b>
@@ -146,10 +145,11 @@ export default function HomePage() {
                   <p>
                     <i>${itm.price}</i>
                   </p>
-                </ListItemContainer>
+                </ListItemContainer></Link>
               );
             })}
           </ListContainer>
+          
         </>
       ) : (
         <p>Loading content</p>
