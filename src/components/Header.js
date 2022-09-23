@@ -1,8 +1,16 @@
+import React from "react";
 import Link from "next/link";
+import Router from "next/router";
 import styled from "styled-components";
+// redux
+import { useSelector, useDispatch } from "react-redux";
+import { storeUser, removeUser } from "../redux/reducers/user-slice";
+import { clearCart } from "../redux/reducers/cart-slice";
+import { RemoveSSRFromComponent } from "../utils";
+// react-icons
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
-import { useSelector } from "react-redux";
+import { BiLogIn, BiLogOut } from "react-icons/bi";
 
 const HeaderContainer = styled.div`
   color: white;
@@ -14,7 +22,6 @@ const HeaderContainer = styled.div`
     }
   }
 `;
-
 const HeaderTop = styled.div`
   height: 2em;
   background-color: black;
@@ -38,29 +45,76 @@ const HeaderMain = styled.div`
   justify-content: space-around;
   align-items: center;
 `;
+const LinkContainer = styled.div`
+  display: flex;
+  align-items: center;
+`;
 
-//COMPONENT STARTS HERE
-export default function Header() {
+function Header() {
   const { cart } = useSelector((state) => state.cart);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  let userStatusLink = "/login";
+  if (typeof window !== "undefined") {
+    if (user.isLoggedIn) {
+      userStatusLink = "/account/view";
+    } else if (localStorage.user) {
+      // should probably verify user token if they try to go to account info / cart
+      dispatch(storeUser(JSON.parse(localStorage.getItem("user"))));
+      userStatusLink = "/account/view";
+    }
+  }
+
+  const handleLogout = () => {
+    // dispatch(clearCart())
+    // need the cart to automatically submit to db - currently it is only in redux store
+
+    dispatch(removeUser());
+    localStorage.removeItem("user");
+    Router.push('/');
+  }
 
   return (
     <HeaderContainer>
       <HeaderTop>
-        <FaUser />
-        <Link href="/account/view">
-          <p>Account</p>
-        </Link>
+        {user.isLoggedIn ? (
+          <>
+          {/* account link - displayed as email */}
+            <Link href={userStatusLink}>
+              <LinkContainer>
+                <FaUser />
+                <p>{user.user.email}</p>
+              </LinkContainer>
+            </Link>
+          {/* logout link */}
+            <Link href="/">
+              <LinkContainer onClick={handleLogout}>
+                <BiLogOut />
+                <p>Logout</p>
+              </LinkContainer>
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link href="/login">
+              <LinkContainer>
+                <BiLogIn />
+                <p>Login</p>
+              </LinkContainer>
+            </Link>
+          </>
+        )}
+
         <Link href="/cart">
-          <div>
-            {" "}
+          <LinkContainer>
             <FaShoppingCart />
-            <p>{cart.length}Cart</p>
-          </div>
+            <p>{`Cart (${cart.length})`}</p>
+          </LinkContainer>
         </Link>
       </HeaderTop>
 
       <HeaderMain>
-        {/* commented out the link due to console error 'functional components cannot be links' */}
         <Link href="/">
           <GiMeatCleaver size="2.4em" />
         </Link>
@@ -78,3 +132,6 @@ export default function Header() {
     </HeaderContainer>
   );
 }
+
+// disabling SSR for the header, because its contents depend on the localStorage
+export default RemoveSSRFromComponent(Header);
