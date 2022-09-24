@@ -121,7 +121,7 @@ function Cart() {
                   {" "}
                   <NameandX>
                     <ProductName>{product.name}</ProductName>
-                    <button>X</button>
+                    <button onClick={()=> dispatch(removeFromCart(product))}>X</button>
                   </NameandX>
                   <IncrementAndPrice>
                     <IncrementContainer>
