@@ -52,7 +52,7 @@ const Checkout = () => {
                 <>
                 <Product>
                 <p>{product.name} ({product.quantity})</p>
-                <p>{product.price * product.quantity}</p>
+                <p>{Math.round((product.price * product.quantity + Number.EPSILON) * 100) / 100}</p>
                 {/* {setTotal(total + (product.price * product.quantity))} */}
                 </Product>
                 <br></br>
@@ -61,7 +61,7 @@ const Checkout = () => {
         </ProductsContainer>
         <TotalContainer>
             <h2>Total:</h2>
-            <Total>{cart.reduce((prev, curr) => (curr.price * curr.quantity) + prev,0)}</Total>
+            <Total>{Math.round((cart.reduce((prev, curr) => (curr.price * curr.quantity) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
         </TotalContainer>
         <ThirdPartyPaymentMethodContainer>
             <button>Placeholder</button>
