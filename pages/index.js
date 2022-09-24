@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import { useGetProductsQuery } from "../src/redux/reducers/apiSlice";
+import { Loading } from "../src/components";
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -81,7 +82,7 @@ const ListItemContainer = styled.div`
 
 export default function HomePage() {
   const { data, isLoading } = useGetProductsQuery();
-  console.log(data);
+  // console.log(data);
 
   const formatName = (string) => {
     if (string.length > 18) {
@@ -95,8 +96,8 @@ export default function HomePage() {
 
   const carouselScroll = (idx) => {
     if (carouselIdx <= 0 && idx < 0) {
-      setCarouselIdx(data.length-1);
-    } else if (carouselIdx >= data.length-1 && idx > 0) {
+      setCarouselIdx(data.length - 1);
+    } else if (carouselIdx >= data.length - 1 && idx > 0) {
       setCarouselIdx(0);
     } else {
       setCarouselIdx(carouselIdx + idx);
@@ -108,36 +109,39 @@ export default function HomePage() {
     return () => clearInterval(interval);
   });
 
-  return (
-    <>
-      {data ? (
-        <>
-            <CarouselContainer>
-              {data.map((itm, idx) => (
-                <Link href={`/${itm.type}/${itm.id}`}>
-                <CarouselItem
-                  key={idx}
-                  style={{
-                    transform: `translate(${carouselIdx * -100}%`,
-                    transition: "0.4s",
-                  }}
-                >
-                  {/* <>{itm.name}</> */}
-                  <img src={itm.img} />
-                </CarouselItem></Link>
-              ))}
-            </CarouselContainer>
-          <CarouselButton onClick={() => carouselScroll(-1)} className="left">
-            {"<"}
-          </CarouselButton>
-          <CarouselButton onClick={() => carouselScroll(1)} className="right">
-            {">"}
-          </CarouselButton>
+  if (!data) {
+    return <Loading />;
+  } else
+    return (
+      <>
+        <CarouselContainer>
+          {data.map((itm, idx) => (
+            <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
+              <CarouselItem
+                key={idx}
+                style={{
+                  transform: `translate(${carouselIdx * -100}%`,
+                  transition: "0.4s",
+                }}
+              >
+                {/* <>{itm.name}</> */}
+                <img src={itm.img} />
+              </CarouselItem>
+            </Link>
+          ))}
+        </CarouselContainer>
+        <CarouselButton onClick={() => carouselScroll(-1)} className="left">
+          {"<"}
+        </CarouselButton>
+        <CarouselButton onClick={() => carouselScroll(1)} className="right">
+          {">"}
+        </CarouselButton>
 
-          <ListContainer>
-            {data?.map((itm) => {
-              return (
-                <Link href={`/${itm.type}/${itm.id}`}><ListItemContainer key={itm.id}>
+        <ListContainer>
+          {data?.map((itm) => {
+            return (
+              <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
+                <ListItemContainer>
                   <img src={itm.img} />
                   <p>
                     <b>{formatName(itm.name)}</b>
@@ -145,15 +149,11 @@ export default function HomePage() {
                   <p>
                     <i>${itm.price}</i>
                   </p>
-                </ListItemContainer></Link>
-              );
-            })}
-          </ListContainer>
-          
-        </>
-      ) : (
-        <p>Loading content</p>
-      )}
-    </>
-  );
+                </ListItemContainer>
+              </Link>
+            );
+          })}
+        </ListContainer>
+      </>
+    );
 }
