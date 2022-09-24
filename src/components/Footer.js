@@ -37,7 +37,7 @@ export default function Footer() {
   const user = useSelector(state => state.user);
 
   if (user.user?.isAdmin) {
-    console.log('user is admin')
+    // console.log('user is admin')
     // should verify their token here before giving access to admin tools
   }
 

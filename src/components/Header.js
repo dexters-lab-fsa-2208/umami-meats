@@ -59,7 +59,7 @@ function Header() {
   if (typeof window !== "undefined") {
     if (user.isLoggedIn) {
       userStatusLink = "/account/view";
-    } else if (localStorage.user) {
+    } else if (localStorage.user && !user) {
       // should probably verify user token if they try to go to account info / cart
       dispatch(storeUser(JSON.parse(localStorage.getItem("user"))));
       userStatusLink = "/account/view";
@@ -67,9 +67,7 @@ function Header() {
   }
 
   const handleLogout = () => {
-    // dispatch(clearCart())
-    // need the cart to automatically submit to db - currently it is only in redux store
-
+    // dispatch(clearCart());
     dispatch(removeUser());
     localStorage.removeItem("user");
     Router.push('/');
@@ -116,7 +114,9 @@ function Header() {
 
       <HeaderMain>
         <Link href="/">
-          <GiMeatCleaver size="2.4em" />
+          <LinkContainer>
+            <GiMeatCleaver size="2.4em" />
+          </LinkContainer>
         </Link>
 
         <Link href="/steaks">

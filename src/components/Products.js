@@ -89,12 +89,12 @@ export default function Products({ products, isLoading }) {
 	}, [products]);
 
 	const tagFilter = (tag) => {
-		console.log(tag);
+		// console.log(tag);
 		setFiltered(true);
 		setFilteredProducts(
 			products?.filter((product) => product.tagName === tag)
 		);
-		console.log(filteredProducts);
+		// console.log(filteredProducts);
 	};
 
 	return (
@@ -106,7 +106,7 @@ export default function Products({ products, isLoading }) {
 					tags
 						.filter((tag) => tag.tagType === products[0].type)
 						.map((tag) => (
-							<TagName onClick={(e) => tagFilter(tag.tagName)}>
+							<TagName onClick={(e) => tagFilter(tag.tagName)} key={tag.tagName}>
 								{tag.tagName.charAt(0).toUpperCase() +
 									tag.tagName.slice(1)}
 							</TagName>
@@ -115,7 +115,7 @@ export default function Products({ products, isLoading }) {
 			{
 				//TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
 			}
-			{products && console.log(products)}
+			{/* {products && console.log(products)} */}
 			<ProductsContainer>
 				<ProductTitle>
 					Our{' '}
@@ -128,7 +128,7 @@ export default function Products({ products, isLoading }) {
 					<div>Loading...</div>
 				) : (
 					(filtered ? filteredProducts : products).map((product) => (
-						<Product>
+						<Product key={product.id}>
 							<Link href={`${product.type}/${product.id}`}>
 								<ProductImage src={product.img} />
 								</Link>
