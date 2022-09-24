@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import Link from "next/link";
-import { addToCart, removeFromCart } from '../src/redux/reducers/cart-slice';
+import { addToCart, removeFromCart } from "../src/redux/reducers/cart-slice";
 import { useDispatch } from "react-redux";
-
+import { motion } from "framer-motion";
 
 const Container = styled.div`
   display: flex;
@@ -109,68 +109,112 @@ function Cart() {
   const dispatch = useDispatch();
   console.log(cart);
   return (
-    <Container>
-      <CartHeader>Cart 6</CartHeader>
-      <Middle>
-        <ProductsContainer>
-          {cart &&
-            cart.map((product) => (
-              <Products key={cart.indexOf(product) - 1}>
-                <Image src={product.image} alt="sushi" />
-                <DetailsContainer>
-                  {" "}
-                  <NameandX>
-                    <ProductName>{product.name}</ProductName>
-                    <button onClick={()=> dispatch(removeFromCart(product))}>X</button>
-                  </NameandX>
-                  <IncrementAndPrice>
-                    <IncrementContainer>
-                      <QuantityButton onClick={(product.quantity <= 1) ? ()=>dispatch(removeFromCart(product)) : ()=>dispatch(addToCart({
-											name: product.name,
-											image: product.img,
-											price: product.price,
-											quantity: -1,
-										}))}>-</QuantityButton>
-                      <Quantity>{product.quantity}</Quantity>
-                      <QuantityButton onClick={()=>dispatch(addToCart({
-											name: product.name,
-											image: product.img,
-											price: product.price,
-											quantity: 1,
-										}))}>+</QuantityButton>
-                    </IncrementContainer>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Container>
+        <CartHeader>Cart 6</CartHeader>
+        <Middle>
+          <ProductsContainer>
+            {cart &&
+              cart.map((product) => (
+                <Products key={cart.indexOf(product) - 1}>
+                  <Image src={product.image} alt="sushi" />
+                  <DetailsContainer>
+                    {" "}
+                    <NameandX>
+                      <ProductName>{product.name}</ProductName>
+                      <button onClick={() => dispatch(removeFromCart(product))}>
+                        X
+                      </button>
+                    </NameandX>
+                    <IncrementAndPrice>
+                      <IncrementContainer>
+                        <QuantityButton
+                          onClick={
+                            product.quantity <= 1
+                              ? () => dispatch(removeFromCart(product))
+                              : () =>
+                                  dispatch(
+                                    addToCart({
+                                      name: product.name,
+                                      image: product.img,
+                                      price: product.price,
+                                      quantity: -1,
+                                    })
+                                  )
+                          }
+                        >
+                          -
+                        </QuantityButton>
+                        <Quantity>{product.quantity}</Quantity>
+                        <QuantityButton
+                          onClick={() =>
+                            dispatch(
+                              addToCart({
+                                name: product.name,
+                                image: product.img,
+                                price: product.price,
+                                quantity: 1,
+                              })
+                            )
+                          }
+                        >
+                          +
+                        </QuantityButton>
+                      </IncrementContainer>
 
-                    <Total>${Math.round((product.price * product.quantity + Number.EPSILON) * 100) / 100}</Total>
-                    {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
-                  </IncrementAndPrice>
-                </DetailsContainer>
-              </Products>
-            ))}
-        </ProductsContainer>
-        <Checkout>
-          Checkout
-          <TotalContainer>
-            <CheckoutHeaders>
-              Subtotal<Total>${Math.round((cart.reduce((prev, curr) => (curr.price * curr.quantity) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
-            </CheckoutHeaders>
-            <CheckoutHeaders>
-              Shipping Calculated at Checkout
-            </CheckoutHeaders>
-            {/* <CheckoutHeaders>
+                      <Total>
+                        $
+                        {Math.round(
+                          (product.price * product.quantity + Number.EPSILON) *
+                            100
+                        ) / 100}
+                      </Total>
+                      {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
+                    </IncrementAndPrice>
+                  </DetailsContainer>
+                </Products>
+              ))}
+          </ProductsContainer>
+          <Checkout>
+            Checkout
+            <TotalContainer>
+              <CheckoutHeaders>
+                Subtotal
+                <Total>
+                  $
+                  {Math.round(
+                    (cart.reduce(
+                      (prev, curr) => curr.price * curr.quantity + prev,
+                      0
+                    ) +
+                      Number.EPSILON) *
+                      100
+                  ) / 100}
+                </Total>
+              </CheckoutHeaders>
+              <CheckoutHeaders>Shipping Calculated at Checkout</CheckoutHeaders>
+              {/* <CheckoutHeaders>
               Tax<Total>$99.99</Total>
             </CheckoutHeaders> */}
-          </TotalContainer>
-          {/* <PaymentMethodContainer>
+            </TotalContainer>
+            {/* <PaymentMethodContainer>
             <CheckoutHeaders>
               Total<Total>$99.99</Total>
             </CheckoutHeaders>
             <CheckoutButton>Paypal</CheckoutButton>
             <CheckoutButton>Credit Card</CheckoutButton>
           </PaymentMethodContainer> */}
-        </Checkout>
-      </Middle>
-      <Link href={'/checkout'}><button>Temp Checkout Button</button></Link>
-    </Container>
+          </Checkout>
+        </Middle>
+        <Link href={"/checkout"}>
+          <button>Temp Checkout Button</button>
+        </Link>
+      </Container>
+    </motion.div>
   );
 }
 
