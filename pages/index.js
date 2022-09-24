@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import { useGetProductsQuery } from "../src/redux/reducers/apiSlice";
 import { Loading } from "../src/components";
+import { motion } from "framer-motion";
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -110,10 +111,21 @@ export default function HomePage() {
   });
 
   if (!data) {
-    return <Loading />;
+    return (
+      <motion.div
+        initial={{opacity: 0}}
+        animate={{opacity: 1}}
+      >
+        <Loading />
+      </motion.div>
+    );
   } else
     return (
-      <>
+      <motion.div
+        initial={{opacity: 0}}
+        animate={{opacity: 1}}
+        exit={{opacity: 0}}
+      >
         <CarouselContainer>
           {data.map((itm, idx) => (
             <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
@@ -154,6 +166,6 @@ export default function HomePage() {
             );
           })}
         </ListContainer>
-      </>
+      </motion.div>
     );
 }
