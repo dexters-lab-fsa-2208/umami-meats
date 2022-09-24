@@ -18,7 +18,12 @@ const cartSlice = createSlice({
       !found && state.cart.push(action.payload)
     },
     removeFromCart: (state, action) => {
-      state.cart.splice(action.payload.id, 1);
+      // console.log('remove slice', state.cart.indexOf(action.payload.name));
+      // const idx = state.cart.indexOf(action.payload);
+      // if (idx !== -1) {
+      // state.cart.splice(idx, 1);
+      // }
+      state.cart = state.cart.filter(obj => obj.name !== action.payload.name)
     },
     clearCart: (state) => {
       state.cart = [];
