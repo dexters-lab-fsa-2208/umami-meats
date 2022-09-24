@@ -112,12 +112,13 @@ export default function HomePage() {
 
   if (!data) {
     return (
-      <motion.div
-        initial={{opacity: 0}}
-        animate={{opacity: 1}}
-      >
+      // <motion.div
+      //   initial={{opacity: 0}}
+      //   animate={{opacity: 1}}
+      //   // exit={{opacity: 0}}
+      // >
         <Loading />
-      </motion.div>
+      // </motion.div>
     );
   } else
     return (
