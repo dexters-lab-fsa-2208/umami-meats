@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/reducers/cart-slice";
 
 const MainProductContainer = styled.div`
@@ -59,6 +59,8 @@ const BuyProductContainer = styled.div`
 // COMPONENT STARTS HERE
 function SingleItemView({ type, data }) {
   const [currentQty, setCurrentQty] = React.useState(1);
+  const { cart } = useSelector((state) => state.cart);
+  console.log(cart.length);
 
   const dispatch = useDispatch();
 
@@ -108,6 +110,7 @@ function SingleItemView({ type, data }) {
                     onClick={() => {
                       dispatch(
                         addToCart({
+                          id: cart.length - 1,
                           name: data.name,
                           image: data.img,
                           price: data.price,

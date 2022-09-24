@@ -1,7 +1,8 @@
 import "../styles/globals.css";
 import { Provider } from "react-redux";
 import { apiSlice } from "../src/redux/reducers/apiSlice";
-import { store } from "../src/redux/store/store";
+import { store, persistor } from "../src/redux/store/store";
+import { PersistGate } from "redux-persist/integration/react";
 import styled from "styled-components";
 import { Header, Footer } from "../src/components";
 
@@ -12,17 +13,24 @@ const MainContainer = styled.div`
     margin: 0;
     user-select: none;
   }
-  background-color: gray;
+`;
+
+const BodyContainer = styled.div`
+  margin-bottom: 2em;
 `;
 
 function App({ Component, pageProps }) {
   return (
     <Provider api={apiSlice} store={store}>
-      <MainContainer>
-        <Header />
-        <Component {...pageProps} />
-        <Footer />
-      </MainContainer>
+      <PersistGate loading={null} persistor={persistor}>
+        <MainContainer>
+          <Header />
+          <BodyContainer>
+            <Component {...pageProps} />
+          </BodyContainer>
+          <Footer />
+        </MainContainer>
+      </PersistGate>
     </Provider>
   );
 }

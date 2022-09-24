@@ -8,10 +8,17 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       console.log("hitting reducer");
-      state.cart.push(action.payload);
+      let found = false;
+      state.cart.map((obj, idx) => {
+        if (obj.name === action.payload.name) {
+          state.cart[idx].quantity += action.payload.quantity;
+          found = true;
+        }
+      });
+      !found && state.cart.push(action.payload);
     },
     removeFromCart: (state, action) => {
-      state.cart.splice(action.payload.id, 1);
+      state.cart = state.cart.filter((item) => item.id !== action.payload);
     },
     clearCart: (state) => {
       state.cart = [];

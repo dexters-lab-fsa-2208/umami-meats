@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import Link from "next/link";
+import { addToCart, removeFromCart } from "../src/redux/reducers/cart-slice";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   display: flex;
@@ -106,6 +109,7 @@ const PaymentMethodContainer = styled.div`
 
 function Cart() {
   const { cart } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
   console.log(cart);
   return (
     <Container>
@@ -119,17 +123,60 @@ function Cart() {
                 <DetailsContainer>
                   {" "}
                   <NameandX>
-                    <ProductName>{product.name}</ProductName>
-                    <button>X</button>
+                    <ProductName>
+                      {product.name}
+                      {product.id}
+                    </ProductName>
+                    <button
+                      onClick={() => dispatch(removeFromCart(product.id))}
+                    >
+                      X
+                    </button>
                   </NameandX>
                   <IncrementAndPrice>
                     <IncrementContainer>
-                      <QuantityButton>-</QuantityButton>
+                      <QuantityButton
+                        onClick={
+                          product.quantity <= 1
+                            ? () => dispatch(removeFromCart(product))
+                            : () =>
+                                dispatch(
+                                  addToCart({
+                                    name: product.name,
+                                    image: product.img,
+                                    price: product.price,
+                                    quantity: -1,
+                                  })
+                                )
+                        }
+                      >
+                        -
+                      </QuantityButton>
                       <Quantity>{product.quantity}</Quantity>
-                      <QuantityButton>+</QuantityButton>
+                      <QuantityButton
+                        onClick={() =>
+                          dispatch(
+                            addToCart({
+                              name: product.name,
+                              image: product.img,
+                              price: product.price,
+                              quantity: 1,
+                            })
+                          )
+                        }
+                      >
+                        +
+                      </QuantityButton>
                     </IncrementContainer>
 
-                    <Total>${product.price * product.quantity}</Total>
+                    <Total>
+                      $
+                      {Math.round(
+                        (product.price * product.quantity + Number.EPSILON) *
+                          100
+                      ) / 100}
+                    </Total>
+                    {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
                   </IncrementAndPrice>
                 </DetailsContainer>
               </Products>
@@ -139,24 +186,36 @@ function Cart() {
           Checkout
           <TotalContainer>
             <CheckoutHeaders>
-              Subtotal<Total>$99.99</Total>
+              Subtotal
+              <Total>
+                $
+                {Math.round(
+                  (cart.reduce(
+                    (prev, curr) => curr.price * curr.quantity + prev,
+                    0
+                  ) +
+                    Number.EPSILON) *
+                    100
+                ) / 100}
+              </Total>
             </CheckoutHeaders>
-            <CheckoutHeaders>
-              Shipping<Total>$99.99</Total>
-            </CheckoutHeaders>
-            <CheckoutHeaders>
+            <CheckoutHeaders>Shipping Calculated at Checkout</CheckoutHeaders>
+            {/* <CheckoutHeaders>
               Tax<Total>$99.99</Total>
-            </CheckoutHeaders>
+            </CheckoutHeaders> */}
           </TotalContainer>
-          <PaymentMethodContainer>
+          {/* <PaymentMethodContainer>
             <CheckoutHeaders>
               Total<Total>$99.99</Total>
             </CheckoutHeaders>
             <CheckoutButton>Paypal</CheckoutButton>
             <CheckoutButton>Credit Card</CheckoutButton>
-          </PaymentMethodContainer>
+          </PaymentMethodContainer> */}
         </Checkout>
       </Middle>
+      <Link href={"/checkout"}>
+        <button>Temp Checkout Button</button>
+      </Link>
     </Container>
   );
 }
