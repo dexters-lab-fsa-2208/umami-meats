@@ -126,7 +126,7 @@ function Cart() {
                       <QuantityButton>+</QuantityButton>
                     </IncrementContainer>
 
-                    <Total>${product.price * product.quantity}</Total>
+                    <Total>${Math.round((product.price * product.quantity + Number.EPSILON) * 100) / 100}</Total>
                   </IncrementAndPrice>
                 </DetailsContainer>
               </Products>
@@ -136,22 +136,22 @@ function Cart() {
           Checkout
           <TotalContainer>
             <CheckoutHeaders>
-              Subtotal<Total>$99.99</Total>
+              Subtotal<Total>${Math.round((cart.reduce((prev, curr) => (curr.price * curr.quantity) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
             </CheckoutHeaders>
             <CheckoutHeaders>
-              Shipping<Total>$99.99</Total>
+              Shipping Calculated at Checkout
             </CheckoutHeaders>
-            <CheckoutHeaders>
+            {/* <CheckoutHeaders>
               Tax<Total>$99.99</Total>
-            </CheckoutHeaders>
+            </CheckoutHeaders> */}
           </TotalContainer>
-          <PaymentMethodContainer>
+          {/* <PaymentMethodContainer>
             <CheckoutHeaders>
               Total<Total>$99.99</Total>
             </CheckoutHeaders>
             <CheckoutButton>Paypal</CheckoutButton>
             <CheckoutButton>Credit Card</CheckoutButton>
-          </PaymentMethodContainer>
+          </PaymentMethodContainer> */}
         </Checkout>
       </Middle>
       <Link href={'/checkout'}><button>Temp Checkout Button</button></Link>
