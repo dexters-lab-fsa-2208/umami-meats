@@ -100,6 +100,10 @@ const PaymentMethodContainer = styled.div`
 
 // COMPONENT STARTS HERE
 
+// Increment/decrement in the cart, while updating price
+// Increment quantity from products page if it already exists
+// Remove item from cart
+
 function Cart() {
   const { cart } = useSelector((state) => state.cart);
   console.log(cart);

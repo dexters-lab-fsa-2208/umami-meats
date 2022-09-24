@@ -39,6 +39,10 @@ const HeaderMain = styled.div`
   align-items: center;
 `;
 
+const CartCounter = styled.div`
+  position: relative;
+`;
+
 //COMPONENT STARTS HERE
 export default function Header() {
   const { cart } = useSelector((state) => state.cart);
@@ -50,11 +54,11 @@ export default function Header() {
         <Link href="/account/view">
           <p>Account</p>
         </Link>
+        <CartCounter>{cart.length}Cart</CartCounter>
         <Link href="/cart">
           <div>
             {" "}
             <FaShoppingCart />
-            <p>{cart.length}Cart</p>
           </div>
         </Link>
       </HeaderTop>
@@ -62,7 +66,7 @@ export default function Header() {
       <HeaderMain>
         {/* commented out the link due to console error 'functional components cannot be links' */}
         {/* <Link href="/"> */}
-          <GiMeatCleaver size="2.4em" />
+        <GiMeatCleaver size="2.4em" />
         {/* </Link> */}
 
         <Link href="/steaks">
