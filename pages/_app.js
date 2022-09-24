@@ -14,12 +14,18 @@ const MainContainer = styled.div`
   }
 `;
 
+const BodyContainer = styled.div`
+  margin-bottom: 2em;
+`;
+
 function App({ Component, pageProps }) {
   return (
     <Provider api={apiSlice} store={store}>
       <MainContainer>
         <Header />
+        <BodyContainer>
         <Component {...pageProps} />
+        </BodyContainer>
         <Footer />
       </MainContainer>
     </Provider>
