@@ -109,8 +109,9 @@ const PaymentMethodContainer = styled.div`
 
 function Cart() {
   const { cart } = useSelector((state) => state.cart);
+  const { isLoggedIn } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  console.log(cart);
+  console.log(cart, isLoggedIn);
   return (
     <Container>
       <CartHeader>Cart 6</CartHeader>
@@ -213,9 +214,15 @@ function Cart() {
           </PaymentMethodContainer> */}
         </Checkout>
       </Middle>
-      <Link href={"/checkout"}>
-        <button>Temp Checkout Button</button>
-      </Link>
+      {isLoggedIn ? (
+        <Link href={"/checkout"}>
+          <button>Temp Checkout Button</button>
+        </Link>
+      ) : (
+        <Link href="login">
+          <button>Log In to Checkout!</button>
+        </Link>
+      )}
     </Container>
   );
 }

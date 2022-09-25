@@ -4,6 +4,7 @@ import styled from "styled-components";
 import authService from "../services/auth.service";
 import { useDispatch } from "react-redux";
 import { storeUser } from "../redux/reducers/user-slice";
+import { useGetSingleUserQuery } from "../redux/reducers/apiSlice";
 
 const LoginFormContainer = styled.div`
   margin: 1em;
@@ -47,8 +48,16 @@ const Login = () => {
       setLoading(true);
       await login(credentials);
       if (typeof window !== "undefined") {
-        dispatch(storeUser(JSON.parse(window.localStorage.getItem("user"))));
-        Router.push('/');
+        let user = JSON.parse(window.localStorage.getItem("user"));
+        console.log(user);
+        let userData = {
+          id: user.id,
+          email: user.email,
+          name: user.firstName + " " + user.lastName,
+          admin: user.isAdmin,
+        };
+        dispatch(storeUser(userData));
+        Router.push("/");
       }
     } catch {
       setError("Failed to sign in");
@@ -60,11 +69,13 @@ const Login = () => {
     <LoginFormContainer>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <label>Username: 
+        <label>
+          Username:
           <input type="text" ref={emailRef} />
         </label>
 
-        <label>Password:
+        <label>
+          Password:
           <input type="password" ref={passwordRef} />
         </label>
 

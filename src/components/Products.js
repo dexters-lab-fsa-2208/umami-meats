@@ -70,11 +70,11 @@ const ProductName = styled.p`
 // COMPONENT STARTS HERE
 
 export default function Products({ products, isLoading }) {
-  // const { data: products, isLoading } = useGetProductsQuery();
-
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filtered, setFiltered] = useState(false);
-  const { cart } = useSelector((state) => state.cart);
+  const { cart, cartId } = useSelector((state) => state.cart);
+  const { isLoggedIn } = useSelector((state) => state.user);
+  const [createLineItem] = useCreateLineItemMutation();
 
   const [user, setUser] = useState("");
 
@@ -135,21 +135,37 @@ export default function Products({ products, isLoading }) {
                 </ProductName>
               </Link>
 
-              <button
-                onClick={() =>
-                  dispatch(
-                    addToCart({
-                      id: cart.length - 1,
-                      name: product.name,
-                      image: product.img,
-                      price: product.price,
-                      quantity: 1,
+              {/* if a user is logged in, onClick will post new line items
+              if user is not logged in, dispatch to redux store */}
+              {isLoggedIn ? (
+                <button
+                  onClick={() =>
+                    createLineItem({
+                      orderId: cartId,
+                      productId: product.id,
+                      qty: 1,
                     })
-                  )
-                }
-              >
-                Add To Cart
-              </button>
+                  }
+                >
+                  Add To Cart
+                </button>
+              ) : (
+                <button
+                  onClick={() =>
+                    dispatch(
+                      addToCart({
+                        id: cart.length - 1,
+                        name: product.name,
+                        image: product.img,
+                        price: product.price,
+                        quantity: 1,
+                      })
+                    )
+                  }
+                >
+                  Add To Cart
+                </button>
+              )}
             </Product>
           ))
         )}

@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
   name: "userSlice",
   initialState: {
-    user: null,
+    user: undefined,
     isLoggedIn: false,
     usersCart: [],
   },
@@ -14,7 +14,7 @@ const userSlice = createSlice({
       state.user = action.payload;
     },
     removeUser: (state) => {
-      state.user = null;
+      state.user = undefined;
       state.isLoggedIn = false;
     },
     getUsersCart: (state, action) => {

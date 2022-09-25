@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Link from "next/link";
-import { useGetProductsQuery } from "../src/redux/reducers/apiSlice";
+import {
+  useCreateOrderMutation,
+  useGetProductsQuery,
+  useGetSingleUserQuery,
+} from "../src/redux/reducers/apiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { skipToken } from "@reduxjs/toolkit/query";
+import { initializeCart } from "../src/redux/reducers/cart-slice";
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -81,7 +88,51 @@ const ListItemContainer = styled.div`
 
 export default function HomePage() {
   const { data, isLoading } = useGetProductsQuery();
-  console.log(data);
+  const { user, isLoggedIn } = useSelector((state) => state.user);
+  // skipToken is a parameter provided by RTK to conditionally query data based on condition passed
+  // in our case, it will be if a user is Logged in (skip if false)
+  const { data: userInstance } = useGetSingleUserQuery(
+    isLoggedIn ? user.id : skipToken
+  );
+  const [createNewOrder] = useCreateOrderMutation();
+  const dispatch = useDispatch();
+
+  // check users orders after sign in,
+  useEffect(() => {
+    const checkForCart = async (userInstance) => {
+      if (
+        userInstance &&
+        // if a user has 0 orders, create new order
+        (userInstance.orders.length < 1 ||
+          // or if last order in orders is false (checked out already)
+          // last item in user orders shud always be the working order,
+          // previous orders should all have isCart === false
+          !userInstance.orders[userInstance.orders.length - 1].isCart)
+      ) {
+        await createNewOrder({
+          userId: userInstance.id,
+          isCart: true,
+          address: "address of user",
+        });
+      }
+      // If the last order in the cart is still a cart, initialize the cartId into redux store
+      // for useage all around the app
+      if (
+        userInstance &&
+        userInstance.orders[userInstance.orders.length - 1].isCart
+      ) {
+        dispatch(
+          initializeCart(userInstance.orders[userInstance.orders.length - 1].id)
+        );
+      }
+    };
+    checkForCart(userInstance);
+    // after a new cart is created, initialize cart id into redux store
+    userInstance &&
+      dispatch(
+        initializeCart(userInstance.orders[userInstance.orders.length - 1].id)
+      );
+  }, [createNewOrder, userInstance, dispatch]);
 
   const formatName = (string) => {
     if (string.length > 18) {
@@ -95,8 +146,8 @@ export default function HomePage() {
 
   const carouselScroll = (idx) => {
     if (carouselIdx <= 0 && idx < 0) {
-      setCarouselIdx(data.length-1);
-    } else if (carouselIdx >= data.length-1 && idx > 0) {
+      setCarouselIdx(data.length - 1);
+    } else if (carouselIdx >= data.length - 1 && idx > 0) {
       setCarouselIdx(0);
     } else {
       setCarouselIdx(carouselIdx + idx);
@@ -112,11 +163,10 @@ export default function HomePage() {
     <>
       {data ? (
         <>
-            <CarouselContainer>
-              {data.map((itm, idx) => (
-                <Link href={`/${itm.type}/${itm.id}`}>
+          <CarouselContainer>
+            {data.map((itm, idx) => (
+              <Link href={`/${itm.type}/${itm.id}`} key={idx}>
                 <CarouselItem
-                  key={idx}
                   style={{
                     transform: `translate(${carouselIdx * -100}%`,
                     transition: "0.4s",
@@ -124,9 +174,10 @@ export default function HomePage() {
                 >
                   {/* <>{itm.name}</> */}
                   <img src={itm.img} />
-                </CarouselItem></Link>
-              ))}
-            </CarouselContainer>
+                </CarouselItem>
+              </Link>
+            ))}
+          </CarouselContainer>
           <CarouselButton onClick={() => carouselScroll(-1)} className="left">
             {"<"}
           </CarouselButton>
@@ -137,19 +188,20 @@ export default function HomePage() {
           <ListContainer>
             {data?.map((itm) => {
               return (
-                <Link href={`/${itm.type}/${itm.id}`}><ListItemContainer key={itm.id}>
-                  <img src={itm.img} />
-                  <p>
-                    <b>{formatName(itm.name)}</b>
-                  </p>
-                  <p>
-                    <i>${itm.price}</i>
-                  </p>
-                </ListItemContainer></Link>
+                <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
+                  <ListItemContainer>
+                    <img src={itm.img} />
+                    <p>
+                      <b>{formatName(itm.name)}</b>
+                    </p>
+                    <p>
+                      <i>${itm.price}</i>
+                    </p>
+                  </ListItemContainer>
+                </Link>
               );
             })}
           </ListContainer>
-          
         </>
       ) : (
         <p>Loading content</p>
