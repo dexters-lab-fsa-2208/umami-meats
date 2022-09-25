@@ -9,6 +9,9 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { initializeCart } from "../src/redux/reducers/cart-slice";
+import { Loading } from "../src/components";
+import { motion } from "framer-motion";
+
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -88,6 +91,7 @@ const ListItemContainer = styled.div`
 
 export default function HomePage() {
   const { data, isLoading } = useGetProductsQuery();
+
   const { user, isLoggedIn } = useSelector((state) => state.user);
   // skipToken is a parameter provided by RTK to conditionally query data based on condition passed
   // in our case, it will be if a user is Logged in (skip if false)
@@ -159,53 +163,63 @@ export default function HomePage() {
     return () => clearInterval(interval);
   });
 
-  return (
-    <>
-      {data ? (
-        <>
-          <CarouselContainer>
-            {data.map((itm, idx) => (
-              <Link href={`/${itm.type}/${itm.id}`} key={idx}>
-                <CarouselItem
-                  style={{
-                    transform: `translate(${carouselIdx * -100}%`,
-                    transition: "0.4s",
-                  }}
-                >
-                  {/* <>{itm.name}</> */}
-                  <img src={itm.img} />
-                </CarouselItem>
-              </Link>
-            ))}
-          </CarouselContainer>
-          <CarouselButton onClick={() => carouselScroll(-1)} className="left">
-            {"<"}
-          </CarouselButton>
-          <CarouselButton onClick={() => carouselScroll(1)} className="right">
-            {">"}
-          </CarouselButton>
+  if (!data) {
+    return (
+      // <motion.div
+      //   initial={{opacity: 0}}
+      //   animate={{opacity: 1}}
+      //   // exit={{opacity: 0}}
+      // >
+        <Loading />
+      // </motion.div>
+    );
+  } else
+    return (
+      <motion.div
+        initial={{opacity: 0}}
+        animate={{opacity: 1}}
+        exit={{opacity: 0}}
+      >
+        <CarouselContainer>
+          {data.map((itm, idx) => (
+            <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
+              <CarouselItem
+                key={idx}
+                style={{
+                  transform: `translate(${carouselIdx * -100}%`,
+                  transition: "0.4s",
+                }}
+              >
+                {/* <>{itm.name}</> */}
+                <img src={itm.img} />
+              </CarouselItem>
+            </Link>
+          ))}
+        </CarouselContainer>
+        <CarouselButton onClick={() => carouselScroll(-1)} className="left">
+          {"<"}
+        </CarouselButton>
+        <CarouselButton onClick={() => carouselScroll(1)} className="right">
+          {">"}
+        </CarouselButton>
 
-          <ListContainer>
-            {data?.map((itm) => {
-              return (
-                <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
-                  <ListItemContainer>
-                    <img src={itm.img} />
-                    <p>
-                      <b>{formatName(itm.name)}</b>
-                    </p>
-                    <p>
-                      <i>${itm.price}</i>
-                    </p>
-                  </ListItemContainer>
-                </Link>
-              );
-            })}
-          </ListContainer>
-        </>
-      ) : (
-        <p>Loading content</p>
-      )}
-    </>
-  );
+        <ListContainer>
+          {data?.map((itm) => {
+            return (
+              <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
+                <ListItemContainer>
+                  <img src={itm.img} />
+                  <p>
+                    <b>{formatName(itm.name)}</b>
+                  </p>
+                  <p>
+                    <i>${itm.price}</i>
+                  </p>
+                </ListItemContainer>
+              </Link>
+            );
+          })}
+        </ListContainer>
+      </motion.div>
+    );
 }

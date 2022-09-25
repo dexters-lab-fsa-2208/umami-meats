@@ -1,10 +1,15 @@
 import React, { useRef, useState } from "react";
 import Router from "next/router";
+import Link from "next/link";
 import styled from "styled-components";
 import authService from "../services/auth.service";
 import { useDispatch } from "react-redux";
 import { storeUser } from "../redux/reducers/user-slice";
+
 import { useGetSingleUserQuery } from "../redux/reducers/apiSlice";
+
+import { motion } from "framer-motion";
+
 
 const LoginFormContainer = styled.div`
   margin: 1em;
@@ -24,6 +29,14 @@ const LoginFormContainer = styled.div`
       margin: 0.7em auto;
     }
   }
+  p {
+    margin: auto;
+    text-align: center;
+    font-style: italic;
+    a {
+      text-decoration: underline;
+    }
+  }
 `;
 
 const Login = () => {
@@ -31,8 +44,8 @@ const Login = () => {
 
   const emailRef = useRef();
   const passwordRef = useRef();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState("");
+  // const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -44,8 +57,8 @@ const Login = () => {
     };
 
     try {
-      setError("");
-      setLoading(true);
+      // setError("");
+      // setLoading(true);
       await login(credentials);
       if (typeof window !== "undefined") {
         let user = JSON.parse(window.localStorage.getItem("user"));
@@ -59,29 +72,40 @@ const Login = () => {
         dispatch(storeUser(userData));
         Router.push("/");
       }
-    } catch {
-      setError("Failed to sign in");
+    } catch (err) {
+      console.log("Failed to sign in");
+      console.error(err);
+      // setError("Failed to sign in");
     }
-    setLoading(false);
+    // setLoading(false);
   }
 
   return (
-    <LoginFormContainer>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Username:
-          <input type="text" ref={emailRef} />
-        </label>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <LoginFormContainer>
+        <h2>Login</h2>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Username:
+            <input type="text" ref={emailRef} />
+          </label>
 
-        <label>
-          Password:
-          <input type="password" ref={passwordRef} />
-        </label>
+          <label>
+            Password:
+            <input type="password" ref={passwordRef} />
+          </label>
 
-        <button type="submit">Log In</button>
-      </form>
-    </LoginFormContainer>
+          <button type="submit">Log In</button>
+        </form>
+        <p>
+          Need an account? <Link href="/signup">Register here</Link>
+        </p>
+      </LoginFormContainer>
+    </motion.div>
   );
 };
 
