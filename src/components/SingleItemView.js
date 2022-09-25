@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../redux/reducers/cart-slice";
+import { useCreateLineItemMutation } from "../redux/reducers/apiSlice";
 
 const MainProductContainer = styled.div`
   max-width: 100%;
@@ -59,6 +60,10 @@ const BuyProductContainer = styled.div`
 // COMPONENT STARTS HERE
 function SingleItemView({ type, data }) {
   const [currentQty, setCurrentQty] = React.useState(1);
+  const { cart, cartId } = useSelector((state) => state.cart);
+  const { isLoggedIn } = useSelector((state) => state.user);
+  const [createLineItem] = useCreateLineItemMutation();
+  console.log(cart.length);
 
   const dispatch = useDispatch();
 
@@ -103,21 +108,39 @@ function SingleItemView({ type, data }) {
                     <button onClick={() => incrementAmt(1)}>+</button>
                   </div>
 
-                  <button
-                    className="cartBtn"
-                    onClick={() => {
-                      dispatch(
-                        addToCart({
-                          name: data.name,
-                          image: data.img,
-                          price: data.price,
-                          quantity: currentQty,
+                  {/* if a user is logged in, onClick will post new line items
+              if user is not logged in, dispatch to redux store */}
+                  {isLoggedIn ? (
+                    <button
+                      className="cartBtn"
+                      onClick={() =>
+                        createLineItem({
+                          orderId: cartId,
+                          productId: product.id,
+                          qty: 1,
                         })
-                      );
-                    }}
-                  >
-                    Add To Cart
-                  </button>
+                      }
+                    >
+                      Add To Cart
+                    </button>
+                  ) : (
+                    <button
+                      className="cartBtn"
+                      onClick={() =>
+                        dispatch(
+                          addToCart({
+                            id: cart.length - 1,
+                            name: product.name,
+                            image: product.img,
+                            price: product.price,
+                            quantity: 1,
+                          })
+                        )
+                      }
+                    >
+                      Add To Cart
+                    </button>
+                  )}
                 </BuyProductContainer>
               </ProductInfoRight>
             </ProductContainerTop>

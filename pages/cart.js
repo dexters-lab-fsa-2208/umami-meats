@@ -104,11 +104,17 @@ const PaymentMethodContainer = styled.div`
 
 // COMPONENT STARTS HERE
 
+// Increment/decrement in the cart, while updating price
+// Increment quantity from products page if it already exists
+// Remove item from cart
+
 function Cart() {
   const { cart } = useSelector((state) => state.cart);
+  const { isLoggedIn } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  console.log(cart);
+  console.log(cart, isLoggedIn);
   return (
+
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -208,13 +214,22 @@ function Cart() {
             <CheckoutButton>Paypal</CheckoutButton>
             <CheckoutButton>Credit Card</CheckoutButton>
           </PaymentMethodContainer> */}
-          </Checkout>
-        </Middle>
+        </Checkout>
+      </Middle>
+      {isLoggedIn ? (
         <Link href={"/checkout"}>
           <button>Temp Checkout Button</button>
         </Link>
-      </Container>
+      ) : (
+        <Link href="/login">
+          <button>Log In to Checkout!</button>
+        </Link>
+      )}
+    </Container>
+
+
     </motion.div>
+
   );
 }
 

@@ -50,6 +50,11 @@ const LinkContainer = styled.div`
   align-items: center;
 `;
 
+const CartCounter = styled.div`
+  position: relative;
+`;
+
+//COMPONENT STARTS HERE
 function Header() {
   const { cart } = useSelector((state) => state.cart);
   const user = useSelector((state) => state.user);
@@ -70,22 +75,22 @@ function Header() {
     // dispatch(clearCart());
     dispatch(removeUser());
     localStorage.removeItem("user");
-    Router.push('/');
-  }
+    Router.push("/");
+  };
 
   return (
     <HeaderContainer>
       <HeaderTop>
         {user.isLoggedIn ? (
           <>
-          {/* account link - displayed as email */}
+            {/* account link - displayed as email */}
             <Link href={userStatusLink}>
               <LinkContainer>
                 <FaUser />
                 <p>{user.user.email}</p>
               </LinkContainer>
             </Link>
-          {/* logout link */}
+            {/* logout link */}
             <Link href="/">
               <LinkContainer onClick={handleLogout}>
                 <BiLogOut />

@@ -136,12 +136,12 @@ export const apiSlice = createApi({
     }),
     //lINE ITEMS
     getLineItems: builder.query({
-      query: () => "/lineItems",
+      query: () => "/lineitems",
       prodivesTags: ["lineItems"],
     }),
     createLineItem: builder.mutation({
       query: (payload) => ({
-        url: "/lineItems",
+        url: "/lineitems",
         method: "POST",
         body: payload,
       }),
@@ -149,7 +149,7 @@ export const apiSlice = createApi({
     }),
     updateLineItem: builder.mutation({
       query: (payload) => ({
-        url: "/lineItems",
+        url: "/lineitems",
         method: "PUT",
         body: payload,
       }),
@@ -157,7 +157,7 @@ export const apiSlice = createApi({
     }),
     deleteLineItem: builder.mutation({
       query: (payload) => ({
-        url: "/lineItems",
+        url: "/lineitems",
         method: "DELETE",
       }),
       invalidatesTags: ["lineItems"],

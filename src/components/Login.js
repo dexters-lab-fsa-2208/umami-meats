@@ -5,7 +5,11 @@ import styled from "styled-components";
 import authService from "../services/auth.service";
 import { useDispatch } from "react-redux";
 import { storeUser } from "../redux/reducers/user-slice";
+
+import { useGetSingleUserQuery } from "../redux/reducers/apiSlice";
+
 import { motion } from "framer-motion";
+
 
 const LoginFormContainer = styled.div`
   margin: 1em;
@@ -57,7 +61,15 @@ const Login = () => {
       // setLoading(true);
       await login(credentials);
       if (typeof window !== "undefined") {
-        dispatch(storeUser(JSON.parse(window.localStorage.getItem("user"))));
+        let user = JSON.parse(window.localStorage.getItem("user"));
+        console.log(user);
+        let userData = {
+          id: user.id,
+          email: user.email,
+          name: user.firstName + " " + user.lastName,
+          admin: user.isAdmin,
+        };
+        dispatch(storeUser(userData));
         Router.push("/");
       }
     } catch (err) {
