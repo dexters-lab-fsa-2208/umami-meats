@@ -73,20 +73,14 @@ export default function Products({ products, isLoading }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filtered, setFiltered] = useState(false);
   const { cart, cartId } = useSelector((state) => state.cart);
-  const { isLoggedIn } = useSelector((state) => state.user);
+  const { isLoggedIn, user } = useSelector((state) => state.user);
   const [createLineItem] = useCreateLineItemMutation();
-
-  const [user, setUser] = useState("");
 
   const { data: tags, isSuccess } = useGetTagsQuery();
   const dispatch = useDispatch();
 
   useEffect(() => {
     setFilteredProducts(products);
-    if (typeof window !== "undefined") {
-      setUser(JSON.parse(window.localStorage.getItem("user")));
-    } else {
-    }
   }, [products]);
 
   const tagFilter = (tag) => {

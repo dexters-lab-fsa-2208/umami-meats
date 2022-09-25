@@ -97,8 +97,8 @@ export default function HomePage() {
   const [createNewOrder] = useCreateOrderMutation();
   const dispatch = useDispatch();
 
-  // check users orders after sign in,
   useEffect(() => {
+    // check users orders after sign in,
     const checkForCart = async (userInstance) => {
       if (
         userInstance &&
