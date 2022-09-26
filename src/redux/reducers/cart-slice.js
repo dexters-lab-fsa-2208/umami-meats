@@ -11,7 +11,7 @@ const cartSlice = createSlice({
     // Users cart reducers
     initializeCart: (state, action) => {
       state.cartId = action.payload.id;
-      state.usersCart = action.payload.order.lineItems;
+      state.usersCart = action.payload.order;
     },
     addToUsersCart: (state, action) => {
       console.log(action.payload);
