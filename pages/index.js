@@ -153,6 +153,7 @@ export default function HomePage() {
           // previous orders should all have isCart === false
           !userInstance.orders[userInstance.orders.length - 1].isCart)
       ) {
+        console.log('new cart')
         await createNewOrder({
           userId: userInstance.id,
           isCart: true,
