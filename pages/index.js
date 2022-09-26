@@ -187,6 +187,7 @@ export default function HomePage() {
       }
     };
     checkForCart(userInstance);
+    console.log(userInstance);
   }, [createNewOrder, userInstance, dispatch]);
 
   // const formatName = (string) => {
