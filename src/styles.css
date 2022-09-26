@@ -1,0 +1,89 @@
+/* mainButton, secondaryButton, incrementContainer, incrementCart */
+
+/* Increment example: */
+/*
+<div class="incrementContainer incrementCart">
+    <button class="incrementButton">-</button>
+    <p>0</p>
+    <button class="incrementButton">+</button>
+</div>
+*/
+
+/* MAIN BUTTONS */
+.mainButton,
+.secondaryButton {
+  width: fit-content;
+  margin: auto;
+  padding: 0.8em 1.3em 0.65em;
+
+  font-weight: bold;
+  color: white;
+  background-color: #b32828;
+  transition: background-color 0.025s;
+
+  text-shadow: 1px 1px 3px rgba(128, 128, 128, 0.6);
+  box-shadow: 1px 1px 4px rgb(50, 50, 50, 0.35);
+  border: 0;
+  border-radius: 8px;
+}
+.mainButton:hover,
+.secondaryButton:hover {
+  background-color: #d12121;
+}
+.mainButton:active,
+.secondaryButton:active {
+  box-shadow: -1px -1px 4px rgb(50, 50, 50, 0.35);
+  background-color: #b32828;
+}
+
+.secondaryButton {
+  padding: 0.38em 1em;
+  font-weight: normal;
+  box-shadow: 1px 1px 4px rgb(50, 50, 50, 0.15);
+  border-radius: 10px;
+}
+
+/* INCREMENT BUTTONS AND CONTAINER */
+.incrementContainer,
+.incrementCart {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  width: 96px;
+  border: 1px solid rgba(150, 150, 150, 1);
+  border-radius: 3px;
+  margin-bottom: 1em;
+}
+.incrementContainer > * {
+  width: 32px;
+  height: 32px;
+  border: 0px;
+}
+.incrementContainer > button {
+  font-weight: bold;
+}
+.incrementContainer > p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(243, 243, 243);
+}
+.incrementButton {
+  background-color: rgb(228, 228, 228);
+}
+.incrementButton:hover {
+  background-color: rgb(213, 213, 213);
+}
+.incrementButton:active {
+  background-color: rgb(197, 197, 197);
+}
+
+.incrementCart {
+  height: 28px;
+  width: 84px;
+}
+.incrementCart > * {
+  width: 28px;
+  height: 28px;
+  border: 0px;
+}

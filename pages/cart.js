@@ -122,6 +122,7 @@ function Cart() {
   const [updateLineItem] = useUpdateLineItemMutation();
   const dispatch = useDispatch();
 
+
   useEffect(() => {
     isLoggedIn ? console.log(usersCart) : console.log(cart);
   }, [cart, usersCart, isLoggedIn]);
@@ -146,11 +147,6 @@ function Cart() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
       <Container>
         <CartHeader>Cart 6</CartHeader>
         <Middle>
@@ -279,19 +275,19 @@ function Cart() {
             <CheckoutButton>Paypal</CheckoutButton>
             <CheckoutButton>Credit Card</CheckoutButton>
           </PaymentMethodContainer> */}
-          </Checkout>
-        </Middle>
-        {isLoggedIn ? (
-          <Link href={"/checkout"}>
-            <button>Temp Checkout Button</button>
-          </Link>
-        ) : (
-          <Link href="/login">
-            <button>Log In to Checkout!</button>
-          </Link>
-        )}
-      </Container>
-    </motion.div>
+        </Checkout>
+      </Middle>
+      {isLoggedIn ? (
+        <Link href={"/checkout"}>
+          <button>Temp Checkout Button</button>
+        </Link>
+      ) : (
+        <Link href="/login">
+          <button>Log In to Checkout!</button>
+        </Link>
+      )}
+    </Container>
+
   );
 }
 

@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/user-slice";
 import { clearUserCart } from "../redux/reducers/cart-slice";
+
 import { RemoveSSRFromComponent } from "../utils";
 
 // react-icons
@@ -13,9 +14,12 @@ import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
 import { BiLogIn, BiLogOut } from "react-icons/bi";
 
+const headerMainHeight = "4em";
+const headerTopHeight = "2em";
+
 const HeaderContainer = styled.div`
   color: white;
-  height: 7em;
+  height: ${headerMainHeight + headerTopHeight};
   h1,
   p {
     :hover {
@@ -24,7 +28,7 @@ const HeaderContainer = styled.div`
   }
 `;
 const HeaderTop = styled.div`
-  height: 2em;
+  height: ${headerTopHeight};
   background-color: black;
 
   display: flex;
@@ -38,14 +42,29 @@ const HeaderTop = styled.div`
     padding: 0 0.4em 0.15em;
   }
 `;
+
 const HeaderMain = styled.div`
-  height: 5em;
-  background-color: darkred;
+  height: ${headerMainHeight};
+  background-color: #8b0000;
 
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+
+  .headerIconButton {
+    background-color: #7B0000;
+    width: ${headerMainHeight};
+    height: ${headerMainHeight};
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .headerIconButton:active {
+    background-color: #660000;
+  }
 `;
+
 const LinkContainer = styled.div`
   display: flex;
   align-items: center;
@@ -130,9 +149,9 @@ function Header() {
 
       <HeaderMain>
         <Link href="/">
-          <LinkContainer>
+          <div className="headerIconButton">
             <GiMeatCleaver size="2.4em" />
-          </LinkContainer>
+          </div>
         </Link>
 
         <Link href="/steaks">
@@ -143,7 +162,11 @@ function Header() {
           <h1>Sushi</h1>
         </Link>
 
-        <FaSearch size="1.9em" />
+        <Link href="/search?">
+          <div className="headerIconButton">
+            <FaSearch size="1.9em" />
+          </div>
+        </Link>
       </HeaderMain>
     </HeaderContainer>
   );

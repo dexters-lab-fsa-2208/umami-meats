@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../src/styles.css";
 // redux
 import { Provider } from "react-redux";
 import { apiSlice } from "../src/redux/reducers/apiSlice";
@@ -25,9 +26,9 @@ function App({ Component, pageProps }) {
       <PersistGate loading={null} persistor={persistor}>
         <MainContainer>
           <Header />
-             <AnimatePresence mode="wait">
-              <Component {...pageProps} key={Component.name}/>
-             </AnimatePresence>
+          <AnimatePresence mode="wait">
+            <Component {...pageProps} key={Component.name} />
+          </AnimatePresence>
           <Footer />
         </MainContainer>
       </PersistGate>

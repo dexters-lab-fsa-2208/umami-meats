@@ -7,64 +7,110 @@ import {
 } from "../../src/redux/reducers/apiSlice";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
+import { Loading } from "./";
 import { addToCart, addToUsersCart } from "../redux/reducers/cart-slice";
 
 const BodyContainer = styled.div`
   display: flex;
 `;
 
+// TAGS
 const TagContainer = styled.div`
-  // width: 100%;
-  // width 200px;
+  min-width: 6em;
+  height: 18em;
+  margin: 1.1em 1em;
+  margin-right: 0.3em;
+  padding: 0.3em 0 2em;
+  
   display: flex;
   flex-direction: column;
-`;
-const TagName = styled.p`
-  width: 100%;
+
+  border-right: 1px solid rgb(200, 200, 200);
+
+  .tagsHeader {
+    font-size: 1.3em;
+    margin-bottom: 0.35em;
+  }
+  p {
+    width: 100%;
+  }
+  > .selected {
+    text-decoration: underline;
+  }
+  /* this targets the 'clear' filter */
+  * {
+    :nth-last-child(1) {
+      margin-top: 0.55em;
+      font-style: italic;
+      font-size: 0.94em;
+    }
+  }
 `;
 
+// PRODUCTS CONTAINER
 const ProductsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-  // margin-left: 15%;
+
+  .productListHeader {
+    flex: 2 2 200%;
+    text-align: center;
+    margin: 0.4em auto 0.2em;
+  }
 `;
 
-const ProductTitle = styled.h2`
-  flex: 2 2 200%;
-  text-align: center;
-`;
-
+// SINGLE PRODUCT IN LIST
 const Product = styled.div`
-  width: 150px;
-  height: 200px;
+  width: 175px;
+  max-width: 65%;
+  min-width: 175px;
+  min-height: 225px;
+
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.43);
+
+  margin: 0.5em;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  button {
+  justify-content: space-between;
+  
+  img {
+    /* using 'height' alone does not make some images the required height */
+    min-height: 150px;
+    max-height: 150px;
+    width: 150px;
+
+    object-fit: cover;
+    margin: 0.7em auto 0.15em;
+
+    box-shadow: 1px 1px 6px rgba(100, 100, 100, 0.31);
   }
-`;
-const ProductImage = styled.img`
-  width: 150px;
-  height: 150px;
-`;
-const ProductName = styled.p`
-  text-align: center;
-  font-size: 12px;
-  span {
-    color: red;
+  p {
+    text-align: center;
+    font-size: 0.85em;
+    max-width: 75%;
+    margin: 0.15em auto;
+
+    &.productPrice {
+      color: red;
+    }
+  }
+  button {
+    margin: 0.15em auto 0.7em;
   }
 `;
 
 // COMPONENT STARTS HERE
-
 export default function Products({ products, isLoading }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filtered, setFiltered] = useState(false);
+  const [currentFilter, setCurrentFilter] = useState("");
+  
   const { cart, cartId, usersCart } = useSelector((state) => state.cart);
   const { isLoggedIn, user } = useSelector((state) => state.user);
+
   const { data: tags, isSuccess } = useGetTagsQuery();
   const [createLineItem] = useCreateLineItemMutation();
   const [updateLineItem] = useUpdateLineItemMutation();
@@ -75,10 +121,15 @@ export default function Products({ products, isLoading }) {
   }, [products, cartId, usersCart]);
 
   const tagFilter = (tag) => {
-    console.log(tag);
-    setFiltered(true);
-    setFilteredProducts(products?.filter((product) => product.tagName === tag));
-    console.log(filteredProducts);
+    if (tag === "clear") {
+      setFiltered(false);
+      setFilteredProducts(products);
+      setCurrentFilter("");
+    } else {
+      setFiltered(true);
+      setFilteredProducts(products?.filter((product) => product.tagName === tag));
+      setCurrentFilter(tag);
+    }
   };
 
   // if a user is logged in
@@ -126,9 +177,12 @@ export default function Products({ products, isLoading }) {
     existingItem && existingItem.id ? update() : add();
   };
 
-  return (
+  if (isLoading) {
+    return <Loading />;
+  } else return (
     <BodyContainer>
       <TagContainer>
+        <p className="tagsHeader">Filters</p>
         {products &&
           products.length &&
           isSuccess &&
@@ -145,30 +199,43 @@ export default function Products({ products, isLoading }) {
       }
       <ProductsContainer>
         <ProductTitle>
-          Our{" "}
+          {"Our "}
           {products &&
             products.length &&
-            products[0].type.charAt(0).toUpperCase() +
-              products[0].type.slice(1)}
-        </ProductTitle>
-        {isLoading ? (
-          <div>Loading...</div>
-        ) : (
-          (filtered ? filteredProducts : products).map((product) => (
+            isSuccess &&
+            tags
+              .filter((tag) => tag.tagType === products[0].type)
+              .map((tag) => (
+                <p onClick={(e) => tagFilter(tag.tagName)} key={tag.id} className={tag.tagName === currentFilter ? "selected" : ""}>
+                  {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
+                </p>
+              ))}
+              <p onClick={(e) => tagFilter("clear")}>Clear filters</p>
+        </TagContainer>
+
+        <ProductsContainer>
+          <h2 className="productListHeader">
+            {"Our "}
+            {products &&
+              products.length &&
+              products[0].type.charAt(0).toUpperCase() +
+                products[0].type.slice(1)}
+          </h2>
+          {(filtered ? filteredProducts : products).map((product) => (
             <Product key={product.id}>
               <Link href={`${product.type}/${product.id}`}>
-                <ProductImage src={product.img} />
+                <img src={product.img} />
               </Link>
               <Link href={`${product.type}/${product.id}`}>
-                <ProductName>
-                  {product.name} <span>{product.price + "/lb"}</span>
-                </ProductName>
+                <p className="productName">{product.name}</p>
               </Link>
+              <p className="productPrice">{product.price + "/lb"}</p>
 
               {/* if a user is logged in, onClick will post new line items
               if user is not logged in, dispatch to redux store */}
               {isLoggedIn ? (
                 <button
+                  className="secondaryButton"
                   onClick={() =>
                     updateOrAddLineItem(
                       {
@@ -185,6 +252,7 @@ export default function Products({ products, isLoading }) {
                 </button>
               ) : (
                 <button
+                  className="secondaryButton"
                   onClick={() =>
                     dispatch(
                       addToCart({
@@ -200,9 +268,8 @@ export default function Products({ products, isLoading }) {
                 </button>
               )}
             </Product>
-          ))
-        )}
-      </ProductsContainer>
-    </BodyContainer>
-  );
+          ))}
+        </ProductsContainer>
+      </BodyContainer>
+    );
 }
