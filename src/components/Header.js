@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import Router from "next/router";
 import styled from "styled-components";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/user-slice";
-import { clearCart } from "../redux/reducers/cart-slice";
+import { clearUserCart } from "../redux/reducers/cart-slice";
 import { RemoveSSRFromComponent } from "../utils";
+
 // react-icons
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
@@ -56,13 +57,14 @@ const CartCounter = styled.div`
 
 //COMPONENT STARTS HERE
 function Header() {
-  const { cart } = useSelector((state) => state.cart);
-  const user = useSelector((state) => state.user);
+  const { cart, usersCart } = useSelector((state) => state.cart);
+  const { user, isLoggedIn } = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
 
   let userStatusLink = "/login";
   if (typeof window !== "undefined") {
-    if (user.isLoggedIn) {
+    if (isLoggedIn) {
       userStatusLink = "/account/view";
     } else if (localStorage.user && !user) {
       // should probably verify user token if they try to go to account info / cart
@@ -72,22 +74,23 @@ function Header() {
   }
 
   const handleLogout = () => {
-    // dispatch(clearCart());
-    dispatch(removeUser());
     localStorage.removeItem("user");
+    dispatch(removeUser());
+    // clears the users cart in redux storage only on log out, workaround for removing persistence
+    dispatch(clearUserCart());
     Router.push("/");
   };
 
   return (
     <HeaderContainer>
       <HeaderTop>
-        {user.isLoggedIn ? (
+        {isLoggedIn ? (
           <>
             {/* account link - displayed as email */}
             <Link href={userStatusLink}>
               <LinkContainer>
                 <FaUser />
-                <p>{user.user.email}</p>
+                <p>{user.email}</p>
               </LinkContainer>
             </Link>
             {/* logout link */}
@@ -108,13 +111,21 @@ function Header() {
             </Link>
           </>
         )}
-
-        <Link href="/cart">
-          <LinkContainer>
-            <FaShoppingCart />
-            <p>{`Cart (${cart.length})`}</p>
-          </LinkContainer>
-        </Link>
+        {isLoggedIn && usersCart ? (
+          <Link href="/cart">
+            <LinkContainer>
+              <FaShoppingCart />
+              <p>{`Cart (${usersCart.length})`}</p>
+            </LinkContainer>
+          </Link>
+        ) : (
+          <Link href="/cart">
+            <LinkContainer>
+              <FaShoppingCart />
+              <p>{`Cart (${cart.length})`}</p>
+            </LinkContainer>
+          </Link>
+        )}
       </HeaderTop>
 
       <HeaderMain>
