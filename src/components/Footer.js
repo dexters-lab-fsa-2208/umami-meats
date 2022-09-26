@@ -34,23 +34,17 @@ const LinkContainer = styled.div`
 `;
 
 export default function Footer() {
-  const user = useSelector(state => state.user);
-
-  if (user.user?.isAdmin) {
-    // console.log('user is admin')
-    // should verify their token here before giving access to admin tools
-  }
+  const isAdmin = useSelector(state => state.user.user?.admin);
 
   return (
     <FooterContainer>
-      {user.user?.isAdmin ?
+      {isAdmin &&
         <Link href="/admin">
           <LinkContainer>
             <FaWrench />
             <p>Administrator Tools</p>
           </LinkContainer>
         </Link>
-      : <></>
       }
 
       <Link href="/contact">
