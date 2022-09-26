@@ -9,6 +9,8 @@ if(process.env.QUIET){
 }
 
 //you name this whatever your project is
-const db = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/dexter', config);
+const db = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/dexter', {ssl: {
+  rejectUnauthorized: false}
+});
 
 module.exports = db;
