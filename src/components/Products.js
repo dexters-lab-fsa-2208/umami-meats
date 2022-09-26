@@ -21,7 +21,7 @@ const TagContainer = styled.div`
   margin: 1.1em 1em;
   margin-right: 0.3em;
   padding: 0.3em 0 2em;
-  
+
   display: flex;
   flex-direction: column;
 
@@ -75,7 +75,7 @@ const Product = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  
+
   img {
     /* using 'height' alone does not make some images the required height */
     min-height: 150px;
@@ -102,12 +102,14 @@ const Product = styled.div`
   }
 `;
 
+const TagName = styled.div``;
+
 // COMPONENT STARTS HERE
 export default function Products({ products, isLoading }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filtered, setFiltered] = useState(false);
   const [currentFilter, setCurrentFilter] = useState("");
-  
+
   const { cart, cartId, usersCart } = useSelector((state) => state.cart);
   const { isLoggedIn, user } = useSelector((state) => state.user);
 
@@ -127,7 +129,9 @@ export default function Products({ products, isLoading }) {
       setCurrentFilter("");
     } else {
       setFiltered(true);
-      setFilteredProducts(products?.filter((product) => product.tagName === tag));
+      setFilteredProducts(
+        products?.filter((product) => product.tagName === tag)
+      );
       setCurrentFilter(tag);
     }
   };
@@ -179,26 +183,27 @@ export default function Products({ products, isLoading }) {
 
   if (isLoading) {
     return <Loading />;
-  } else return (
-    <BodyContainer>
-      <TagContainer>
-        <p className="tagsHeader">Filters</p>
-        {products &&
-          products.length &&
-          isSuccess &&
-          tags
-            .filter((tag) => tag.tagType === products[0].type)
-            .map((tag) => (
-              <TagName onClick={(e) => tagFilter(tag.tagName)} key={tag.id}>
-                {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
-              </TagName>
-            ))}
-      </TagContainer>
-      {
-        //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
-      }
-      <ProductsContainer>
-        <ProductTitle>
+  } else
+    return (
+      <BodyContainer>
+        <TagContainer>
+          <p className="tagsHeader">Filters</p>
+          {products &&
+            products.length &&
+            isSuccess &&
+            tags
+              .filter((tag) => tag.tagType === products[0].type)
+              .map((tag) => (
+                <TagName onClick={(e) => tagFilter(tag.tagName)} key={tag.id}>
+                  {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
+                </TagName>
+              ))}
+        </TagContainer>
+        {
+          //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
+        }
+
+        <TagContainer>
           {"Our "}
           {products &&
             products.length &&
@@ -206,11 +211,15 @@ export default function Products({ products, isLoading }) {
             tags
               .filter((tag) => tag.tagType === products[0].type)
               .map((tag) => (
-                <p onClick={(e) => tagFilter(tag.tagName)} key={tag.id} className={tag.tagName === currentFilter ? "selected" : ""}>
+                <p
+                  onClick={(e) => tagFilter(tag.tagName)}
+                  key={tag.id}
+                  className={tag.tagName === currentFilter ? "selected" : ""}
+                >
                   {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
                 </p>
               ))}
-              <p onClick={(e) => tagFilter("clear")}>Clear filters</p>
+          <p onClick={(e) => tagFilter("clear")}>Clear filters</p>
         </TagContainer>
 
         <ProductsContainer>
