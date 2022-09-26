@@ -3,7 +3,6 @@ import Router from "next/router";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import authService from "../src/services/auth.service";
-import { motion } from "framer-motion";
 
 const SignInFormContainer = styled.div`
   margin: 1em;
@@ -73,11 +72,6 @@ export default function Signup() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
       <SignInFormContainer>
         <form onSubmit={handleSubmit} autoComplete="off">
           <label>
@@ -104,9 +98,8 @@ export default function Signup() {
             Confirm password:
             <input type="password" ref={confirmPasswordRef} />
           </label>
-          <button type="submit">Sign Up</button>
+          <button type="submit" className="mainButton">Sign Up</button>
         </form>
       </SignInFormContainer>
-    </motion.div>
   );
 }

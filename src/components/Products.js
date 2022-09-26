@@ -68,7 +68,6 @@ const ProductName = styled.p`
 `;
 
 // COMPONENT STARTS HERE
-
 export default function Products({ products, isLoading }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filtered, setFiltered] = useState(false);

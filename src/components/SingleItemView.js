@@ -7,6 +7,7 @@ import { useCreateLineItemMutation } from "../redux/reducers/apiSlice";
 const MainProductContainer = styled.div`
   max-width: 100%;
   margin: 0 1em;
+  overflow-wrap: break-word;
 
   > p {
     text-align: center;
@@ -14,46 +15,32 @@ const MainProductContainer = styled.div`
     margin: 0.4em;
   }
   .desc {
-    margin-top: 0.5em;
+    text-align: justify;
+    margin-top: 0.8em;
   }
 `;
 const ProductContainerTop = styled.div`
   img {
     width: 55%;
   }
-
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-evenly;
+  justify-content: space-between;
 `;
 const ProductInfoRight = styled.div`
   width: 40%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-right: 0.1em;
 `;
 const BuyProductContainer = styled.div`
   text-align: center;
-
   display: flex;
   flex-direction: column;
-  .qty {
-    display: flex;
-    button {
-      height: 1.8em;
-      width: 1.8em;
 
-      border: 0.1em solid gray;
-      border-radius: 50%;
-    }
-    p {
-      width: 1.5em;
-      margin: 0 0.4em;
-    }
-  }
-  .cartBtn {
-    max-width: 80%;
-    margin-top: 0.5em;
+  > .incrementContainer {
+    margin: 0.5em 0;
   }
 `;
 
@@ -68,7 +55,11 @@ function SingleItemView({ type, data }) {
   const dispatch = useDispatch();
 
   const incrementAmt = (num) => {
-    setCurrentQty(currentQty + num);
+    if (currentQty > 1) {
+      setCurrentQty(currentQty + num);
+    } else if (currentQty === 1 && num > 0) {
+      setCurrentQty(currentQty + num);
+    }
   };
 
   const printAvailability = () => {
@@ -88,31 +79,31 @@ function SingleItemView({ type, data }) {
         <>
           <MainProductContainer>
             <p>
-              <i>{"availability: " + printAvailability()}</i>
+              <i>{"Availability: " + printAvailability()}</i>
             </p>
             <ProductContainerTop>
               <img src={data.img} />
 
               <ProductInfoRight>
                 <div>
-                  <h1>{data.name}</h1>
+                  <h2>{data.name}</h2>
                   <p>
                     <i>{`${data.price} / lb`}</i>
                   </p>
                 </div>
 
                 <BuyProductContainer>
-                  <div className="qty">
-                    <button onClick={() => incrementAmt(-1)}>-</button>
+                  <div className="incrementContainer">
+                    <button onClick={() => incrementAmt(-1)} className="incrementButton">-</button>
                     <p>{currentQty}</p>
-                    <button onClick={() => incrementAmt(1)}>+</button>
+                    <button onClick={() => incrementAmt(1)} className="incrementButton">+</button>
                   </div>
 
                   {/* if a user is logged in, onClick will post new line items
               if user is not logged in, dispatch to redux store */}
                   {isLoggedIn ? (
                     <button
-                      className="cartBtn"
+                      className="mainButton"
                       onClick={() =>
                         createLineItem({
                           orderId: cartId,
@@ -125,7 +116,7 @@ function SingleItemView({ type, data }) {
                     </button>
                   ) : (
                     <button
-                      className="cartBtn"
+                      className="mainButton"
                       onClick={() =>
                         dispatch(
                           addToCart({

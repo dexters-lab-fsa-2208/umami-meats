@@ -114,12 +114,6 @@ function Cart() {
   const dispatch = useDispatch();
   console.log(cart, isLoggedIn);
   return (
-
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
       <Container>
         <CartHeader>Cart 6</CartHeader>
         <Middle>
@@ -226,10 +220,6 @@ function Cart() {
         </Link>
       )}
     </Container>
-
-
-    </motion.div>
-
   );
 }
 

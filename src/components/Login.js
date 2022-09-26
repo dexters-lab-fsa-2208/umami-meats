@@ -5,11 +5,7 @@ import styled from "styled-components";
 import authService from "../services/auth.service";
 import { useDispatch } from "react-redux";
 import { storeUser } from "../redux/reducers/user-slice";
-
 import { useGetSingleUserQuery } from "../redux/reducers/apiSlice";
-
-import { motion } from "framer-motion";
-
 
 const LoginFormContainer = styled.div`
   margin: 1em;
@@ -81,31 +77,25 @@ const Login = () => {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      <LoginFormContainer>
-        <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
-          <label>
-            Username:
-            <input type="text" ref={emailRef} />
-          </label>
+    <LoginFormContainer>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Username:
+          <input type="text" ref={emailRef} />
+        </label>
 
-          <label>
-            Password:
-            <input type="password" ref={passwordRef} />
-          </label>
+        <label>
+          Password:
+          <input type="password" ref={passwordRef} />
+        </label>
 
-          <button type="submit">Log In</button>
-        </form>
-        <p>
-          Need an account? <Link href="/signup">Register here</Link>
-        </p>
-      </LoginFormContainer>
-    </motion.div>
+        <button type="submit">Log In</button>
+      </form>
+      <p>
+        Need an account? <Link href="/signup">Register here</Link>
+      </p>
+    </LoginFormContainer>
   );
 };
 
