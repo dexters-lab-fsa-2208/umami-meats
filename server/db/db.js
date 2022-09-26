@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
 
-const config = {};
+const config = {ssl: {
+  rejectUnauthorized: false,
+}};
 
 if(process.env.QUIET){
   config.logging = false;
