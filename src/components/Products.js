@@ -17,24 +17,48 @@ const BodyContainer = styled.div`
 
 // TAGS
 const TagContainer = styled.div`
+  min-width: 6em;
+  height: 18em;
+  margin: 1.1em 1em;
+  margin-right: 0.3em;
+  padding: 0.3em 0 2em;
+  
   display: flex;
   flex-direction: column;
-`;
-const TagName = styled.p`
-  width: 100%;
+
+  border-right: 1px solid rgb(200, 200, 200);
+
+  .tagsHeader {
+    font-size: 1.3em;
+    margin-bottom: 0.35em;
+  }
+  p {
+    width: 100%;
+  }
+  > .selected {
+    text-decoration: underline;
+  }
+  /* this targets the 'clear' filter */
+  * {
+    :nth-last-child(1) {
+      margin-top: 0.55em;
+      font-style: italic;
+      font-size: 0.94em;
+    }
+  }
 `;
 
-// PRODUCTS
+// PRODUCTS CONTAINER
 const ProductsContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
-`;
 
-const ProductListHeader = styled.h2`
-  flex: 2 2 200%;
-  text-align: center;
-  margin-top: 0.3em;
+  .productListHeader {
+    flex: 2 2 200%;
+    text-align: center;
+    margin: 0.4em auto 0.2em;
+  }
 `;
 
 // SINGLE PRODUCT IN LIST
@@ -52,7 +76,7 @@ const Product = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
+  
   img {
     /* using 'height' alone does not make some images the required height */
     min-height: 150px;
@@ -83,8 +107,10 @@ const Product = styled.div`
 export default function Products({ products, isLoading }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filtered, setFiltered] = useState(false);
+  const [currentFilter, setCurrentFilter] = useState("");
+
   const { cart, cartId } = useSelector((state) => state.cart);
-  const { isLoggedIn, user } = useSelector((state) => state.user);
+  const { isLoggedIn, /*user*/ } = useSelector((state) => state.user);
   const [createLineItem] = useCreateLineItemMutation();
 
   const { data: tags, isSuccess } = useGetTagsQuery();
@@ -95,10 +121,15 @@ export default function Products({ products, isLoading }) {
   }, [products]);
 
   const tagFilter = (tag) => {
-    console.log(tag);
-    setFiltered(true);
-    setFilteredProducts(products?.filter((product) => product.tagName === tag));
-    console.log(filteredProducts);
+    if (tag === "clear") {
+      setFiltered(false);
+      setFilteredProducts(products);
+      setCurrentFilter("");
+    } else {
+      setFiltered(true);
+      setFilteredProducts(products?.filter((product) => product.tagName === tag));
+      setCurrentFilter(tag);
+    }
   };
 
   if (isLoading) {
@@ -107,77 +138,73 @@ export default function Products({ products, isLoading }) {
     return (
       <BodyContainer>
         <TagContainer>
+          <p className="tagsHeader">Filters</p>
           {products &&
             products.length &&
             isSuccess &&
             tags
               .filter((tag) => tag.tagType === products[0].type)
               .map((tag) => (
-                <TagName onClick={(e) => tagFilter(tag.tagName)} key={tag.id}>
+                <p onClick={(e) => tagFilter(tag.tagName)} key={tag.id} className={tag.tagName === currentFilter ? "selected" : ""}>
                   {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
-                </TagName>
+                </p>
               ))}
+              <p onClick={(e) => tagFilter("clear")}>Clear filters</p>
         </TagContainer>
-        {
-          //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
-        }
+
         <ProductsContainer>
-          <ProductListHeader>
+          <h2 className="productListHeader">
             {"Our "}
             {products &&
               products.length &&
               products[0].type.charAt(0).toUpperCase() +
                 products[0].type.slice(1)}
-          </ProductListHeader>
-          {isLoading ? (
-            <div>Loading...</div>
-          ) : (
-            (filtered ? filteredProducts : products).map((product) => (
-              <Product key={product.id}>
-                <Link href={`${product.type}/${product.id}`}>
-                  <img src={product.img} />
-                </Link>
-                <Link href={`${product.type}/${product.id}`}>
-                  <p className="productName">{product.name}</p>
-                </Link>
-                <p className="productPrice">{product.price + "/lb"}</p>
+          </h2>
+          {(filtered ? filteredProducts : products).map((product) => (
+            <Product key={product.id}>
+              <Link href={`${product.type}/${product.id}`}>
+                <img src={product.img} />
+              </Link>
+              <Link href={`${product.type}/${product.id}`}>
+                <p className="productName">{product.name}</p>
+              </Link>
+              <p className="productPrice">{product.price + "/lb"}</p>
 
-                {/* if a user is logged in, onClick will post new line items
+              {/* if a user is logged in, onClick will post new line items
               if user is not logged in, dispatch to redux store */}
-                {isLoggedIn ? (
-                  <button
-                    className="secondaryButton"
-                    onClick={() =>
-                      createLineItem({
-                        orderId: cartId,
-                        productId: product.id,
-                        qty: 1,
+              {isLoggedIn ? (
+                <button
+                  className="secondaryButton"
+                  onClick={() =>
+                    createLineItem({
+                      orderId: cartId,
+                      productId: product.id,
+                      qty: 1,
+                    })
+                  }
+                >
+                  Add To Cart
+                </button>
+              ) : (
+                <button
+                  className="secondaryButton"
+                  onClick={() =>
+                    dispatch(
+                      addToCart({
+                        id: cart.length - 1,
+                        name: product.name,
+                        image: product.img,
+                        price: product.price,
+                        quantity: 1,
                       })
-                    }
-                  >
-                    Add To Cart
-                  </button>
-                ) : (
-                  <button
-                    className="secondaryButton"
-                    onClick={() =>
-                      dispatch(
-                        addToCart({
-                          id: cart.length - 1,
-                          name: product.name,
-                          image: product.img,
-                          price: product.price,
-                          quantity: 1,
-                        })
-                      )
-                    }
-                  >
-                    Add To Cart
-                  </button>
-                )}
-              </Product>
-            ))
-          )}
+                    )
+                  }
+                >
+                  Add To Cart
+                </button>
+              )}
+            </Product>
+          ))}
         </ProductsContainer>
       </BodyContainer>
     );
