@@ -147,7 +147,7 @@ export default function HomePage() {
       if (
         userInstance &&
         // if a user has 0 orders, create new order
-        (userInstance.orders.length < 1 ||
+        (!userInstance.orders.length ||
           // or if last order in orders is false (checked out already)
           // last item in user orders shud always be the working order,
           // previous orders should all have isCart === false
