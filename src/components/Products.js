@@ -82,15 +82,16 @@ export default function Products({ products, isLoading }) {
   };
 
   // if a user is logged in
-  const updateOrAddLineItem = (payload) => {
-    console.log("isLoggedIn", payload);
+  const updateOrAddLineItem = (payload, num) => {
+    console.log(usersCart);
+    let newData = { ...payload };
     // keeping track of previous quantity
     let prevQty;
     // find out if the item exists in our redux store
     // if it does, we are able to call PUT
     // if it dosent, we are calling POST
     const existingItem = usersCart.find(
-      ({ productId }) => productId === payload.productId
+      (item) => item.productId === payload.productId
     );
 
     // setting the previous quantity to the quantity of the exisiting
@@ -105,23 +106,24 @@ export default function Products({ products, isLoading }) {
         data: {
           orderId: cartId,
           productId: payload.productId,
-          qty: (prevQty += payload.qty),
+          qty: (prevQty += num),
         },
       });
-      dispatch(addToUsersCart(payload));
+      dispatch(addToUsersCart({ newData, num }));
     };
 
     // add line item and sending it to redux store
     const add = async () => {
       console.log("creating");
       let { data } = await createLineItem(payload);
-      dispatch(addToUsersCart(data));
+      // clone data to make it muteable so we can add product and add into redux store
+      newData = { ...data, product: payload.product };
+      dispatch(addToUsersCart({ newData, num }));
     };
 
     // if the lineitem found has an id (meaning it exists in our DB)
     // update it, if not, add new line item
     existingItem && existingItem.id ? update() : add();
-    console.log("checking my cart", usersCart);
   };
 
   return (
@@ -168,12 +170,15 @@ export default function Products({ products, isLoading }) {
               {isLoggedIn ? (
                 <button
                   onClick={() =>
-                    updateOrAddLineItem({
-                      orderId: cartId,
-                      productId: product.id,
-                      qty: 1,
-                      product: product,
-                    })
+                    updateOrAddLineItem(
+                      {
+                        orderId: cartId,
+                        productId: product.id,
+                        qty: 1,
+                        product: product,
+                      },
+                      1
+                    )
                   }
                 >
                   Add To Cart
@@ -183,11 +188,10 @@ export default function Products({ products, isLoading }) {
                   onClick={() =>
                     dispatch(
                       addToCart({
-                        id: cart.length - 1,
-                        name: product.name,
-                        image: product.img,
-                        price: product.price,
-                        quantity: 1,
+                        orderId: null,
+                        productId: product.id,
+                        qty: 1,
+                        product: product,
                       })
                     )
                   }

@@ -87,6 +87,7 @@ function SingleItemView({ type, data }) {
 
   const updateOrAddLineItem = (payload) => {
     // keeping track of previous quantity
+    let newData = { ...payload };
     let prevQty;
     // find out if the item exists in our redux store
     // if it does, we are able to call PUT
@@ -110,14 +111,15 @@ function SingleItemView({ type, data }) {
           qty: (prevQty += payload.qty),
         },
       });
-      dispatch(addToUsersCart(payload));
+      dispatch(addToUsersCart({ newData, num: payload.qty }));
     };
 
     // add line item and sending it to redux store
     const add = async () => {
       console.log("creating");
       let { data } = await createLineItem(payload);
-      dispatch(addToUsersCart(data));
+      newData = { ...data, product: payload.product };
+      dispatch(addToUsersCart({ newData, currentQty }));
     };
 
     // if the lineitem found has an id (meaning it exists in our DB)
@@ -174,11 +176,10 @@ function SingleItemView({ type, data }) {
                       onClick={() =>
                         dispatch(
                           addToCart({
-                            id: cart.length - 1,
-                            name: product.name,
-                            image: product.img,
-                            price: product.price,
-                            quantity: 1,
+                            orderId: null,
+                            productId: data.id,
+                            qty: currentQty,
+                            product: data,
                           })
                         )
                       }
