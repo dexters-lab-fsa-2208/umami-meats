@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../redux/reducers/cart-slice";
-import { useCreateLineItemMutation } from "../redux/reducers/apiSlice";
+import { addToCart, addToUsersCart } from "../redux/reducers/cart-slice";
+import {
+  useCreateLineItemMutation,
+  useUpdateLineItemMutation,
+} from "../redux/reducers/apiSlice";
 
 const MainProductContainer = styled.div`
   max-width: 100%;
@@ -60,10 +63,10 @@ const BuyProductContainer = styled.div`
 // COMPONENT STARTS HERE
 function SingleItemView({ type, data }) {
   const [currentQty, setCurrentQty] = React.useState(1);
-  const { cart, cartId } = useSelector((state) => state.cart);
+  const { cart, cartId, usersCart } = useSelector((state) => state.cart);
   const { isLoggedIn } = useSelector((state) => state.user);
   const [createLineItem] = useCreateLineItemMutation();
-  console.log(cart.length);
+  const [updateLineItem] = useUpdateLineItemMutation();
 
   const dispatch = useDispatch();
 
@@ -80,6 +83,47 @@ function SingleItemView({ type, data }) {
     } else {
       return `${data.qty} left in stock!`;
     }
+  };
+
+  const updateOrAddLineItem = (payload) => {
+    // keeping track of previous quantity
+    let prevQty;
+    // find out if the item exists in our redux store
+    // if it does, we are able to call PUT
+    // if it dosent, we are calling POST
+    const existingItem = usersCart.find(
+      ({ productId }) => productId === payload.productId
+    );
+
+    // setting the previous quantity to the quantity of the exisiting
+    // in the database
+    if (existingItem && existingItem.qty) prevQty = existingItem.qty;
+
+    // update line item and sending it to redux store
+    const update = async () => {
+      console.log("editing");
+      await updateLineItem({
+        id: existingItem.id,
+        data: {
+          orderId: cartId,
+          productId: payload.productId,
+          qty: (prevQty += payload.qty),
+        },
+      });
+      dispatch(addToUsersCart(payload));
+    };
+
+    // add line item and sending it to redux store
+    const add = async () => {
+      console.log("creating");
+      let { data } = await createLineItem(payload);
+      dispatch(addToUsersCart(data));
+    };
+
+    // if the lineitem found has an id (meaning it exists in our DB)
+    // update it, if not, add new line item
+    existingItem && existingItem.id ? update() : add();
+    console.log("checking my cart", usersCart);
   };
 
   return (
@@ -114,10 +158,11 @@ function SingleItemView({ type, data }) {
                     <button
                       className="cartBtn"
                       onClick={() =>
-                        createLineItem({
+                        updateOrAddLineItem({
                           orderId: cartId,
-                          productId: product.id,
-                          qty: 1,
+                          productId: data.id,
+                          qty: currentQty,
+                          product: data,
                         })
                       }
                     >

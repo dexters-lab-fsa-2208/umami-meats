@@ -12,7 +12,6 @@ import { initializeCart } from "../src/redux/reducers/cart-slice";
 import { Loading } from "../src/components";
 import { motion } from "framer-motion";
 
-
 const CarouselContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
@@ -118,6 +117,15 @@ export default function HomePage() {
           isCart: true,
           address: "address of user",
         });
+        // initialize the new order id and line items to redux store
+        // maybe somehow use apislice only depending on which has better preformance
+        dispatch(
+          initializeCart({
+            id: userInstance.orders[userInstance.orders.length - 1].id,
+            order:
+              userInstance.orders[userInstance.orders.length - 1].lineItems,
+          })
+        );
       }
       // If the last order in the cart is still a cart, initialize the cartId into redux store
       // for useage all around the app
@@ -125,17 +133,24 @@ export default function HomePage() {
         userInstance &&
         userInstance.orders[userInstance.orders.length - 1].isCart
       ) {
+        // initialize the new order id and line items to redux store
+        // maybe somehow use apislice only depending on which has better preformance
         dispatch(
-          initializeCart(userInstance.orders[userInstance.orders.length - 1].id)
+          initializeCart({
+            id: userInstance.orders[userInstance.orders.length - 1].id,
+            order: userInstance.orders[userInstance.orders.length - 1],
+          })
         );
       }
     };
     checkForCart(userInstance);
+
     // after a new cart is created, initialize cart id into redux store
     userInstance &&
       dispatch(
         initializeCart(userInstance.orders[userInstance.orders.length - 1]?.id)
       );
+
   }, [createNewOrder, userInstance, dispatch]);
 
   const formatName = (string) => {
@@ -170,15 +185,15 @@ export default function HomePage() {
       //   animate={{opacity: 1}}
       //   // exit={{opacity: 0}}
       // >
-        <Loading />
+      <Loading />
       // </motion.div>
     );
   } else
     return (
       <motion.div
-        initial={{opacity: 0}}
-        animate={{opacity: 1}}
-        exit={{opacity: 0}}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
       >
         <CarouselContainer>
           {data.map((itm, idx) => (

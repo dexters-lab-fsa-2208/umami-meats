@@ -1,23 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { FaPhone, FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import {
-  useGetProductsQuery,
-  useCreateOrderMutation,
   useCreateLineItemMutation,
   useGetTagsQuery,
+  useUpdateLineItemMutation,
 } from "../../src/redux/reducers/apiSlice";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../redux/reducers/cart-slice";
+import { addToCart, addToUsersCart } from "../redux/reducers/cart-slice";
 
-// const tags = [
-// 	{ tagName: 'tuna' },
-// 	{ tagName: 'beef' },
-// 	{ tagName: 'japanese' },
-// 	{ tagName: 'american' },
-//     { tagName: 'sushi' }
-// ];
 const BodyContainer = styled.div`
   display: flex;
 `;
@@ -72,22 +63,65 @@ const ProductName = styled.p`
 export default function Products({ products, isLoading }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [filtered, setFiltered] = useState(false);
-  const { cart, cartId } = useSelector((state) => state.cart);
+  const { cart, cartId, usersCart } = useSelector((state) => state.cart);
   const { isLoggedIn, user } = useSelector((state) => state.user);
-  const [createLineItem] = useCreateLineItemMutation();
-
   const { data: tags, isSuccess } = useGetTagsQuery();
+  const [createLineItem] = useCreateLineItemMutation();
+  const [updateLineItem] = useUpdateLineItemMutation();
   const dispatch = useDispatch();
 
   useEffect(() => {
     setFilteredProducts(products);
-  }, [products]);
+  }, [products, cartId, usersCart]);
 
   const tagFilter = (tag) => {
     console.log(tag);
     setFiltered(true);
     setFilteredProducts(products?.filter((product) => product.tagName === tag));
     console.log(filteredProducts);
+  };
+
+  // if a user is logged in
+  const updateOrAddLineItem = (payload) => {
+    console.log("isLoggedIn", payload);
+    // keeping track of previous quantity
+    let prevQty;
+    // find out if the item exists in our redux store
+    // if it does, we are able to call PUT
+    // if it dosent, we are calling POST
+    const existingItem = usersCart.find(
+      ({ productId }) => productId === payload.productId
+    );
+
+    // setting the previous quantity to the quantity of the exisiting
+    // in the database
+    if (existingItem && existingItem.qty) prevQty = existingItem.qty;
+
+    // update line item and sending it to redux store
+    const update = async () => {
+      console.log("editing");
+      await updateLineItem({
+        id: existingItem.id,
+        data: {
+          orderId: cartId,
+          productId: payload.productId,
+          qty: (prevQty += payload.qty),
+        },
+      });
+      dispatch(addToUsersCart(payload));
+    };
+
+    // add line item and sending it to redux store
+    const add = async () => {
+      console.log("creating");
+      let { data } = await createLineItem(payload);
+      dispatch(addToUsersCart(data));
+    };
+
+    // if the lineitem found has an id (meaning it exists in our DB)
+    // update it, if not, add new line item
+    existingItem && existingItem.id ? update() : add();
+    console.log("checking my cart", usersCart);
   };
 
   return (
@@ -134,10 +168,11 @@ export default function Products({ products, isLoading }) {
               {isLoggedIn ? (
                 <button
                   onClick={() =>
-                    createLineItem({
+                    updateOrAddLineItem({
                       orderId: cartId,
                       productId: product.id,
                       qty: 1,
+                      product: product,
                     })
                   }
                 >
