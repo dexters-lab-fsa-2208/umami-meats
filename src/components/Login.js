@@ -5,7 +5,7 @@ import styled from "styled-components";
 import authService from "../services/auth.service";
 import { useDispatch } from "react-redux";
 import { storeUser } from "../redux/reducers/user-slice";
-import { useGetSingleUserQuery } from "../redux/reducers/apiSlice";
+// import { useGetSingleUserQuery } from "../redux/reducers/apiSlice";
 
 const LoginFormContainer = styled.div`
   margin: 1em;
@@ -21,8 +21,7 @@ const LoginFormContainer = styled.div`
       }
     }
     button {
-      width: fit-content;
-      margin: 0.7em auto;
+      margin: 0.65em auto;
     }
   }
   p {
@@ -90,7 +89,7 @@ const Login = () => {
           <input type="password" ref={passwordRef} />
         </label>
 
-        <button type="submit">Log In</button>
+        <button type="submit" className="mainButton">Log In</button>
       </form>
       <p>
         Need an account? <Link href="/signup">Register here</Link>
