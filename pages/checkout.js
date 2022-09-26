@@ -48,7 +48,7 @@ const Checkout = () => {
         <h2>Checkout</h2>
         <br></br>
         <ProductsContainer>
-            {(isLoggedIn && usersCart ? usersCart : cart).map(product => (
+            {(usersCart && usersCart ? usersCart : cart).map(product => (
                 <>
                 <Product>
                 <p>{product.name} ({product.quantity})</p>
@@ -61,7 +61,7 @@ const Checkout = () => {
         </ProductsContainer>
         <TotalContainer>
             <h2>Total:</h2>
-            <Total>{Math.round(((isLoggedIn && usersCart ? usersCart : cart).reduce((prev, curr) => (curr.price * curr.quantity) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
+            <Total>{Math.round(((usersCart && usersCart ? usersCart : cart).reduce((prev, curr) => (curr.price * curr.quantity) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
         </TotalContainer>
         <ThirdPartyPaymentMethodContainer>
             <button>Placeholder</button>
