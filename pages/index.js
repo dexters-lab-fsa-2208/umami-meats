@@ -141,7 +141,7 @@ export default function HomePage() {
     // check users orders after sign in,
     const checkForCart = async (userInstance) => {
       userInstance &&
-        console.log(
+        console.log('check 4 cart',
           userInstance.orders[userInstance.orders.length - 1].lineItems
         );
       if (
