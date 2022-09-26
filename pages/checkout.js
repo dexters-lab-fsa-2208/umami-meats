@@ -38,7 +38,7 @@ const PaymentMethodContainer = styled.div`
 
 const Checkout = () => {
 
-    const { cart } = useSelector((state) => state.cart);
+    const { cart, cartId, usersCart } = useSelector((state) => state.cart);
     console.log(cart);
 
     // const [total, setTotal] = useState(0)
@@ -48,7 +48,7 @@ const Checkout = () => {
         <h2>Checkout</h2>
         <br></br>
         <ProductsContainer>
-            {cart.map(product => (
+            {(isLoggedIn && usersCart ? usersCart : cart).map(product => (
                 <>
                 <Product>
                 <p>{product.name} ({product.quantity})</p>
@@ -61,7 +61,7 @@ const Checkout = () => {
         </ProductsContainer>
         <TotalContainer>
             <h2>Total:</h2>
-            <Total>{Math.round((cart.reduce((prev, curr) => (curr.price * curr.quantity) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
+            <Total>{Math.round(((isLoggedIn && usersCart ? usersCart : cart).reduce((prev, curr) => (curr.price * curr.quantity) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
         </TotalContainer>
         <ThirdPartyPaymentMethodContainer>
             <button>Placeholder</button>
