@@ -6,6 +6,9 @@ import authService from "../services/auth.service";
 import { useDispatch } from "react-redux";
 import { storeUser } from "../redux/reducers/user-slice";
 // import { useGetSingleUserQuery } from "../redux/reducers/apiSlice";
+import { clearCart } from "../redux/reducers/cart-slice";
+import { motion } from "framer-motion";
+
 
 const LoginFormContainer = styled.div`
   margin: 1em;
@@ -65,6 +68,8 @@ const Login = () => {
           admin: user.isAdmin,
         };
         dispatch(storeUser(userData));
+        //work on posting to users cart on sign in later
+        dispatch(clearCart());
         Router.push("/");
       }
     } catch (err) {

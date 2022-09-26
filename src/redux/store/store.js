@@ -20,7 +20,9 @@ import thunk from "redux-thunk";
 
 const persistConfig = {
   key: "root",
+  version: 1,
   storage,
+  blacklist: [apiSlice.reducerPath],
 };
 
 const persistedCart = persistReducer(persistConfig, cartSlice.reducer);
