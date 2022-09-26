@@ -12,7 +12,6 @@ import { initializeCart } from "../src/redux/reducers/cart-slice";
 import { Loading } from "../src/components";
 import { motion } from "framer-motion";
 
-
 const CarouselContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
@@ -49,10 +48,10 @@ const CarouselButton = styled.button`
     color: rgba(255, 255, 255, 1);
     /* these transitions work for now, but should be centralized later */
     /* i think the easiest method would be to set all buttons/links to transition colors this way */
-    -webkit-transition: background-color 500ms linear;
+    /* -webkit-transition: background-color 500ms linear;
     -webkit-transition: color 500ms linear;
     -ms-transition: background-color 500ms linear;
-    -ms-transition: color 500ms linear;
+    -ms-transition: color 500ms linear; */
     transition: background-color 500ms linear;
     transition: color 500ms linear;
   }
@@ -69,23 +68,60 @@ const CarouselButton = styled.button`
   }
 `;
 
+// PRODUCTS CONTAINER
 const ListContainer = styled.div`
-  margin: 1em auto;
   display: flex;
   flex-flow: row wrap;
-  max-width: fit-content;
   justify-content: space-around;
+
+  margin: 0.5em;
 `;
+
+// SINGLE PRODUCT IN LIST
 const ListItemContainer = styled.div`
-  width: 10em;
-  height: 15em;
-  margin: 10px;
+  max-width: 160px;
+  min-height: 250px;
+
+  margin: 0.6em;
+  padding-bottom: 0.5em;
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.43);
+
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   img {
-    border: 1px solid black;
-    width: 100%;
-    height: 66%;
+    min-height: 130px;
+    max-height: 130px;
+    width: 130px;
+
     object-fit: cover;
+    box-shadow: 1px 1px 6px rgba(100, 100, 100, 0.31);
+
+    margin: 0.4em auto 0;
+  }
+  p {
+    text-align: center;
+    max-width: 80%;
+    margin: 0.15em auto;
+
+    &.productName {
+      font-size: 1em;
+      font-weight: bold;
+      margin: auto;
+    }
+    &.productPrice {
+      font-size: 0.85em;
+      font-style: italic;
+      /* color: red; */
+      margin: 0 auto 0.2em;
+    }
+  }
+
+  button {
+    margin: 0.15em auto 0.7em;
   }
 `;
 
@@ -138,13 +174,13 @@ export default function HomePage() {
       );
   }, [createNewOrder, userInstance, dispatch]);
 
-  const formatName = (string) => {
-    if (string.length > 18) {
-      return string.slice(0, 16) + "...";
-    } else {
-      return string;
-    }
-  };
+  // const formatName = (string) => {
+  //   if (string.length > 18) {
+  //     return string.slice(0, 16) + "...";
+  //   } else {
+  //     return string;
+  //   }
+  // };
 
   const [carouselIdx, setCarouselIdx] = React.useState(0);
 
@@ -164,21 +200,13 @@ export default function HomePage() {
   });
 
   if (!data) {
-    return (
-      // <motion.div
-      //   initial={{opacity: 0}}
-      //   animate={{opacity: 1}}
-      //   // exit={{opacity: 0}}
-      // >
-        <Loading />
-      // </motion.div>
-    );
+    return <Loading />;
   } else
     return (
       <motion.div
-        initial={{opacity: 0}}
-        animate={{opacity: 1}}
-        exit={{opacity: 0}}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
       >
         <CarouselContainer>
           {data.map((itm, idx) => (
@@ -209,12 +237,8 @@ export default function HomePage() {
               <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
                 <ListItemContainer>
                   <img src={itm.img} />
-                  <p>
-                    <b>{formatName(itm.name)}</b>
-                  </p>
-                  <p>
-                    <i>${itm.price}</i>
-                  </p>
+                  <p className="productName">{itm.name}</p>
+                  <p className="productPrice">${itm.price}</p>
                 </ListItemContainer>
               </Link>
             );
