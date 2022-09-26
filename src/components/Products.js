@@ -194,34 +194,15 @@ export default function Products({ products, isLoading }) {
             tags
               .filter((tag) => tag.tagType === products[0].type)
               .map((tag) => (
-                <TagName onClick={(e) => tagFilter(tag.tagName)} key={tag.id}>
-                  {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
-                </TagName>
-              ))}
-        </TagContainer>
-        {
-          //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
-        }
-
-        <TagContainer>
-          {"Our "}
-          {products &&
-            products.length &&
-            isSuccess &&
-            tags
-              .filter((tag) => tag.tagType === products[0].type)
-              .map((tag) => (
-                <p
-                  onClick={(e) => tagFilter(tag.tagName)}
-                  key={tag.id}
-                  className={tag.tagName === currentFilter ? "selected" : ""}
-                >
+                <p onClick={(e) => tagFilter(tag.tagName)} key={tag.id}>
                   {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
                 </p>
               ))}
           <p onClick={(e) => tagFilter("clear")}>Clear filters</p>
         </TagContainer>
-
+        {
+          //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
+        }
         <ProductsContainer>
           <h2 className="productListHeader">
             {"Our "}
