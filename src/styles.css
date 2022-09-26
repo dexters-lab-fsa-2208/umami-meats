@@ -9,9 +9,11 @@
 </div>
 */
 
-/* ADD TO CART ON SINGLE ITEM PAGE */
-
-.mainButton {
+/* MAIN BUTTONS */
+.mainButton,
+.secondaryButton {
+  width: fit-content;
+  margin: auto;
   padding: 0.8em 1.3em 0.65em;
 
   font-weight: bold;
@@ -24,39 +26,26 @@
   border: 0;
   border-radius: 8px;
 }
-.mainButton:hover {
+.mainButton:hover,
+.secondaryButton:hover {
   background-color: #d12121;
 }
-.mainButton:active {
+.mainButton:active,
+.secondaryButton:active {
   box-shadow: -1px -1px 4px rgb(50, 50, 50, 0.35);
   background-color: #b32828;
 }
 
-/* ADD TO CART ON LIST VIEW */
-
 .secondaryButton {
   padding: 0.38em 1em;
-
-  color: white;
-  background-color: #b32828;
-  transition: background-color 0.025s;
-
-  text-shadow: 1px 1px 4px rgba(128, 128, 128, 0.6);
+  font-weight: normal;
   box-shadow: 1px 1px 4px rgb(50, 50, 50, 0.15);
-  border: 0;
   border-radius: 10px;
 }
-.secondaryButton:hover {
-  background-color: #d12121;
-}
-.secondaryButton:active {
-  box-shadow: -1px -1px 4px rgb(50, 50, 50, 0.15);
-  background-color: #b32828;
-}
 
-/* INCREMENT BUTTONS ON SINGLE ITEM VIEW */
-
-.incrementContainer {
+/* INCREMENT BUTTONS AND CONTAINER */
+.incrementContainer,
+.incrementCart {
   display: flex;
   align-items: center;
   height: 32px;
@@ -90,13 +79,8 @@
 }
 
 .incrementCart {
-  display: flex;
-  align-items: center;
   height: 28px;
   width: 84px;
-  border: 1px solid rgba(150, 150, 150, 1);
-  border-radius: 3px;
-  margin-bottom: 1em;
 }
 .incrementCart > * {
   width: 28px;
