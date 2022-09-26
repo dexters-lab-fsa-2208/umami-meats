@@ -144,6 +144,13 @@ export default function HomePage() {
       }
     };
     checkForCart(userInstance);
+
+    // after a new cart is created, initialize cart id into redux store
+    userInstance &&
+      dispatch(
+        initializeCart(userInstance.orders[userInstance.orders.length - 1]?.id)
+      );
+
   }, [createNewOrder, userInstance, dispatch]);
 
   const formatName = (string) => {
