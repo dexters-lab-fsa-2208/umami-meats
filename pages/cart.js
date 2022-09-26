@@ -2,11 +2,18 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import Link from "next/link";
-import { addToCart, removeFromCart } from "../src/redux/reducers/cart-slice";
+import {
+  addToCart,
+  addToUsersCart,
+  removeFromCart,
+  removeFromUsersCart,
+} from "../src/redux/reducers/cart-slice";
 import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
-import { useGetSingleOrderQuery } from "../src/redux/reducers/apiSlice";
-import { skipToken } from "@reduxjs/toolkit/query";
+import {
+  useUpdateLineItemMutation,
+  useDeleteLineItemMutation,
+} from "../src/redux/reducers/apiSlice";
 
 const Container = styled.div`
   display: flex;
@@ -108,16 +115,35 @@ const PaymentMethodContainer = styled.div`
 // Remove item from cart
 
 function Cart() {
-  const { cart, cartId } = useSelector((state) => state.cart);
+  const { cart, cartId, usersCart } = useSelector((state) => state.cart);
   const { isLoggedIn } = useSelector((state) => state.user);
-  const { data: usersCart } = useGetSingleOrderQuery(
-    isLoggedIn ? cartId : skipToken
-  );
+
+  const [deleteLineItem] = useDeleteLineItemMutation();
+  const [updateLineItem] = useUpdateLineItemMutation();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(usersCart.lineItems);
-  }, [usersCart]);
+    isLoggedIn ? console.log(usersCart) : console.log(cart);
+  }, [cart, usersCart, isLoggedIn]);
+
+  const handleRemoveLineItem = async (payload) => {
+    dispatch(removeFromUsersCart(payload.productId));
+    await deleteLineItem(payload.id);
+  };
+
+  const handleUpdateItem = async (payload, num) => {
+    let newData = { ...payload };
+    let prevQty = payload.qty;
+    await updateLineItem({
+      id: payload.id,
+      data: {
+        orderId: cartId,
+        productId: payload.productId,
+        qty: (prevQty += num),
+      },
+    });
+    dispatch(addToUsersCart({ newData, num }));
+  };
 
   return (
     <motion.div
@@ -129,70 +155,98 @@ function Cart() {
         <CartHeader>Cart 6</CartHeader>
         <Middle>
           <ProductsContainer>
-            {cart ||
-              (usersCart.lineItems &&
-                cart.map((product) => (
-                  <Products key={cart.indexOf(product) - 1}>
-                    <Image src={product.image} alt="sushi" />
-                    <DetailsContainer>
-                      {" "}
-                      <NameandX>
-                        <ProductName>{product.name}</ProductName>
-                        <button
-                          onClick={() => dispatch(removeFromCart(product))}
+            {(isLoggedIn ? usersCart : cart).map((product) => (
+              <Products key={product.productId}>
+                <Image src={product.product.img} alt="sushi" />
+                <DetailsContainer>
+                  {" "}
+                  <NameandX>
+                    <ProductName>{product.product.name}</ProductName>
+                    {isLoggedIn ? (
+                      <button onClick={() => handleRemoveLineItem(product)}>
+                        X
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() =>
+                          dispatch(removeFromCart(product.productId))
+                        }
+                      >
+                        X
+                      </button>
+                    )}
+                  </NameandX>
+                  <IncrementAndPrice>
+                    <IncrementContainer>
+                      {isLoggedIn ? (
+                        // If a user is logged in, access database
+                        <QuantityButton
+                          onClick={
+                            product.qty <= 1
+                              ? () => handleRemoveLineItem(product)
+                              : () => handleUpdateItem(product, -1)
+                          }
                         >
-                          X
-                        </button>
-                      </NameandX>
-                      <IncrementAndPrice>
-                        <IncrementContainer>
-                          <QuantityButton
-                            onClick={
-                              product.quantity <= 1
-                                ? () => dispatch(removeFromCart(product))
-                                : () =>
-                                    dispatch(
-                                      addToCart({
-                                        name: product.name,
-                                        image: product.img,
-                                        price: product.price,
-                                        quantity: -1,
-                                      })
-                                    )
-                            }
-                          >
-                            -
-                          </QuantityButton>
-                          <Quantity>{product.quantity}</Quantity>
-                          <QuantityButton
-                            onClick={() =>
-                              dispatch(
-                                addToCart({
-                                  name: product.name,
-                                  image: product.img,
-                                  price: product.price,
-                                  quantity: 1,
-                                })
-                              )
-                            }
-                          >
-                            +
-                          </QuantityButton>
-                        </IncrementContainer>
+                          -
+                        </QuantityButton>
+                      ) : (
+                        <QuantityButton
+                          onClick={
+                            product.qty <= 1
+                              ? () =>
+                                  dispatch(removeFromCart(product.productId))
+                              : () =>
+                                  dispatch(
+                                    addToCart({
+                                      orderId: null,
+                                      productId: product.product.id,
+                                      qty: -1,
+                                      product: product.product,
+                                    })
+                                  )
+                          }
+                        >
+                          -
+                        </QuantityButton>
+                      )}
 
-                        <Total>
-                          $
-                          {Math.round(
-                            (product.price * product.quantity +
-                              Number.EPSILON) *
-                              100
-                          ) / 100}
-                        </Total>
-                        {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
-                      </IncrementAndPrice>
-                    </DetailsContainer>
-                  </Products>
-                )))}
+                      <Quantity>{product.qty}</Quantity>
+                      {isLoggedIn ? (
+                        <QuantityButton
+                          onClick={() => handleUpdateItem(product, 1)}
+                        >
+                          +
+                        </QuantityButton>
+                      ) : (
+                        <QuantityButton
+                          onClick={() =>
+                            dispatch(
+                              addToCart({
+                                orderId: null,
+                                product: product.product,
+                                productId: product.product.id,
+                                qty: 1,
+                              })
+                            )
+                          }
+                        >
+                          +
+                        </QuantityButton>
+                      )}
+                    </IncrementContainer>
+
+                    <Total>
+                      $
+                      {Math.round(
+                        (product.product.price * product.qty + Number.EPSILON) *
+                          100
+                      ) / 100}
+                    </Total>
+                    {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
+                  </IncrementAndPrice>
+                </DetailsContainer>
+              </Products>
+            ))}
           </ProductsContainer>
           <Checkout>
             Checkout
@@ -203,7 +257,9 @@ function Cart() {
                   $
                   {Math.round(
                     (cart.reduce(
-                      (prev, curr) => curr.price * curr.quantity + prev,
+                      (prev, curr) =>
+                        Number(curr.product.price) * Number(curr.qty) +
+                        Number(prev),
                       0
                     ) +
                       Number.EPSILON) *

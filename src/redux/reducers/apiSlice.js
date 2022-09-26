@@ -157,7 +157,7 @@ export const apiSlice = createApi({
     }),
     deleteLineItem: builder.mutation({
       query: (payload) => ({
-        url: "/lineitems",
+        url: `/lineItems/${payload}`,
         method: "DELETE",
       }),
       invalidatesTags: ["lineItems"],

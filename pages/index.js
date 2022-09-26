@@ -103,6 +103,10 @@ export default function HomePage() {
   useEffect(() => {
     // check users orders after sign in,
     const checkForCart = async (userInstance) => {
+      userInstance &&
+        console.log(
+          userInstance.orders[userInstance.orders.length - 1].lineItems
+        );
       if (
         userInstance &&
         // if a user has 0 orders, create new order

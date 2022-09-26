@@ -6,9 +6,6 @@ import authService from "../services/auth.service";
 import { useDispatch } from "react-redux";
 import { storeUser } from "../redux/reducers/user-slice";
 import { clearCart } from "../redux/reducers/cart-slice";
-
-import { useGetSingleUserQuery } from "../redux/reducers/apiSlice";
-
 import { motion } from "framer-motion";
 
 const LoginFormContainer = styled.div`
