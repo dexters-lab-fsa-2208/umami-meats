@@ -9,7 +9,6 @@ import {
   removeFromUsersCart,
 } from "../src/redux/reducers/cart-slice";
 import { useDispatch } from "react-redux";
-import { motion } from "framer-motion";
 import {
   useUpdateLineItemMutation,
   useDeleteLineItemMutation,
@@ -122,8 +121,8 @@ function Cart() {
   const [updateLineItem] = useUpdateLineItemMutation();
   const dispatch = useDispatch();
 
-
   useEffect(() => {
+    console.log(usersCart);
     isLoggedIn ? console.log(usersCart) : console.log(cart);
   }, [cart, usersCart, isLoggedIn]);
 
@@ -147,89 +146,88 @@ function Cart() {
   };
 
   return (
-      <Container>
-        <CartHeader>Cart 6</CartHeader>
-        <Middle>
-          <ProductsContainer>
-            {(isLoggedIn ? usersCart : cart).map((product) => (
-              <Products key={product.productId}>
-                <Image src={product.product.img} alt="sushi" />
-                <DetailsContainer>
-                  {" "}
-                  <NameandX>
-                    <ProductName>{product.product.name}</ProductName>
+    <Container>
+      <CartHeader>Cart 6</CartHeader>
+      <Middle>
+        <ProductsContainer>
+          {(isLoggedIn && usersCart ? usersCart : cart).map((product) => (
+            <Products key={product.productId}>
+              <Image src={product.product.img} alt="sushi" />
+              <DetailsContainer>
+                {" "}
+                <NameandX>
+                  <ProductName>{product.product.name}</ProductName>
+                  {isLoggedIn ? (
+                    <button onClick={() => handleRemoveLineItem(product)}>
+                      X
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() =>
+                        dispatch(removeFromCart(product.productId))
+                      }
+                    >
+                      X
+                    </button>
+                  )}
+                </NameandX>
+                <IncrementAndPrice>
+                  <IncrementContainer>
                     {isLoggedIn ? (
-                      <button onClick={() => handleRemoveLineItem(product)}>
-                        X
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() =>
-                          dispatch(removeFromCart(product.productId))
+                      // If a user is logged in, access database
+                      <QuantityButton
+                        onClick={
+                          product.qty <= 1
+                            ? () => handleRemoveLineItem(product)
+                            : () => handleUpdateItem(product, -1)
                         }
                       >
-                        X
-                      </button>
+                        -
+                      </QuantityButton>
+                    ) : (
+                      <QuantityButton
+                        onClick={
+                          product.qty <= 1
+                            ? () => dispatch(removeFromCart(product.productId))
+                            : () =>
+                                dispatch(
+                                  addToCart({
+                                    orderId: null,
+                                    productId: product.product.id,
+                                    qty: -1,
+                                    product: product.product,
+                                  })
+                                )
+                        }
+                      >
+                        -
+                      </QuantityButton>
                     )}
-                  </NameandX>
-                  <IncrementAndPrice>
-                    <IncrementContainer>
-                      {isLoggedIn ? (
-                        // If a user is logged in, access database
-                        <QuantityButton
-                          onClick={
-                            product.qty <= 1
-                              ? () => handleRemoveLineItem(product)
-                              : () => handleUpdateItem(product, -1)
-                          }
-                        >
-                          -
-                        </QuantityButton>
-                      ) : (
-                        <QuantityButton
-                          onClick={
-                            product.qty <= 1
-                              ? () =>
-                                  dispatch(removeFromCart(product.productId))
-                              : () =>
-                                  dispatch(
-                                    addToCart({
-                                      orderId: null,
-                                      productId: product.product.id,
-                                      qty: -1,
-                                      product: product.product,
-                                    })
-                                  )
-                          }
-                        >
-                          -
-                        </QuantityButton>
-                      )}
 
-                      <Quantity>{product.qty}</Quantity>
-                      {isLoggedIn ? (
-                        <QuantityButton
-                          onClick={() => handleUpdateItem(product, 1)}
-                        >
-                          +
-                        </QuantityButton>
-                      ) : (
-                        <QuantityButton
-                          onClick={() =>
-                            dispatch(
-                              addToCart({
-                                orderId: null,
-                                product: product.product,
-                                productId: product.product.id,
-                                qty: 1,
-                              })
-                            )
-                          }
-                        >
-                          +
-                        </QuantityButton>
-                      )}
-                    </IncrementContainer>
+                    <Quantity>{product.qty}</Quantity>
+                    {isLoggedIn ? (
+                      <QuantityButton
+                        onClick={() => handleUpdateItem(product, 1)}
+                      >
+                        +
+                      </QuantityButton>
+                    ) : (
+                      <QuantityButton
+                        onClick={() =>
+                          dispatch(
+                            addToCart({
+                              orderId: null,
+                              product: product.product,
+                              productId: product.product.id,
+                              qty: 1,
+                            })
+                          )
+                        }
+                      >
+                        +
+                      </QuantityButton>
+                    )}
+                  </IncrementContainer>
 
                     <Total>
                       $
@@ -252,7 +250,7 @@ function Cart() {
                 <Total>
                   $
                   {Math.round(
-                    ((isLoggedIn ? userCart : cart).reduce(
+                    ((isLoggedIn ? usersCart : cart).reduce(
                       (prev, curr) =>
                         Number(curr.product.price) * Number(curr.qty) +
                         Number(prev),
@@ -267,8 +265,8 @@ function Cart() {
               {/* <CheckoutHeaders>
               Tax<Total>$99.99</Total>
             </CheckoutHeaders> */}
-            </TotalContainer>
-            {/* <PaymentMethodContainer>
+          </TotalContainer>
+          {/* <PaymentMethodContainer>
             <CheckoutHeaders>
               Total<Total>$99.99</Total>
             </CheckoutHeaders>
@@ -287,7 +285,6 @@ function Cart() {
         </Link>
       )}
     </Container>
-
   );
 }
 

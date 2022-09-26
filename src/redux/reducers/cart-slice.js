@@ -10,11 +10,11 @@ const cartSlice = createSlice({
   reducers: {
     // Users cart reducers
     initializeCart: (state, action) => {
+      console.log("initializing cart", action.payload);
       state.cartId = action.payload.id;
       state.usersCart = action.payload.order;
     },
     addToUsersCart: (state, action) => {
-      console.log(action.payload);
       let found = false;
       state.usersCart.map((obj, idx) => {
         if (obj.productId === action.payload.newData.productId) {
@@ -31,7 +31,6 @@ const cartSlice = createSlice({
     },
     // Guest Cart Reducers
     addToCart: (state, action) => {
-      console.log(action.payload);
       let found = false;
       state.cart.map((obj, idx) => {
         if (obj.productId === action.payload.productId) {
@@ -42,7 +41,6 @@ const cartSlice = createSlice({
       !found && state.cart.push(action.payload);
     },
     removeFromCart: (state, action) => {
-      console.log(action.payload);
       state.cart = state.cart.filter(
         (item) => item.productId !== action.payload
       );
