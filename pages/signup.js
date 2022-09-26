@@ -41,7 +41,7 @@ export default function Signup() {
   const confirmPasswordRef = useRef();
   const firstNameRef = useRef();
   const lastNameRef = useRef();
-  const addressRef = useRef();
+  // const addressRef = useRef();
   //   const [error, setError] = useState("");
   //   const [loading, setLoading] = useState(false);
 
@@ -54,7 +54,7 @@ export default function Signup() {
       password: passwordRef.current.value,
       firstName: firstNameRef.current.value,
       lastName: lastNameRef.current.value,
-      address: addressRef.current.value,
+      // address: addressRef.current.value,
     };
 
     try {
@@ -88,10 +88,10 @@ export default function Signup() {
             Last Name:
             <input type="text" ref={lastNameRef} />
           </label>
-          <label>
+          {/* <label>
             Address:
             <input type="text" ref={addressRef} />
-          </label>
+          </label> */}
           <label>
             Email:
             <input type="text" ref={emailRef} />

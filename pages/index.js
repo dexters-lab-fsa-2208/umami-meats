@@ -134,7 +134,7 @@ export default function HomePage() {
     // after a new cart is created, initialize cart id into redux store
     userInstance &&
       dispatch(
-        initializeCart(userInstance.orders[userInstance.orders.length - 1].id)
+        initializeCart(userInstance.orders[userInstance.orders.length - 1]?.id)
       );
   }, [createNewOrder, userInstance, dispatch]);
 
