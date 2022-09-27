@@ -44,12 +44,25 @@ const HeaderTop = styled.div`
 `;
 
 const HeaderMain = styled.div`
+  width: 100%;
   height: ${headerMainHeight};
   background-color: #8b0000;
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @media screen and (min-width: 1000px) {
+      background-color: #7B0000;
+
+      > div  {
+        width: 1000px;
+        margin: auto;
+        background-color: #8b0000;
+      }
+  }
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
   .headerIconButton {
     background-color: #7B0000;
@@ -148,6 +161,7 @@ function Header() {
       </HeaderTop>
 
       <HeaderMain>
+        <div>
         <Link href="/">
           <div className="headerIconButton">
             <GiMeatCleaver size="2.4em" />
@@ -167,6 +181,7 @@ function Header() {
             <FaSearch size="1.9em" />
           </div>
         </Link>
+        </div>
       </HeaderMain>
     </HeaderContainer>
   );
