@@ -135,18 +135,18 @@ const SearchContainer = styled.div`
   }
 `;
 
-const SearchContainer = styled.div`
-position: absolute;
-display: flex column;
-// z-index: 2;
-color: black;
-// margin-top: 6em;
-justify-content: center;
-align-items: center;
-text-align: center;
-background-color: white;
-width: 100%;
-`;
+// const SearchContainer = styled.div`
+// position: absolute;
+// display: flex column;
+// // z-index: 2;
+// color: black;
+// // margin-top: 6em;
+// justify-content: center;
+// align-items: center;
+// text-align: center;
+// background-color: white;
+// width: 100%;
+// `;
 
 //COMPONENT STARTS HERE
 function Header() {
@@ -187,8 +187,10 @@ function Header() {
       toggleSearch(!isSearchOpen);
       searchRef.current.classList.toggle("hide");
       setSearchTerm("");
+      inputRef.current.focus();
     } else if (e.target.tagName === "P") {
       searchRef.current.classList.add("hide");
+      
       setTimeout(() => {
         toggleSearch(false);
         setSearchTerm("");
