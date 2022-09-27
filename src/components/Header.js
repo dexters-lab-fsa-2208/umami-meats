@@ -187,8 +187,10 @@ function Header() {
       toggleSearch(!isSearchOpen);
       searchRef.current.classList.toggle("hide");
       setSearchTerm("");
+      inputRef.current.focus();
     } else if (e.target.tagName === "P") {
       searchRef.current.classList.add("hide");
+      
       setTimeout(() => {
         toggleSearch(false);
         setSearchTerm("");
