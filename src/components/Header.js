@@ -123,6 +123,7 @@ function Header() {
 
   const toggle = () => {
     searchRef.current.classList.toggle('hide');
+    setSearchTerm('')
   }
 
   return (
@@ -196,7 +197,7 @@ function Header() {
           
       </HeaderMain>
       <SearchContainer className="hide" ref={searchRef}>
-          <input type="text" className="search" ref={inputRef} placeholder="Search..." onChange={(e) => {setSearchTerm(e.target.value)}}></input>
+          <input type="text" className="search" ref={inputRef} placeholder="Search..." onChange={(e) => {setSearchTerm(e.target.value)}} value={searchTerm}></input>
           {!isLoading && products.filter(product => searchTerm == "" || product.name.toLowerCase().includes(searchTerm.toLocaleLowerCase())).map(product => <Link href={`/${product.type}/${product.id}`}key={product.id} ><div onClick={toggle}>{product.name}</div></Link>)}
           </SearchContainer>
     </HeaderContainer>
