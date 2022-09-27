@@ -1,8 +1,6 @@
 const Sequelize = require('sequelize');
 
-const config = {ssl: {
-  rejectUnauthorized: false,
-}};
+const config = {};
 
 if(process.env.QUIET){
   config.logging = false;
@@ -24,9 +22,6 @@ if(process.env.QUIET){
 //   },
 // });
 
-const db = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/dexter', {ssl: {
-  require: true,
-  rejectUnauthorized: false}
-});
+const db = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/dexter', config);
 
 module.exports = db;
