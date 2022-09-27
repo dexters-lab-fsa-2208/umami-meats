@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Router from "next/router";
 import styled from "styled-components";
@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/user-slice";
 import { clearUserCart } from "../redux/reducers/cart-slice";
+import { useGetProductsQuery } from "../redux/reducers/apiSlice";
 
 import { RemoveSSRFromComponent } from "../utils";
 
@@ -74,10 +75,26 @@ const CartCounter = styled.div`
   position: relative;
 `;
 
+const SearchContainer = styled.div`
+position: absolute;
+display: flex column;
+// z-index: 2;
+color: black;
+// margin-top: 6em;
+justify-content: center;
+align-items: center;
+text-align: center;
+background-color: white;
+width: 100%;
+`;
+
 //COMPONENT STARTS HERE
 function Header() {
   const { cart, usersCart } = useSelector((state) => state.cart);
   const { user, isLoggedIn } = useSelector((state) => state.user);
+
+  const { data: products, isLoading } = useGetProductsQuery();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const dispatch = useDispatch();
 
@@ -99,6 +116,16 @@ function Header() {
     dispatch(clearUserCart());
     Router.push("/");
   };
+
+  // const search = document.querySelector('SearchContainer');
+  const searchRef = React.useRef();
+  const inputRef = React.useRef();
+
+  console.log(searchRef.current);
+
+  const toggle = () => {
+    searchRef.current.classList.toggle('hide');
+  }
 
   return (
     <HeaderContainer>
@@ -162,12 +189,18 @@ function Header() {
           <h1>Sushi</h1>
         </Link>
 
-        <Link href="/search?">
-          <div className="headerIconButton">
+          <div className="headerIconButton" 
+          onClick={toggle}
+          >
             <FaSearch size="1.9em" />
           </div>
-        </Link>
+
+          
       </HeaderMain>
+      <SearchContainer className="hide" ref={searchRef}>
+          <input type="text" className="search" ref={inputRef} placeholder="Search..." onChange={(e) => {setSearchTerm(e.target.value)}}></input>
+          {!isLoading && products.filter(product => searchTerm == "" || product.name.toLowerCase().includes(searchTerm.toLocaleLowerCase())).map(product => <Link href={`/${product.type}/${product.id}`}key={product.id} ><div onClick={toggle}>{product.name}</div></Link>)}
+          </SearchContainer>
     </HeaderContainer>
   );
 }
