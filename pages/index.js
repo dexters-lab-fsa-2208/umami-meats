@@ -156,18 +156,19 @@ export default function HomePage() {
     // check users orders after sign in,
     const checkForCart = async (userInstance) => {
       userInstance &&
-        console.log(
+        console.log('check 4 cart',
           userInstance.orders[userInstance.orders.length - 1].lineItems
         );
       if (
         userInstance &&
         // if a user has 0 orders, create new order
-        (userInstance.orders.length < 1 ||
+        (!userInstance.orders.length ||
           // or if last order in orders is false (checked out already)
           // last item in user orders shud always be the working order,
           // previous orders should all have isCart === false
           !userInstance.orders[userInstance.orders.length - 1].isCart)
       ) {
+        console.log('new cart')
         await createNewOrder({
           userId: userInstance.id,
           isCart: true,
@@ -175,6 +176,7 @@ export default function HomePage() {
         });
         // initialize the new order id and line items to redux store
         // maybe somehow use apislice only depending on which has better preformance
+
         dispatch(
           initializeCart({
             id: userInstance.orders[userInstance.orders.length - 1].id,
@@ -194,13 +196,13 @@ export default function HomePage() {
         dispatch(
           initializeCart({
             id: userInstance.orders[userInstance.orders.length - 1].id,
-            order: userInstance.orders[userInstance.orders.length - 1],
+            order:
+              userInstance.orders[userInstance.orders.length - 1].lineItems,
           })
         );
       }
     };
     checkForCart(userInstance);
-
     // after a new cart is created, initialize cart id into redux store
     userInstance &&
       dispatch(

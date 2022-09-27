@@ -119,6 +119,7 @@ function Cart() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log(usersCart);
     isLoggedIn ? console.log(usersCart) : console.log(cart);
   }, [cart, usersCart, isLoggedIn]);
 
@@ -142,6 +143,7 @@ function Cart() {
   };
 
   return (
+
     <MainContainer>
       <h2>Your Cart</h2>
 
@@ -160,14 +162,24 @@ function Cart() {
                         X
                       </button>
                     ) : (
-                      <button
-                        onClick={() =>
-                          dispatch(removeFromCart(product.productId))
+                      <QuantityButton
+                        onClick={
+                          product.qty <= 1
+                            ? () => dispatch(removeFromCart(product.productId))
+                            : () =>
+                                dispatch(
+                                  addToCart({
+                                    orderId: null,
+                                    productId: product.product.id,
+                                    qty: -1,
+                                    product: product.product,
+                                  })
+                                )
                         }
                         className="secondaryButton xBtn"
                       >
-                        X
-                      </button>
+                        -
+                      </QuantityButton>
                     )}
                   </NameandX>
                   <IncrementAndPrice>
@@ -232,7 +244,6 @@ function Cart() {
                         </button>
                       )}
                     </div>
-
                     <p className="cartPrice">
                       $
                       {Math.round(
@@ -296,7 +307,6 @@ function Cart() {
             </Link>
           )}
         </Checkout>
-
       </div>
     </MainContainer>
   );

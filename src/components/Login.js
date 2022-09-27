@@ -69,7 +69,7 @@ const Login = () => {
         };
         dispatch(storeUser(userData));
         //work on posting to users cart on sign in later
-        dispatch(clearCart());
+        // dispatch(clearCart());
         Router.push("/");
       }
     } catch (err) {

@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/user-slice";
 import { clearUserCart } from "../redux/reducers/cart-slice";
 import { useGetProductsQuery } from "../redux/reducers/apiSlice";
+
 // react-icons
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
@@ -134,14 +135,29 @@ const SearchContainer = styled.div`
   }
 `;
 
+const SearchContainer = styled.div`
+position: absolute;
+display: flex column;
+// z-index: 2;
+color: black;
+// margin-top: 6em;
+justify-content: center;
+align-items: center;
+text-align: center;
+background-color: white;
+width: 100%;
+`;
+
 //COMPONENT STARTS HERE
 function Header() {
   const { cart, usersCart } = useSelector((state) => state.cart);
   const { user, isLoggedIn } = useSelector((state) => state.user);
 
   const { data: products, isLoading } = useGetProductsQuery();
+
   const [isSearchOpen, toggleSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
 
   const dispatch = useDispatch();
 
@@ -162,7 +178,6 @@ function Header() {
     dispatch(clearUserCart());
     Router.push("/");
   };
-
   const searchRef = useRef();
   const inputRef = useRef();
 
@@ -183,7 +198,6 @@ function Header() {
 
   // if we want to hide search when user switch pages, maybe should add 'isSearching' to redux store
   // also need to allow user to exit out by clicking elsewhere
-
   return (
     <HeaderContainer>
       <HeaderTop>
