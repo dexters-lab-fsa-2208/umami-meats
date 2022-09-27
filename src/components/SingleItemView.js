@@ -6,6 +6,7 @@ import {
   useCreateLineItemMutation,
   useUpdateLineItemMutation,
 } from "../redux/reducers/apiSlice";
+import { Loading } from "./"
 
 const MainProductContainer = styled.div`
   max-width: 100%;
@@ -203,7 +204,7 @@ function SingleItemView({ type, data }) {
           {/* Recommended Products can go down here if we have time */}
         </>
       ) : (
-        <p>Loading content</p>
+        <Loading />
       )}
     </>
   );
