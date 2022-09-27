@@ -4,7 +4,7 @@ export const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({
     // baseUrl: "https://umamimeats.herokuapp.com/api/",
-      baseUrl: process.env.DATABASE_URL,
+      baseUrl: process.env.DATABASE_URL || "https://localhost:3000",
 
   }),
   tagTypes: [
