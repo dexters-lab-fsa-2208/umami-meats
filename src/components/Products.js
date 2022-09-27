@@ -17,7 +17,7 @@ const BodyContainer = styled.div`
 // TAGS
 const TagContainer = styled.div`
   min-width: 6em;
-  height: 18em;
+  height: 21em;
   margin: 1.1em 1em;
   margin-right: 0.3em;
   padding: 0.3em 0 2em;
@@ -194,7 +194,7 @@ export default function Products({ products, isLoading }) {
             tags
               .filter((tag) => tag.tagType === products[0].type)
               .map((tag) => (
-                <p onClick={(e) => tagFilter(tag.tagName)} key={tag.id}>
+                <p onClick={(e) => tagFilter(tag.tagName)} key={tag.id} className={currentFilter === tag.tagName ? "selected" : ""}>
                   {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
                 </p>
               ))}

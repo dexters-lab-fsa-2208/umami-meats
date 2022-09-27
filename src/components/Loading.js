@@ -5,25 +5,32 @@ import styled from "styled-components";
 import { BiLoaderAlt } from "react-icons/bi";
 
 const LoadingContainer = styled.div`
-    margin: 2em auto;
-    text-align: center;
-    p {
-        margin-top: 0.5em;
-        font-style: italic;
-    }
+  padding-top: 2em;
+  text-align: center;
+  p {
+    margin-top: 0.5em;
+    font-style: italic;
+  }
 `;
 
-export default function Loading({ content }) {
-    const [rotation, rotate] = React.useState(0);
+export default function Loading({ content, message }) {
+  const [rotation, rotate] = React.useState(0);
 
-    React.useEffect(() => {
-        setTimeout(() => rotate(rotation + 7), 16.7);
-    });
+  React.useEffect(() => {
+    setTimeout(() => {
+      if (rotation >= 2520 /* rotation * 360 */) rotate(0);
+      else rotate(rotation + 7);
+    }, 16.7);
+  });
 
-    return(
-        <LoadingContainer>
-            <BiLoaderAlt style={{transform: `rotate(${rotation}deg)`}} />
-            <p>Loading{content ? ` ${content}...` : "..." }</p>
-        </LoadingContainer>
-    )
+  return (
+    <LoadingContainer>
+      <BiLoaderAlt style={{ transform: `rotate(${rotation}deg)` }} />
+      {message ? (
+        <p>{message}</p>
+      ) : (
+        <p>Loading{content ? ` ${content}...` : "..."}</p>
+      )}
+    </LoadingContainer>
+  );
 }
