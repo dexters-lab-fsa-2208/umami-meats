@@ -117,11 +117,9 @@ function Header() {
     Router.push("/");
   };
 
-  // const search = document.querySelector('SearchContainer');
   const searchRef = React.useRef();
   const inputRef = React.useRef();
 
-  console.log(searchRef.current);
 
   const toggle = () => {
     searchRef.current.classList.toggle('hide');
