@@ -162,7 +162,7 @@ function Cart() {
                         X
                       </button>
                     ) : (
-                      <QuantityButton
+                      <button
                         onClick={
                           product.qty <= 1
                             ? () => dispatch(removeFromCart(product.productId))
@@ -179,7 +179,7 @@ function Cart() {
                         className="secondaryButton xBtn"
                       >
                         -
-                      </QuantityButton>
+                      </button>
                     )}
                   </NameandX>
                   <IncrementAndPrice>
