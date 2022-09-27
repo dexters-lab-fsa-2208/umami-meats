@@ -27,14 +27,16 @@ const FooterContainer = styled.div`
   }
 `;
 
-// this should probably be in a separate folder (because header is also using it)
 const LinkContainer = styled.div`
   display: flex;
   align-items: center;
 `;
 
 export default function Footer() {
-  const isAdmin = useSelector(state => state.user.user?.admin);
+  let isAdmin = useSelector(state => state.user.user?.admin);
+  if (typeof window !== "undefined" && localStorage.user) {
+    isAdmin = isAdmin || JSON.parse(localStorage.user).isAdmin;
+  }
 
   return (
     <FooterContainer>

@@ -156,7 +156,7 @@ function Cart() {
                   <NameandX>
                     <p>{product.product.name}</p>
                     {isLoggedIn ? (
-                      <button onClick={() => handleRemoveLineItem(product)}>
+                      <button onClick={() => handleRemoveLineItem(product)} className="secondaryButton xBtn">
                         X
                       </button>
                     ) : (

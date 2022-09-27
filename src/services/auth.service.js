@@ -24,6 +24,23 @@ class AuthService {
 		}
 	}
 
+	async verifyToken(token) {
+		try {
+			const { data: user } = await axios.get('api/auth/login', {
+				headers: {
+					authorization: `${token}`,
+				},
+			});
+			user.token = token;
+			localStorage.setItem('user', JSON.stringify(user));
+			console.log('token verified');
+			return true;
+		} catch (error) {
+			console.log('unable to verify token');
+			return false;
+		}
+	}
+
 	logout() {
 		localStorage.removeItem('user');
 	}
