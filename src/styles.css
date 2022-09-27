@@ -42,6 +42,16 @@
   box-shadow: 1px 1px 4px rgb(50, 50, 50, 0.15);
   border-radius: 10px;
 }
+.secondaryButton.xBtn {
+  width: 1.4em;
+  max-height: 1.55em;
+  border-radius: 4px;
+  font-weight: bold;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 /* INCREMENT BUTTONS AND CONTAINER */
 .incrementContainer,
@@ -50,7 +60,6 @@
   align-items: center;
   height: 32px;
   width: 96px;
-  border: 1px solid rgba(150, 150, 150, 1);
   border-radius: 3px;
   margin-bottom: 1em;
 }
@@ -79,11 +88,21 @@
 }
 
 .incrementCart {
-  height: 28px;
-  width: 84px;
+  height: 24px;
+  width: 72px;
+  box-shadow: 1px 1px 4px rgba(100, 100, 100, 0.2);
 }
 .incrementCart > * {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border: 0px;
+}
+.incrementCart > button {
+  background-color: rgb(215, 215, 215);
+}
+.incrementCart > button:hover {
+  background-color: rgb(208, 208, 208);
+}
+.incrementCart > button:active {
+  background-color: rgb(190, 190, 190);
 }

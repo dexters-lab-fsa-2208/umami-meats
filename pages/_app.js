@@ -9,6 +9,7 @@ import styled from "styled-components";
 import { Header, Footer } from "../src/components";
 import { AnimatePresence } from "framer-motion";
 
+// maybe a max-width is all that's necessary to make the design work on desktop...?
 const MainContainer = styled.div`
   position: relative;
   min-height: 100vh;
@@ -19,16 +20,22 @@ const MainContainer = styled.div`
   }
 `;
 
+const PageContainer = styled.div`
+  max-width: 1000px;
+  margin: auto;
+`;
+
 function App({ Component, pageProps }) {
-  // console.dir(Component);
   return (
     <Provider api={apiSlice} store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <MainContainer>
           <Header />
-          <AnimatePresence mode="wait">
-            <Component {...pageProps} key={Component.name} />
-          </AnimatePresence>
+          <PageContainer>
+            <AnimatePresence mode="wait">
+              <Component {...pageProps} key={Component.name} />
+            </AnimatePresence>
+          </PageContainer>
           <Footer />
         </MainContainer>
       </PersistGate>
