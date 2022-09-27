@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Router from "next/router";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import authService from "../../src/services/auth.service";
-import { RemoveSSRFromComponent } from "../../src/utils";
+// import { RemoveSSRFromComponent } from "../../src/utils";
 import { Loading } from "../../src/components";
+import {
+    ManageProducts,
+    ManagePromos,
+    ManageUsers,
+    ToolList,
+    UpdateFeatured,
+  } from "../../src/components/admin";
 
 const grayContainer = styled.div`
     background-color: rgb(230, 230, 230);
@@ -30,45 +37,19 @@ const AdminToolsContainer = styled.div`
         text-align: center;
         margin-bottom: 0.5em;
     }
-    .devTodo {
-        margin: 0.5em 0;
-        padding-bottom: 0.5em;
-        background-color: rgb(230, 230, 230);
-        box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.43);
-        p { 
-            text-align: center;
-            padding: 0.3em 0 0;
-        }
+    .return {
+        font-style: italic;
+        text-decoration: underline;
+        margin: 0 0.5em 0.5em;
     }
 `
-
-const hoverTransition = "0.2s"
-
-const ToolContainer = styled.div`
-    background-color: rgb(230, 230, 230);
-    transition: background-color ${hoverTransition};
-    box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.3);
-    padding: 0.5em;
-    margin: 1em 0;
-
-    h3 {
-        text-shadow: 1px 1px 3px rgba(150, 150, 150, 0);
-        transition:text-shadow ${hoverTransition};
-    }
-
-    &:hover {
-        background-color: rgb(220, 220, 220);
-        h3 {
-            text-shadow: 1px 1px 6px rgba(120, 120, 120, 0.15);
-        }
-    }
-`;
 
 function AdminTools() {
     const user = useSelector(state => state.user);
 
-    const [loading, setLoading] = React.useState(true);
-    const [userVerified, setUserVerified] = React.useState(false);
+    // ADMIN VERIFICATION
+    const [loading, setLoading] = useState(true);
+    const [userVerified, setUserVerified] = useState(false);
     // checks token in redux state to ensure that the user is admin
     React.useEffect(() => {
         const verify = async (token) => {
@@ -85,6 +66,35 @@ function AdminTools() {
             setLoading(false);
         }
     }, [])
+
+    // TOOL SELECTION
+        // ManageProducts,
+        // ManagePromos,
+        // ManageUsers,
+        // ToolList,
+        // UpdateFeatured,
+    const [selectedTool, setSelectedTool] = useState("");
+    // useEffect(() => {
+
+    // })
+
+    const renderSelectedTool = () => {
+        // cases: featured, products, promos, users
+        switch (selectedTool) {
+            case ("featured"):
+                return <UpdateFeatured />
+            case ("productsAdd"):
+                return <ManageProducts req={"add"} />
+            case ("productsEdit"):
+                return <ManageProducts req={"edit"} />
+            case ("promos"):
+                return <ManagePromos />
+            case ("users"):
+                return <ManageUsers />
+            default:
+                return <ToolList select={setSelectedTool} />
+        }
+    }
     
     if (loading) {
         return <Loading message={"Verifying admin..."} />
@@ -100,29 +110,13 @@ function AdminTools() {
     } else
     return(
         <AdminToolsContainer>
-            <h2>Administrator Tools</h2>
-
-            <ToolContainer>
-                <h3>Set homepage items</h3>
-            </ToolContainer>
-
-            <ToolContainer>
-                <h3>Add/remove products</h3>
-            </ToolContainer>
-
-            <ToolContainer>
-                <h3>Update existing products</h3>
-            </ToolContainer>
-
-            <ToolContainer>
-                <h3>Create and manage promo codes</h3>
-            </ToolContainer>
-
-            <ToolContainer>
-                <h3>Manage users</h3>
-            </ToolContainer>
+            {selectedTool ? <>
+            <p onClick={() => setSelectedTool("")} className="return">Return to all tools</p>
+            </> : <h2>Administrator Tools</h2>
+            }
+            {renderSelectedTool()}
         </AdminToolsContainer>
     )
 }
 
-export default RemoveSSRFromComponent(AdminTools);
+export default AdminTools;
