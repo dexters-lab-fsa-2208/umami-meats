@@ -38,8 +38,9 @@ const PaymentMethodContainer = styled.div`
 
 const Checkout = () => {
 
-    const { cart, cartId, usersCart } = useSelector((state) => state.cart);
-    console.log(cart);
+    const { cart } = useSelector((state) => state.cart);
+    const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
+    console.log(usersCart);
 
     // const [total, setTotal] = useState(0)
 
@@ -48,11 +49,11 @@ const Checkout = () => {
         <h2>Checkout</h2>
         <br></br>
         <ProductsContainer>
-            {(usersCart && usersCart ? usersCart : cart).map(product => (
+            {(usersCart ? usersCart : cart).map(product => (
                 <>
                 <Product>
-                <p>{product.name} ({product.quantity})</p>
-                <p>{Math.round((product.price * product.quantity + Number.EPSILON) * 100) / 100}</p>
+                <p>{product.product.name} ({product.product.qty})</p>
+                <p>{Math.round((product.product.price * product.product.qty + Number.EPSILON) * 100) / 100}</p>
                 {/* {setTotal(total + (product.price * product.quantity))} */}
                 </Product>
                 <br></br>
@@ -61,7 +62,7 @@ const Checkout = () => {
         </ProductsContainer>
         <TotalContainer>
             <h2>Total:</h2>
-            <Total>{Math.round(((usersCart && usersCart ? usersCart : cart).reduce((prev, curr) => (curr.price * curr.quantity) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
+            <Total>{Math.round(((usersCart ? usersCart : cart).reduce((prev, curr) => (curr.product.price * curr.product.qty) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
         </TotalContainer>
         <ThirdPartyPaymentMethodContainer>
             <button>Placeholder</button>
