@@ -147,7 +147,7 @@ function Cart() {
     <MainContainer>
       <h2>Your Cart</h2>
         <ProductsContainer>
-          {(isLoggedIn && isSuccess ? usersCart : cart).map((product) => (
+          {(isLoggedIn && isSuccess ? usersCart : cart).map((product, idx) => (
             <div key={product.productId}>
               <Image src={product.product.img} alt="sushi" />
               <DetailsContainer>
