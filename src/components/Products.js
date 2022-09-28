@@ -8,7 +8,8 @@ import {
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { Loading } from "./";
-import { addToCart, addToUsersCart } from "../redux/reducers/usersCart-slice";
+import { addToUsersCart } from "../redux/reducers/usersCart-slice";
+import { addToCart } from "../redux/reducers/cart-slice";
 
 const BodyContainer = styled.div`
   display: flex;

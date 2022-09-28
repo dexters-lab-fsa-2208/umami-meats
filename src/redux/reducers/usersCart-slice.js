@@ -30,7 +30,7 @@ const usersCartSlice = createSlice({
     initializeCart: (state, action) => {
       console.log("initializing", action.payload);
       state.cartId = action.payload.id;
-      state.cart = action.payload.order;
+      state.cart = action.payload.lineItems;
     },
     addToUsersCart: (state, action) => {
       console.log("adding item", action.payload);

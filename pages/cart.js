@@ -126,10 +126,6 @@ function Cart() {
   const [updateLineItem] = useUpdateLineItemMutation();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log(usersCart);
-  }, [cart, usersCart, isLoggedIn, data]);
-
   const handleRemoveLineItem = async (payload) => {
     dispatch(removeFromUsersCart(payload.productId));
     await deleteLineItem(payload.id);

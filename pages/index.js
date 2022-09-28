@@ -140,12 +140,11 @@ export default function HomePage() {
     const checkForCart = async () => {
       const { data: blah } = await axios.get(`/api/users/${user.id}`);
       const lastOrder = blah.orders[blah.orders.length - 1];
-      console.log(blah.orders === undefined, lastOrder);
       // if a user has 0 orders, create new order
       // or if last order in orders is false (checked out already)
       // last item in user orders shud always be the working order,
       // previous orders should all have isCart === false
-      if (blah && (lastOrder.lineItems.length === 0 || !lastOrder.isCart)) {
+      if (blah && (blah.orders.length === 0 || !lastOrder.isCart)) {
         let { data } = await createNewOrder({
           userId: user.id,
           isCart: true,
@@ -153,28 +152,19 @@ export default function HomePage() {
         });
         // initialize the new order id and line items to redux store
         // maybe somehow use apislice only depending on which has better preformance
-        dispatch(
-          initializeCart({
-            id: data.id,
-            order: { ...data, lineItems: [] },
-          })
-        );
+        dispatch(initializeCart({ ...data, lineItems: [] }));
       }
 
       // If the last order in the cart is still a cart, initialize the cartId into redux store
       // for useage all around the app
-      if (user && blah.orders[0].isCart) {
+      if (user && blah.orders[0]?.isCart) {
         // initialize the new order id and line items to redux store
         // maybe somehow use apislice only depending on which has better preformance
-        dispatch(
-          initializeCart({
-            id: !blah.orders[blah.orders.length - 1].isCart.id,
-            order: !blah.orders[blah.orders.length - 1].isCart.lineItems,
-          })
-        );
+        console.log("DB to redux", blah);
+        dispatch(initializeCart(blah.orders[blah.orders.length - 1]));
       }
     };
-    checkForCart();
+    user?.id ? checkForCart() : console.log("sign in stoopid");
   }, []);
 
   const [carouselIdx, setCarouselIdx] = React.useState(0);
