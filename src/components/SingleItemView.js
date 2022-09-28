@@ -8,7 +8,7 @@ import {
   useCreateLineItemMutation,
   useUpdateLineItemMutation,
 } from "../redux/reducers/apiSlice";
-import { Loading } from "./"
+import { Loading } from "./";
 
 const MainProductContainer = styled.div`
   max-width: 100%;
@@ -138,7 +138,7 @@ function SingleItemView({ type, data }) {
               <i>{"Availability: " + printAvailability()}</i>
             </p>
             <ProductContainerTop>
-              <img src={data.img} alt={data.name || "product"}/>
+              <img src={data.img} alt={data.name || "product"} />
 
               <ProductInfoRight>
                 <div>
