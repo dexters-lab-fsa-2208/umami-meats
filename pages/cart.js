@@ -268,7 +268,7 @@ function Cart() {
               <p>
                 $
                 {Math.round(
-                  ((isLoggedIn ? userCart : cart).reduce(
+                  ((isLoggedIn ? usersCart : cart).reduce(
                     (prev, curr) =>
                       Number(curr.product.price) * Number(curr.qty) +
                       Number(prev),
