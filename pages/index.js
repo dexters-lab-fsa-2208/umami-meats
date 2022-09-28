@@ -11,7 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { initializeCart } from "../src/redux/reducers/usersCart-slice";
-import { Loading } from "../src/components";
+import { Loading, Error } from "../src/components";
 // design
 import styled from "styled-components";
 import { motion } from "framer-motion";
@@ -150,7 +150,7 @@ const ListItemContainer = styled.div`
 `;
 
 export default function HomePage() {
-  const { data, isLoading } = useGetProductsQuery();
+  const { data, isLoading, error } = useGetProductsQuery();
   const { user, isLoggedIn } = useSelector((state) => state.user);
   // skipToken is a parameter provided by RTK to conditionally query data based on condition passed
   // in our case, it will be if a user is Logged in (skip if false)
@@ -207,12 +207,16 @@ export default function HomePage() {
   };
 
   useEffect(() => {
-    let interval = setInterval(() => carouselScroll(1), 5000);
-    return () => clearInterval(interval);
+    if (!isLoading && !error) {
+      let interval = setInterval(() => carouselScroll(1), 5000);
+      return () => clearInterval(interval);
+    }
   });
 
-  if (!data) {
+  if (isLoading) {
     return <Loading />;
+  } else if (error) {
+    return <Error is500={error.status === 500}/>
   } else
     return (
       <motion.div

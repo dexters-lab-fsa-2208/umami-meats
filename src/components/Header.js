@@ -2,20 +2,17 @@ import React, { useState, useRef } from "react";
 import Link from "next/link";
 import Router from "next/router";
 import styled from "styled-components";
+import { RemoveSSRFromComponent } from "../utils";
+import { Error } from "./";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/user-slice";
-
-import { RemoveSSRFromComponent } from "../utils";
-
 import { clearUserCart } from "../redux/reducers/cart-slice";
 import { useGetProductsQuery } from "../redux/reducers/apiSlice";
-
 // react-icons
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
 import { BiLogIn, BiLogOut } from "react-icons/bi";
-
 
 const headerMainHeight = "4em";
 const headerTopHeight = "2em";
@@ -90,19 +87,14 @@ const LinkContainer = styled.div`
   align-items: center;
 `;
 
-// const CartCounter = styled.div`
-//   position: relative;
-// `;
-
 const searchBarWidth = "15em";
-const searchTransition = "0.2s";
 
 const SearchContainer = styled.div`
   position: absolute;
   width: 100%;
   height: calc(100% - 6em);
   top: ${headerMainHeight + headerTopHeight};
-  
+
   transition: background-color 0.2s;
   transition: opacity 0.2s;
   background-color: rgba(50, 50, 50, 0.4);
@@ -129,15 +121,15 @@ const SearchContainer = styled.div`
     * {
       padding: 0.3em 0.7em;
       &:nth-child(even) {
-        background-color: rgb(238,238,238);
+        background-color: rgb(238, 238, 238);
       }
     }
   }
-  
+
   &.hide {
     z-index: -100;
     opacity: 0;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
   }
 `;
 
@@ -147,11 +139,10 @@ function Header() {
   const { cart: usersCart } = useSelector((state) => state.usersCart);
   const { user, isLoggedIn } = useSelector((state) => state.user);
 
-  const { data: products, isLoading } = useGetProductsQuery();
+  const { data: products, isLoading, isError } = useGetProductsQuery();
 
   const [isSearchOpen, toggleSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-
 
   const dispatch = useDispatch();
 
@@ -185,7 +176,7 @@ function Header() {
       inputRef.current.focus();
     } else if (e.target.tagName === "P") {
       searchRef.current.classList.add("hide");
-      
+
       setTimeout(() => {
         toggleSearch(false);
         setSearchTerm("");
@@ -258,9 +249,9 @@ function Header() {
             <h1>Sushi</h1>
           </Link>
 
-            <div className="headerIconButton" onClick={toggle}>
-              <FaSearch size="1.9em" />
-            </div>
+          <div className="headerIconButton" onClick={toggle}>
+            <FaSearch size="1.9em" />
+          </div>
         </div>
       </HeaderMain>
 
@@ -276,22 +267,23 @@ function Header() {
           value={searchTerm}
         ></input>
         <div className="searchProductList">
-        {!isLoading &&
-          products
-            .filter((product) => {
-              if (searchTerm === "") {
-                return false;
-              } else {
-                return product.name.toLowerCase().includes(searchTerm.toLowerCase());
-              }
-            }
-            )
-            .map((product) => (
-              <Link href={`/${product.type}/${product.id}`} key={product.id}>
-                <p onClick={toggle}>{product.name}</p>
-              </Link>
-            ))}
-            </div>
+          {(!isLoading && !isError) &&
+            products
+              .filter((product) => {
+                if (searchTerm === "") {
+                  return false;
+                } else {
+                  return product.name
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase());
+                }
+              })
+              .map((product) => (
+                <Link href={`/${product.type}/${product.id}`} key={product.id}>
+                  <p onClick={toggle}>{product.name}</p>
+                </Link>
+              ))}
+        </div>
       </SearchContainer>
     </HeaderContainer>
   );
