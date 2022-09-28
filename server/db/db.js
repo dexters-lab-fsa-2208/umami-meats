@@ -26,7 +26,11 @@ const db = new Sequelize(
   {
     dialect: "postgres",
     dialectOptions: {
-      ssl: process.env.DATABASE_URL ? true : false,
+      ssl: process.env.DATABASE_URL ? {
+        require: true,
+        rejectUnauthorized: false,
+      } : false,
+
     },
     logging: false,
   }
