@@ -1,34 +1,31 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+
+const fetchUsersCart = async (id) => {
+  console.log("sinide fetch", id);
+  const { data } = await axios.get(`/api/orders/${id}`);
+  return data;
+};
+
+export const fetchUsersCartThunk = createAsyncThunk(
+  "cart/fetchCart",
+  async (id) => {
+    try {
+      let data = await fetchUsersCart(id);
+      console.log("inside thunk", data);
+      return data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+);
 
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
     cart: [],
-    usersCart: null,
-    cartId: null,
   },
   reducers: {
-    // Users cart reducers
-    initializeCart: (state, action) => {
-      console.log("initializing cart", action.payload);
-      state.cartId = action.payload.id;
-      state.usersCart = action.payload.order;
-    },
-    addToUsersCart: (state, action) => {
-      let found = false;
-      state.usersCart.map((obj, idx) => {
-        if (obj.productId === action.payload.newData.productId) {
-          state.usersCart[idx].qty += action.payload.num;
-          found = true;
-        }
-      });
-      !found && state.usersCart.push(action.payload.newData);
-    },
-    removeFromUsersCart: (state, action) => {
-      state.usersCart = state.usersCart.filter(
-        (item) => item.productId !== action.payload
-      );
-    },
     // Guest Cart Reducers
     addToCart: (state, action) => {
       let found = false;
@@ -49,20 +46,14 @@ const cartSlice = createSlice({
       state.cart = [];
     },
     // for logging out only
-    clearUserCart: (state) => {
-      state.cartId = null;
-      state.usersCart = null;
-    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchUsersCartThunk.fulfilled, (state, action) => {
+      console.log("inside reducer", action.payload);
+      state.usersCart = action.payload.lineItems;
+    });
   },
 });
 
-export const {
-  addToCart,
-  removeFromCart,
-  clearCart,
-  clearUserCart,
-  initializeCart,
-  addToUsersCart,
-  removeFromUsersCart,
-} = cartSlice.actions;
+export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
 export default cartSlice;

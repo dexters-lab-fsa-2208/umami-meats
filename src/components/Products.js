@@ -8,7 +8,8 @@ import {
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { Loading } from "./";
-import { addToCart, addToUsersCart } from "../redux/reducers/cart-slice";
+import { addToUsersCart } from "../redux/reducers/usersCart-slice";
+import { addToCart } from "../redux/reducers/cart-slice";
 
 const BodyContainer = styled.div`
   display: flex;
@@ -110,7 +111,8 @@ export default function Products({ products, isLoading }) {
   const [filtered, setFiltered] = useState(false);
   const [currentFilter, setCurrentFilter] = useState("");
 
-  const { cart, cartId, usersCart } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
+  const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
   const { isLoggedIn, user } = useSelector((state) => state.user);
 
   const { data: tags, isSuccess } = useGetTagsQuery();
@@ -120,7 +122,7 @@ export default function Products({ products, isLoading }) {
 
   useEffect(() => {
     setFilteredProducts(products);
-  }, [products, cartId, usersCart]);
+  }, [products]);
 
   const tagFilter = (tag) => {
     if (tag === "clear") {
@@ -148,12 +150,12 @@ export default function Products({ products, isLoading }) {
     const existingItem = usersCart.find(
       (item) => item.productId === payload.productId
     );
-
     // setting the previous quantity to the quantity of the exisiting
     // in the database
     if (existingItem && existingItem.qty) prevQty = existingItem.qty;
 
     // update line item and sending it to redux store
+
     const update = async () => {
       console.log("editing");
       await updateLineItem({

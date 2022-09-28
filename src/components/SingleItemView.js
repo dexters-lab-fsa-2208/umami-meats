@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, addToUsersCart } from "../redux/reducers/cart-slice";
+import { addToCart } from "../redux/reducers/cart-slice";
+import { addToUsersCart } from "../redux/reducers/usersCart-slice";
+
 import {
   useCreateLineItemMutation,
   useUpdateLineItemMutation,
@@ -56,7 +58,8 @@ const BuyProductContainer = styled.div`
 // COMPONENT STARTS HERE
 function SingleItemView({ type, data }) {
   const [currentQty, setCurrentQty] = React.useState(1);
-  const { cart, cartId, usersCart } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
+  const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
   const { isLoggedIn } = useSelector((state) => state.user);
   const [createLineItem] = useCreateLineItemMutation();
   const [updateLineItem] = useUpdateLineItemMutation();
@@ -89,6 +92,7 @@ function SingleItemView({ type, data }) {
     // find out if the item exists in our redux store
     // if it does, we are able to call PUT
     // if it dosent, we are calling POST
+    console.log(usersCart);
     const existingItem = usersCart.find(
       ({ productId }) => productId === payload.productId
     );

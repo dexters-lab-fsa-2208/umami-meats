@@ -10,11 +10,12 @@ import {
 } from "../src/redux/reducers/apiSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { skipToken } from "@reduxjs/toolkit/query";
-import { initializeCart } from "../src/redux/reducers/cart-slice";
+import { initializeCart } from "../src/redux/reducers/usersCart-slice";
 import { Loading } from "../src/components";
 // design
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 // need to clean up this CSS/styled-components
 const customGray = "rgba(120, 120, 120, 0.1)";
@@ -146,81 +147,48 @@ const ListItemContainer = styled.div`
 
 export default function HomePage() {
   const { data, isLoading } = useGetProductsQuery();
-
   const { user, isLoggedIn } = useSelector((state) => state.user);
   // skipToken is a parameter provided by RTK to conditionally query data based on condition passed
   // in our case, it will be if a user is Logged in (skip if false)
-  const { data: userInstance } = useGetSingleUserQuery(
-    isLoggedIn ? user.id : skipToken
-  );
+
   const [createNewOrder] = useCreateOrderMutation();
   const dispatch = useDispatch();
 
   useEffect(() => {
     // check users orders after sign in,
-    const checkForCart = async (userInstance) => {
-      userInstance &&
-        console.log('check 4 cart',
-          userInstance.orders[userInstance.orders.length - 1].lineItems
-        );
-      if (
-        userInstance &&
-        // if a user has 0 orders, create new order
-        (!userInstance.orders.length ||
-          // or if last order in orders is false (checked out already)
-          // last item in user orders shud always be the working order,
-          // previous orders should all have isCart === false
-          !userInstance.orders[userInstance.orders.length - 1].isCart)
-      ) {
-        console.log('new cart')
-        await createNewOrder({
-          userId: userInstance.id,
+
+    const checkForCart = async () => {
+      const { data: blah } = await axios.get(`/api/users/${user.id}`);
+      const lastOrder = blah.orders[blah.orders.length - 1];
+      // if a user has 0 orders, create new order
+      // or if last order in orders is false (checked out already)
+      // last item in user orders shud always be the working order,
+      // previous orders should all have isCart === false
+      if (blah && (blah.orders.length === 0 || !lastOrder.isCart)) {
+        let { data } = await createNewOrder({
+          userId: user.id,
+
           isCart: true,
           address: "address of user",
         });
         // initialize the new order id and line items to redux store
         // maybe somehow use apislice only depending on which has better preformance
-
-        dispatch(
-          initializeCart({
-            id: userInstance.orders[userInstance.orders.length - 1].id,
-            order:
-              userInstance.orders[userInstance.orders.length - 1].lineItems,
-          })
-        );
+        dispatch(initializeCart({ ...data, lineItems: [] }));
       }
+
       // If the last order in the cart is still a cart, initialize the cartId into redux store
       // for useage all around the app
-      if (
-        userInstance &&
-        userInstance.orders[userInstance.orders.length - 1].isCart
-      ) {
+      if (user && blah.orders[0]?.isCart) {
         // initialize the new order id and line items to redux store
         // maybe somehow use apislice only depending on which has better preformance
-        dispatch(
-          initializeCart({
-            id: userInstance.orders[userInstance.orders.length - 1].id,
-            order:
-              userInstance.orders[userInstance.orders.length - 1].lineItems,
-          })
-        );
+        console.log("DB to redux", blah);
+        dispatch(initializeCart(blah.orders[blah.orders.length - 1]));
       }
     };
-    checkForCart(userInstance);
-    // after a new cart is created, initialize cart id into redux store
-    userInstance &&
-      dispatch(
-        initializeCart(userInstance.orders[userInstance.orders.length - 1]?.id)
-      );
-  }, [createNewOrder, userInstance, dispatch]);
 
-  // const formatName = (string) => {
-  //   if (string.length > 18) {
-  //     return string.slice(0, 16) + "...";
-  //   } else {
-  //     return string;
-  //   }
-  // };
+    user?.id ? checkForCart() : console.log("sign in stoopid");
+  }, []);
+
 
   const [carouselIdx, setCarouselIdx] = React.useState(0);
 

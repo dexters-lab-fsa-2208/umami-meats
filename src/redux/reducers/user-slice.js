@@ -1,4 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+
+const fetchUser = async (id) => {
+  const { data } = await axios.get(`/api/users/2`);
+  return data;
+};
+
+export const fetchUserThunk = createAsyncThunk(
+  "fetchUser/handleFetchUser",
+  async (payload) => {
+    try {
+      const data = await fetchUser(payload.id);
+      return data;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "userSlice",
@@ -8,14 +26,18 @@ const userSlice = createSlice({
   },
   reducers: {
     storeUser: (state, action) => {
-      console.log(action.payload);
-      state.isLoggedIn = true;
       state.user = action.payload;
     },
     removeUser: (state) => {
       state.user = undefined;
       state.isLoggedIn = false;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchUserThunk.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.isLoggedIn = true;
+    });
   },
 });
 
