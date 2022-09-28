@@ -34,7 +34,7 @@ const products = [
         price: 79.99,
         grade: "BMS 9+",
         qty: 75,
-        img: "http://cdn.shopify.com/s/files/1/0554/4466/8481/products/Wagyu-Reserve-New-York-Strip-Steak.jpg?v=1658356330",
+        img: "https://cdn.shopify.com/s/files/1/0554/4466/8481/products/WagyuNYStrip_900x.png?v=1664225224",
         desc: "This is the highest grade of American Wagyu you can buy. Look no further, you have found the best steak in the country. The New York Strip is cut from the short loin of the Wagyu cattle. Delicious, tender, always juicy, amazing, superb, wow! Those are just some of the adjectives that will help (doesn't even scratch the surface) to describe the explosion of perfection in your mouth, after you try it!",
         type: "steaks",
         tagName: "american"
