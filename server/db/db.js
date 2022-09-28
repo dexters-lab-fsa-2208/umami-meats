@@ -1,12 +1,11 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 
 const config = {};
 
-if(process.env.QUIET){
+if (process.env.QUIET) {
   config.logging = false;
 }
 
-//you name this whatever your project is
 // const db = new Sequelize({
 //   database: "dav3ctroc2p7sm",
 //   username: "oexgfvznbbkyxi",
@@ -16,19 +15,24 @@ if(process.env.QUIET){
 //   dialect: "postgres",
 //   dialectOptions: {
 //     ssl: {
-//       require: true, // This will help you. But you will see nwe error
-//       rejectUnauthorized: false // This line will fix new error
+//       require: true, // This will help, but cause error
+//       rejectUnauthorized: false // This will fix error
 //     }
 //   },
 // });
 
-const db = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/dexter', {dialect: "postgres",
-  dialectOptions: {
-    ssl: {
-      require: true, // This will help you. But you will see nwe error
-      rejectUnauthorized: false // This line will fix new error
-    }
+const db = new Sequelize(
+  process.env.DATABASE_URL || "postgres://localhost/dexter",
+  {
+    dialect: "postgres",
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
+    },
+    logging: false,
   }
-  },);
+);
 
 module.exports = db;

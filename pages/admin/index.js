@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Router from "next/router";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import authService from "../../src/services/auth.service";
-// import { RemoveSSRFromComponent } from "../../src/utils";
+import { RemoveSSRFromComponent } from "../../src/utils";
 import { Loading } from "../../src/components";
 import {
     ManageProducts,
@@ -14,15 +13,10 @@ import {
     UpdateFeatured,
   } from "../../src/components/admin";
 
-const grayContainer = styled.div`
-    background-color: rgb(230, 230, 230);
-    box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.43);
-    padding: 0.5em;
-`
-
 const AdminToolsContainer = styled.div`
     &#noAccess {
-        margin: 2em 4.2em;
+        text-align: center;
+        margin: 2em 3em;
         p {
             margin-bottom: 1.5em;
             &:last-child {
@@ -30,17 +24,24 @@ const AdminToolsContainer = styled.div`
             }
         }
     }
-
     margin: 1em;
 
     h2 {
         text-align: center;
         margin-bottom: 0.5em;
     }
-    .return {
+    .returnHome {
+        font-size: 1.1em;
         font-style: italic;
-        text-decoration: underline;
         margin: 0 0.5em 0.5em;
+    }
+    .returnTools {
+        font-style: italic;
+        margin: 0 0.5em 0.5em;
+        text-decoration: underline;
+    }
+    #toolHeader {
+        margin-top: 0.5em;
     }
 `
 
@@ -51,7 +52,7 @@ function AdminTools() {
     const [loading, setLoading] = useState(true);
     const [userVerified, setUserVerified] = useState(false);
     // checks token in redux state to ensure that the user is admin
-    React.useEffect(() => {
+    useEffect(() => {
         const verify = async (token) => {
             const { verifyToken } = authService;
             return await verifyToken(token);
@@ -65,28 +66,18 @@ function AdminTools() {
         } else {
             setLoading(false);
         }
-    }, [])
+    }, [user])
 
     // TOOL SELECTION
-        // ManageProducts,
-        // ManagePromos,
-        // ManageUsers,
-        // ToolList,
-        // UpdateFeatured,
     const [selectedTool, setSelectedTool] = useState("");
-    // useEffect(() => {
-
-    // })
 
     const renderSelectedTool = () => {
         // cases: featured, products, promos, users
         switch (selectedTool) {
             case ("featured"):
                 return <UpdateFeatured />
-            case ("productsAdd"):
-                return <ManageProducts req={"add"} />
-            case ("productsEdit"):
-                return <ManageProducts req={"edit"} />
+            case ("products"):
+                return <ManageProducts />
             case ("promos"):
                 return <ManagePromos />
             case ("users"):
@@ -101,9 +92,9 @@ function AdminTools() {
     } else if (!loading && !userVerified) {
         return (
             <AdminToolsContainer id="noAccess">
-              <p>You do not have the credentials to access this page</p>
+              <p>You do not have the credentials to access this page. If you think this is a mistake, please try logging out and logging back in.</p>
               <Link href="/">
-                <p>Return to <u>home page</u></p>
+                <p className="returnHome">Return to <u>home page</u></p>
               </Link>
             </AdminToolsContainer>
         )
@@ -111,7 +102,8 @@ function AdminTools() {
     return(
         <AdminToolsContainer>
             {selectedTool ? <>
-            <p onClick={() => setSelectedTool("")} className="return">Return to all tools</p>
+            <p onClick={() => setSelectedTool("")} className="returnTools">Return to all tools</p>
+            <h2 id="toolHeader">Placeholder</h2>
             </> : <h2>Administrator Tools</h2>
             }
             {renderSelectedTool()}
@@ -119,4 +111,4 @@ function AdminTools() {
     )
 }
 
-export default AdminTools;
+export default RemoveSSRFromComponent(AdminTools);

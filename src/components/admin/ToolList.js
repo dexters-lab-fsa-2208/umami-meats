@@ -35,12 +35,8 @@ export default function ToolList({ select }) {
         <h3>Set homepage items</h3>
       </ToolContainer>
 
-      <ToolContainer onClick={() => selectTool("productsAdd")}>
-        <h3>Add/remove products</h3>
-      </ToolContainer>
-
-      <ToolContainer onClick={() => selectTool("productsEdit")}>
-        <h3>Update existing products</h3>
+      <ToolContainer onClick={() => selectTool("products")}>
+        <h3>Manage products</h3>
       </ToolContainer>
 
       <ToolContainer onClick={() => selectTool("promos")}>
