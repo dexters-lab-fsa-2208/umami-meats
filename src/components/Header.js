@@ -3,11 +3,9 @@ import Link from "next/link";
 import Router from "next/router";
 import styled from "styled-components";
 import { RemoveSSRFromComponent } from "../utils";
-import { Error } from "./";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/user-slice";
-import { clearUserCart } from "../redux/reducers/cart-slice";
 import { useGetProductsQuery } from "../redux/reducers/apiSlice";
 // react-icons
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
@@ -94,6 +92,7 @@ const SearchContainer = styled.div`
   width: 100%;
   height: calc(100% - 6em);
   top: ${headerMainHeight + headerTopHeight};
+  z-index: 50;
 
   transition: background-color 0.2s;
   transition: opacity 0.2s;

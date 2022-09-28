@@ -49,7 +49,7 @@ const CarouselContainer = styled.div`
   overflow: hidden;
 `;
 const CarouselButton = styled.button`
-  z-index: 99;
+  z-index: 40;
   position: absolute;
   width: 25px;
   height: 25px;
