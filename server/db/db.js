@@ -30,6 +30,7 @@ const db = new Sequelize(
         require: true,
         rejectUnauthorized: false,
       } : false,
+
     },
     logging: false,
   }

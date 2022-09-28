@@ -5,6 +5,7 @@ import styled from "styled-components";
 import authService from "../services/auth.service";
 import { useDispatch } from "react-redux";
 import { fetchUserThunk } from "../redux/reducers/user-slice";
+import { useGetSingleOrderQuery } from "../redux/reducers/apiSlice";
 
 const LoginFormContainer = styled.div`
   margin: 1em;
@@ -64,7 +65,6 @@ const Login = () => {
         };
         dispatch(fetchUserThunk(payload));
         //work on posting to users cart on sign in later
-
         Router.push("/");
       }
     } catch (err) {

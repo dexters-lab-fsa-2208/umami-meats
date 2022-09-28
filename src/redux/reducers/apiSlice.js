@@ -6,7 +6,6 @@ export const apiSlice = createApi({
     // baseUrl: 
     // "https://umamimeats.herokuapp.com",
       baseUrl: process.env.BASE_URL || "http://localhost:3000",
-
   }),
   tagTypes: [
     "users",
