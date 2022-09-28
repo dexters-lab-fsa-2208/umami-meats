@@ -53,7 +53,7 @@ const Checkout = () => {
                 <>
                 <Product>
                 <p>{product.product.name} ({product.product.qty})</p>
-                <p>{Math.round((product.product.price * product.product.qty + Number.EPSILON) * 100) / 100}</p>
+                <p>{Math.round((product.product.price * product.qty + Number.EPSILON) * 100) / 100}</p>
                 {/* {setTotal(total + (product.price * product.quantity))} */}
                 </Product>
                 <br></br>
