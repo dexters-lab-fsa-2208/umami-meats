@@ -162,6 +162,7 @@ function Cart() {
                       </button>
                     ) : (
                       <button className="incrementButton"
+
                         onClick={
                           product.qty <= 1
                             ? () => dispatch(removeFromCart(product.productId))

@@ -3,8 +3,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({
-    // baseUrl: "https://umamimeats.herokuapp.com/api/",
-      baseUrl: process.env.DATABASE_URL || "http://localhost:3000",
+    baseUrl: "https://umamimeats.herokuapp.com/",
+      // baseUrl: process.env.DATABASE_URL || "http://localhost:3000",
 
   }),
   tagTypes: [
