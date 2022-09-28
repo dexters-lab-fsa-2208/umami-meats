@@ -3,6 +3,7 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { apiSlice } from "../reducers/apiSlice";
 import cartSlice from "../reducers/cart-slice";
 import userSlice from "../reducers/user-slice";
+import usersCartSlice from "../reducers/usersCart-slice";
 import loggingMiddleware from "redux-logger";
 //redux persist
 import {
@@ -32,6 +33,7 @@ export const store = configureStore({
   reducer: {
     cart: persistedCart,
     user: persistedUser,
+    usersCart: usersCartSlice.reducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

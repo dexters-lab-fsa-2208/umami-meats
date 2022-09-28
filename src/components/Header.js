@@ -5,7 +5,6 @@ import styled from "styled-components";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/user-slice";
-import { clearUserCart } from "../redux/reducers/cart-slice";
 
 import { RemoveSSRFromComponent } from "../utils";
 
@@ -52,7 +51,7 @@ const HeaderMain = styled.div`
   align-items: center;
 
   .headerIconButton {
-    background-color: #7B0000;
+    background-color: #7b0000;
     width: ${headerMainHeight};
     height: ${headerMainHeight};
 
@@ -76,7 +75,8 @@ const CartCounter = styled.div`
 
 //COMPONENT STARTS HERE
 function Header() {
-  const { cart, usersCart } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
+  const { cart: usersCart } = useSelector((state) => state.usersCart);
   const { user, isLoggedIn } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
@@ -94,9 +94,10 @@ function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("persist:root");
     dispatch(removeUser());
     // clears the users cart in redux storage only on log out, workaround for removing persistence
-    dispatch(clearUserCart());
+
     Router.push("/");
   };
 

@@ -69,7 +69,7 @@ export const apiSlice = createApi({
     }),
     getSingleOrder: builder.query({
       query: (id) => `/orders/${id}`,
-      providesTags: ["order"],
+      providesTags: ["orders"],
     }),
     createOrder: builder.mutation({
       query: (payload) => ({

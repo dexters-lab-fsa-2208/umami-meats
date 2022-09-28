@@ -2,17 +2,18 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import Link from "next/link";
-import {
-  addToCart,
-  addToUsersCart,
-  removeFromCart,
-  removeFromUsersCart,
-} from "../src/redux/reducers/cart-slice";
+import { addToCart, removeFromCart } from "../src/redux/reducers/cart-slice";
 import { useDispatch } from "react-redux";
 import {
   useUpdateLineItemMutation,
   useDeleteLineItemMutation,
+  useGetSingleOrderQuery,
 } from "../src/redux/reducers/apiSlice";
+import {
+  addToUsersCart,
+  removeFromUsersCart,
+} from "../src/redux/reducers/usersCart-slice";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 const Container = styled.div`
   display: flex;
@@ -114,8 +115,12 @@ const PaymentMethodContainer = styled.div`
 // Remove item from cart
 
 function Cart() {
-  const { cart, cartId, usersCart } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
+  const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
   const { isLoggedIn } = useSelector((state) => state.user);
+  const { data, isSuccess } = useGetSingleOrderQuery(
+    isLoggedIn ? cartId : skipToken
+  );
 
   const [deleteLineItem] = useDeleteLineItemMutation();
   const [updateLineItem] = useUpdateLineItemMutation();
@@ -123,8 +128,7 @@ function Cart() {
 
   useEffect(() => {
     console.log(usersCart);
-    isLoggedIn ? console.log(usersCart) : console.log(cart);
-  }, [cart, usersCart, isLoggedIn]);
+  }, [cart, usersCart, isLoggedIn, data]);
 
   const handleRemoveLineItem = async (payload) => {
     dispatch(removeFromUsersCart(payload.productId));
@@ -150,7 +154,7 @@ function Cart() {
       <CartHeader>Cart 6</CartHeader>
       <Middle>
         <ProductsContainer>
-          {(isLoggedIn && usersCart ? usersCart : cart).map((product) => (
+          {(isLoggedIn && isSuccess ? usersCart : cart).map((product) => (
             <Products key={product.productId}>
               <Image src={product.product.img} alt="sushi" />
               <DetailsContainer>
