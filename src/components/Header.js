@@ -15,8 +15,7 @@ import { useGetProductsQuery } from "../redux/reducers/apiSlice";
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
 import { BiLogIn, BiLogOut } from "react-icons/bi";
-// utils
-import { RemoveSSRFromComponent } from "../utils";
+
 
 const headerMainHeight = "4em";
 const headerTopHeight = "2em";
