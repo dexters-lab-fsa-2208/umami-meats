@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
+//next
 import Link from "next/link";
+// can maybe use <picture></picture> to remove 'img' error from next.js
+// redux
 import {
   useCreateOrderMutation,
   useGetProductsQuery,
@@ -10,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { initializeCart } from "../src/redux/reducers/cart-slice";
 import { Loading } from "../src/components";
+// design
+import styled from "styled-components";
 import { motion } from "framer-motion";
 
 // need to clean up this CSS/styled-components
@@ -230,7 +234,7 @@ export default function HomePage() {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     let interval = setInterval(() => carouselScroll(1), 5000);
     return () => clearInterval(interval);
   });
@@ -257,7 +261,7 @@ export default function HomePage() {
                   }}
                 >
                   {/* <>{itm.name}</> */}
-                  <img src={itm.img} />
+                  <img src={itm.img} alt={itm.name || "product"}/>
                 </div>
               </Link>
             ))}
@@ -274,7 +278,7 @@ export default function HomePage() {
               return (
                 <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
                   <ListItemContainer>
-                    <img src={itm.img} />
+                    <img src={itm.img} alt={itm.name}/>
                     <p className="productName">{itm.name}</p>
                     <p className="productPrice">${itm.price}</p>
                   </ListItemContainer>

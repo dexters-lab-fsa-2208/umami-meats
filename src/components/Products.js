@@ -214,7 +214,7 @@ export default function Products({ products, isLoading }) {
           {(filtered ? filteredProducts : products).map((product) => (
             <Product key={product.id}>
               <Link href={`${product.type}/${product.id}`}>
-                <img src={product.img} />
+                <img src={product.img} alt={product.name || "product"}/>
               </Link>
               <Link href={`${product.type}/${product.id}`}>
                 <p className="productName">{product.name}</p>
