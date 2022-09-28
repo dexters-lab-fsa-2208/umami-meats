@@ -146,16 +146,14 @@ function Cart() {
 
     <MainContainer>
       <h2>Your Cart</h2>
-
-      <div>
         <ProductsContainer>
-          {(isLoggedIn && isSuccess ? usersCart : cart).map((product) => (
-            <Products key={product.productId}>
+          {(isLoggedIn && isSuccess ? usersCart : cart).map((product, idx) => (
+            <div key={product.productId}>
               <Image src={product.product.img} alt="sushi" />
               <DetailsContainer>
                 {" "}
                 <NameandX>
-                  <ProductName>{product.product.name}</ProductName>
+                  <p>{product.product.name}</p>
                     {isLoggedIn ? (
                       <button onClick={() => handleRemoveLineItem(product)} className="secondaryButton xBtn">
                         X
@@ -253,11 +251,12 @@ function Cart() {
                     {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
                   </IncrementAndPrice>
                 </DetailsContainer>
+                {/* places a line below each item unless it is the last in the cart */}
+              {idx + 1 === (isLoggedIn ? usersCart : cart).length ? "" : <hr />}
               </div>
 
-              {/* places a line below each item unless it is the last in the cart */}
-              {idx + 1 === (isLoggedIn ? usersCart : cart).length ? "" : <hr />}
-            </>
+              
+
           ))}
         </ProductsContainer>
 
@@ -269,7 +268,7 @@ function Cart() {
               <p>
                 $
                 {Math.round(
-                  (cart.reduce(
+                  ((isLoggedIn ? usersCart : cart).reduce(
                     (prev, curr) =>
                       Number(curr.product.price) * Number(curr.qty) +
                       Number(prev),
@@ -306,7 +305,6 @@ function Cart() {
             </Link>
           )}
         </Checkout>
-      </div>
     </MainContainer>
   );
 }
