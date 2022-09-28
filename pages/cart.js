@@ -153,7 +153,7 @@ function Cart() {
               <DetailsContainer>
                 {" "}
                 <NameandX>
-                  <ProductName>{product.product.name}</ProductName>
+                  <p>{product.product.name}</p>
                     {isLoggedIn ? (
                       <button onClick={() => handleRemoveLineItem(product)} className="secondaryButton xBtn">
                         X
