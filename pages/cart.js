@@ -125,7 +125,7 @@ function Cart() {
 
   const handleRemoveLineItem = async (payload) => {
     dispatch(removeFromUsersCart(payload.productId));
-    await deleteLineItem(payload.id);
+    await deleteLineItem(payload.productId);
   };
 
   const handleUpdateItem = async (payload, num) => {
