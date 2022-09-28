@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Router from "next/router";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import authService from "../../src/services/auth.service";
-// import { RemoveSSRFromComponent } from "../../src/utils";
+import { RemoveSSRFromComponent } from "../../src/utils";
 import { Loading } from "../../src/components";
 import {
     ManageProducts,
@@ -53,7 +52,7 @@ function AdminTools() {
     const [loading, setLoading] = useState(true);
     const [userVerified, setUserVerified] = useState(false);
     // checks token in redux state to ensure that the user is admin
-    React.useEffect(() => {
+    useEffect(() => {
         const verify = async (token) => {
             const { verifyToken } = authService;
             return await verifyToken(token);
@@ -67,7 +66,7 @@ function AdminTools() {
         } else {
             setLoading(false);
         }
-    }, [])
+    }, [user])
 
     // TOOL SELECTION
     const [selectedTool, setSelectedTool] = useState("");
@@ -112,4 +111,4 @@ function AdminTools() {
     )
 }
 
-export default AdminTools;
+export default RemoveSSRFromComponent(AdminTools);
