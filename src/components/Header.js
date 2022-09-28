@@ -5,6 +5,9 @@ import styled from "styled-components";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/user-slice";
+
+import { RemoveSSRFromComponent } from "../utils";
+
 import { clearUserCart } from "../redux/reducers/cart-slice";
 import { useGetProductsQuery } from "../redux/reducers/apiSlice";
 
@@ -150,7 +153,8 @@ const SearchContainer = styled.div`
 
 //COMPONENT STARTS HERE
 function Header() {
-  const { cart, usersCart } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
+  const { cart: usersCart } = useSelector((state) => state.usersCart);
   const { user, isLoggedIn } = useSelector((state) => state.user);
 
   const { data: products, isLoading } = useGetProductsQuery();
@@ -173,9 +177,10 @@ function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("persist:root");
     dispatch(removeUser());
     // clears the users cart in redux storage only on log out, workaround for removing persistence
-    dispatch(clearUserCart());
+
     Router.push("/");
   };
   const searchRef = useRef();

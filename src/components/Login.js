@@ -4,11 +4,7 @@ import Link from "next/link";
 import styled from "styled-components";
 import authService from "../services/auth.service";
 import { useDispatch } from "react-redux";
-import { storeUser } from "../redux/reducers/user-slice";
-// import { useGetSingleUserQuery } from "../redux/reducers/apiSlice";
-import { clearCart } from "../redux/reducers/cart-slice";
-import { motion } from "framer-motion";
-
+import { fetchUserThunk } from "../redux/reducers/user-slice";
 
 const LoginFormContainer = styled.div`
   margin: 1em;
@@ -60,16 +56,15 @@ const Login = () => {
       await login(credentials);
       if (typeof window !== "undefined") {
         let user = JSON.parse(window.localStorage.getItem("user"));
-        console.log(user);
-        let userData = {
+        let payload = {
           id: user.id,
           email: user.email,
           name: user.firstName + " " + user.lastName,
           admin: user.isAdmin,
         };
-        dispatch(storeUser(userData));
+        dispatch(fetchUserThunk(payload));
         //work on posting to users cart on sign in later
-        // dispatch(clearCart());
+
         Router.push("/");
       }
     } catch (err) {
@@ -94,7 +89,9 @@ const Login = () => {
           <input type="password" ref={passwordRef} />
         </label>
 
-        <button type="submit" className="mainButton">Log In</button>
+        <button type="submit" className="mainButton">
+          Log In
+        </button>
       </form>
       <p>
         Need an account? <Link href="/signup">Register here</Link>

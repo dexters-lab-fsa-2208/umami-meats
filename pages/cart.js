@@ -2,17 +2,18 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import Link from "next/link";
-import {
-  addToCart,
-  addToUsersCart,
-  removeFromCart,
-  removeFromUsersCart,
-} from "../src/redux/reducers/cart-slice";
+import { addToCart, removeFromCart } from "../src/redux/reducers/cart-slice";
 import { useDispatch } from "react-redux";
 import {
   useUpdateLineItemMutation,
   useDeleteLineItemMutation,
+  useGetSingleOrderQuery,
 } from "../src/redux/reducers/apiSlice";
+import {
+  addToUsersCart,
+  removeFromUsersCart,
+} from "../src/redux/reducers/usersCart-slice";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 const MainContainer = styled.div`
   margin: 0.9em;
@@ -111,17 +112,16 @@ const Checkout = styled.div`
 // Remove item from cart
 
 function Cart() {
-  const { cart, cartId, usersCart } = useSelector((state) => state.cart);
+  const { cart } = useSelector((state) => state.cart);
+  const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
   const { isLoggedIn } = useSelector((state) => state.user);
+  const { data, isSuccess } = useGetSingleOrderQuery(
+    isLoggedIn ? cartId : skipToken
+  );
 
   const [deleteLineItem] = useDeleteLineItemMutation();
   const [updateLineItem] = useUpdateLineItemMutation();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    console.log(usersCart);
-    isLoggedIn ? console.log(usersCart) : console.log(cart);
-  }, [cart, usersCart, isLoggedIn]);
 
   const handleRemoveLineItem = async (payload) => {
     dispatch(removeFromUsersCart(payload.productId));
@@ -149,20 +149,20 @@ function Cart() {
 
       <div>
         <ProductsContainer>
-          {(isLoggedIn ? usersCart : cart).map((product, idx) => (
-            <>
-              <div key={product.productId} className="singleProduct">
-                <Image src={product.product.img} alt={product.product.name} />
-                <DetailsContainer>
-                  {" "}
-                  <NameandX>
-                    <p>{product.product.name}</p>
+          {(isLoggedIn && isSuccess ? usersCart : cart).map((product) => (
+            <Products key={product.productId}>
+              <Image src={product.product.img} alt="sushi" />
+              <DetailsContainer>
+                {" "}
+                <NameandX>
+                  <ProductName>{product.product.name}</ProductName>
                     {isLoggedIn ? (
                       <button onClick={() => handleRemoveLineItem(product)} className="secondaryButton xBtn">
                         X
                       </button>
                     ) : (
-                      <button
+                      <button className="incrementButton"
+
                         onClick={
                           product.qty <= 1
                             ? () => dispatch(removeFromCart(product.productId))
@@ -176,7 +176,6 @@ function Cart() {
                                   })
                                 )
                         }
-                        className="secondaryButton xBtn"
                       >
                         -
                       </button>
