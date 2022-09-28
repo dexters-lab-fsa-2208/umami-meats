@@ -22,12 +22,12 @@ const customGray = "rgba(120, 120, 120, 0.1)";
 
 const HomePageContainer = styled.div`
 
-  @media screen and (min-width: 1000px) {
+  @media screen and (min-width: 800px) {
     .carouselItem > img {
       border-left: 1px solid ${customGray};
       border-right: 1px solid ${customGray};
       border-bottom: 1px solid rgba(120, 120, 120, 0.25);
-      box-shadow: 1px 1px 7px rgba(120, 120, 120, 1);
+      box-shadow: 1px 1px 7px rgba(120, 120, 120, 0.5);
     }
   }
 
@@ -66,25 +66,29 @@ const CarouselButton = styled.button`
   :hover {
     background-color: rgba(0, 0, 0, 0.8);
     color: rgba(255, 255, 255, 1);
-    /* these transitions work for now, but should be centralized later */
-    /* i think the easiest method would be to set all buttons/links to transition colors this way */
-    /* -webkit-transition: background-color 500ms linear;
-    -webkit-transition: color 500ms linear;
-    -ms-transition: background-color 500ms linear;
-    -ms-transition: color 500ms linear; */
     transition: background-color 500ms linear;
     transition: color 500ms linear;
   }
 
-  &.left {
+  &#leftBtn {
     border-radius: 0 3px 3px 0;
     left: 0;
     padding: 0;
   }
 
-  &.right {
+  &#rightBtn {
     border-radius: 3px 0 0 3px;
     right: 0;
+    padding: 0;
+  }
+
+  @media screen and (min-width: 800px) {
+    &#leftBtn {
+      left: calc(50% - 400px);
+    }
+    &#rightBtn {
+      right: calc(50% - 400px);
+    }
   }
 `;
 
@@ -234,10 +238,10 @@ export default function HomePage() {
               </Link>
             ))}
           </CarouselContainer>
-          <CarouselButton onClick={() => carouselScroll(-1)} className="left">
+          <CarouselButton onClick={() => carouselScroll(-1)} id="leftBtn">
             {"<"}
           </CarouselButton>
-          <CarouselButton onClick={() => carouselScroll(1)} className="right">
+          <CarouselButton onClick={() => carouselScroll(1)} id="rightBtn">
             {">"}
           </CarouselButton>
 

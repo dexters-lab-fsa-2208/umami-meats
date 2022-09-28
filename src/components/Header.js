@@ -42,6 +42,7 @@ const HeaderTop = styled.div`
     margin: auto 0;
   }
   p {
+    margin-top: 0.27em;
     padding: 0 0.4em 0.15em;
   }
 `;
@@ -62,6 +63,9 @@ const HeaderMain = styled.div`
   }
 
   > div {
+    h1 {
+      margin-top: 0.13em;
+    }
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -96,7 +100,7 @@ const searchTransition = "0.2s";
 const SearchContainer = styled.div`
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 6em);
   top: ${headerMainHeight + headerTopHeight};
   
   transition: background-color 0.2s;
@@ -136,19 +140,6 @@ const SearchContainer = styled.div`
     background-color: rgba(0,0,0,0);
   }
 `;
-
-// const SearchContainer = styled.div`
-// position: absolute;
-// display: flex column;
-// // z-index: 2;
-// color: black;
-// // margin-top: 6em;
-// justify-content: center;
-// align-items: center;
-// text-align: center;
-// background-color: white;
-// width: 100%;
-// `;
 
 //COMPONENT STARTS HERE
 function Header() {
@@ -206,7 +197,7 @@ function Header() {
   // also need to allow user to exit out by clicking elsewhere
   return (
     <HeaderContainer>
-      <HeaderTop>
+      <HeaderTop className="hfLinks">
         {isLoggedIn ? (
           <>
             {/* account link - displayed as email */}
