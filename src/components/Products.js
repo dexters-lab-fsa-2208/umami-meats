@@ -18,7 +18,7 @@ const BodyContainer = styled.div`
 // TAGS
 const TagContainer = styled.div`
   min-width: 6em;
-  height: 18em;
+  height: 21em;
   margin: 1.1em 1em;
   margin-right: 0.3em;
   padding: 0.3em 0 2em;
@@ -196,34 +196,15 @@ export default function Products({ products, isLoading }) {
             tags
               .filter((tag) => tag.tagType === products[0].type)
               .map((tag) => (
-                <TagName onClick={(e) => tagFilter(tag.tagName)} key={tag.id}>
-                  {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
-                </TagName>
-              ))}
-        </TagContainer>
-        {
-          //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
-        }
-
-        <TagContainer>
-          {"Our "}
-          {products &&
-            products.length &&
-            isSuccess &&
-            tags
-              .filter((tag) => tag.tagType === products[0].type)
-              .map((tag) => (
-                <p
-                  onClick={(e) => tagFilter(tag.tagName)}
-                  key={tag.id}
-                  className={tag.tagName === currentFilter ? "selected" : ""}
-                >
+                <p onClick={(e) => tagFilter(tag.tagName)} key={tag.id} className={currentFilter === tag.tagName ? "selected" : ""}>
                   {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
                 </p>
               ))}
           <p onClick={(e) => tagFilter("clear")}>Clear filters</p>
         </TagContainer>
-
+        {
+          //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
+        }
         <ProductsContainer>
           <h2 className="productListHeader">
             {"Our "}
@@ -235,7 +216,7 @@ export default function Products({ products, isLoading }) {
           {(filtered ? filteredProducts : products).map((product) => (
             <Product key={product.id}>
               <Link href={`${product.type}/${product.id}`}>
-                <img src={product.img} />
+                <img src={product.img} alt={product.name || "product"}/>
               </Link>
               <Link href={`${product.type}/${product.id}`}>
                 <p className="productName">{product.name}</p>

@@ -64,6 +64,7 @@ const Login = () => {
         };
         dispatch(fetchUserThunk(payload));
         //work on posting to users cart on sign in later
+
         Router.push("/");
       }
     } catch (err) {

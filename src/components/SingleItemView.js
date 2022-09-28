@@ -8,10 +8,11 @@ import {
   useCreateLineItemMutation,
   useUpdateLineItemMutation,
 } from "../redux/reducers/apiSlice";
+import { Loading } from "./"
 
 const MainProductContainer = styled.div`
   max-width: 100%;
-  margin: 0 1em;
+  margin: 0 1.1em;
   overflow-wrap: break-word;
 
   > p {
@@ -25,8 +26,13 @@ const MainProductContainer = styled.div`
   }
 `;
 const ProductContainerTop = styled.div`
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.43);
+  padding: 0.5em;
+
   img {
     width: 55%;
+    object-fit: cover;
   }
   display: flex;
   flex-flow: row wrap;
@@ -132,7 +138,7 @@ function SingleItemView({ type, data }) {
               <i>{"Availability: " + printAvailability()}</i>
             </p>
             <ProductContainerTop>
-              <img src={data.img} />
+              <img src={data.img} alt={data.name || "product"}/>
 
               <ProductInfoRight>
                 <div>
@@ -202,7 +208,7 @@ function SingleItemView({ type, data }) {
           {/* Recommended Products can go down here if we have time */}
         </>
       ) : (
-        <p>Loading content</p>
+        <Loading />
       )}
     </>
   );

@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
+//next
 import Link from "next/link";
+// can maybe use <picture></picture> to remove 'img' error from next.js
+// redux
 import {
   useCreateOrderMutation,
   useGetProductsQuery,
@@ -10,24 +12,41 @@ import { useDispatch, useSelector } from "react-redux";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { initializeCart } from "../src/redux/reducers/usersCart-slice";
 import { Loading } from "../src/components";
+// design
+import styled from "styled-components";
 import { motion } from "framer-motion";
 import axios from "axios";
 
+// need to clean up this CSS/styled-components
+const customGray = "rgba(120, 120, 120, 0.1)";
+
+const HomePageContainer = styled.div`
+
+  @media screen and (min-width: 1000px) {
+    .carouselItem > img {
+      border-left: 1px solid ${customGray};
+      border-right: 1px solid ${customGray};
+      border-bottom: 1px solid rgba(120, 120, 120, 0.25);
+      box-shadow: 1px 1px 7px rgba(120, 120, 120, 1);
+    }
+  }
+
+  .carouselItem {
+    min-width: 100%;
+    width: 100%;
+    height: 15rem;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+`;
 const CarouselContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   overflow: hidden;
-`;
-const CarouselItem = styled.div`
-  min-width: 100%;
-  width: 100%;
-  height: 15rem;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
 `;
 const CarouselButton = styled.button`
   z-index: 99;
@@ -137,6 +156,7 @@ export default function HomePage() {
 
   useEffect(() => {
     // check users orders after sign in,
+
     const checkForCart = async () => {
       const { data: blah } = await axios.get(`/api/users/${user.id}`);
       const lastOrder = blah.orders[blah.orders.length - 1];
@@ -147,6 +167,7 @@ export default function HomePage() {
       if (blah && (blah.orders.length === 0 || !lastOrder.isCart)) {
         let { data } = await createNewOrder({
           userId: user.id,
+
           isCart: true,
           address: "address of user",
         });
@@ -164,8 +185,10 @@ export default function HomePage() {
         dispatch(initializeCart(blah.orders[blah.orders.length - 1]));
       }
     };
+
     user?.id ? checkForCart() : console.log("sign in stoopid");
   }, []);
+
 
   const [carouselIdx, setCarouselIdx] = React.useState(0);
 
@@ -179,7 +202,7 @@ export default function HomePage() {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     let interval = setInterval(() => carouselScroll(1), 5000);
     return () => clearInterval(interval);
   });
@@ -193,42 +216,45 @@ export default function HomePage() {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <CarouselContainer>
-          {data.map((itm, idx) => (
-            <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
-              <CarouselItem
-                key={idx}
-                style={{
-                  transform: `translate(${carouselIdx * -100}%`,
-                  transition: "0.4s",
-                }}
-              >
-                {/* <>{itm.name}</> */}
-                <img src={itm.img} />
-              </CarouselItem>
-            </Link>
-          ))}
-        </CarouselContainer>
-        <CarouselButton onClick={() => carouselScroll(-1)} className="left">
-          {"<"}
-        </CarouselButton>
-        <CarouselButton onClick={() => carouselScroll(1)} className="right">
-          {">"}
-        </CarouselButton>
-
-        <ListContainer>
-          {data?.map((itm) => {
-            return (
+        <HomePageContainer>
+          <CarouselContainer>
+            {data.map((itm, idx) => (
               <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
-                <ListItemContainer>
-                  <img src={itm.img} />
-                  <p className="productName">{itm.name}</p>
-                  <p className="productPrice">${itm.price}</p>
-                </ListItemContainer>
+                <div
+                  className="carouselItem"
+                  key={idx}
+                  style={{
+                    transform: `translate(${carouselIdx * -100}%`,
+                    transition: "0.4s",
+                  }}
+                >
+                  {/* <>{itm.name}</> */}
+                  <img src={itm.img} alt={itm.name || "product"}/>
+                </div>
               </Link>
-            );
-          })}
-        </ListContainer>
+            ))}
+          </CarouselContainer>
+          <CarouselButton onClick={() => carouselScroll(-1)} className="left">
+            {"<"}
+          </CarouselButton>
+          <CarouselButton onClick={() => carouselScroll(1)} className="right">
+            {">"}
+          </CarouselButton>
+
+          <ListContainer>
+            {data?.map((itm) => {
+              return (
+                <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
+                  <ListItemContainer>
+                    <img src={itm.img} alt={itm.name}/>
+                    <p className="productName">{itm.name}</p>
+                    <p className="productPrice">${itm.price}</p>
+                  </ListItemContainer>
+                </Link>
+              );
+            })}
+          </ListContainer>
+        </HomePageContainer>
       </motion.div>
     );
 }

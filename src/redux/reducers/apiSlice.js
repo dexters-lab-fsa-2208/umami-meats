@@ -3,7 +3,9 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000/api",
+    // baseUrl: "https://umamimeats.herokuapp.com/api/",
+      baseUrl: process.env.DATABASE_URL || "http://localhost:3000",
+
   }),
   tagTypes: [
     "users",
@@ -22,16 +24,16 @@ export const apiSlice = createApi({
   endpoints: (builder) => ({
     // users
     getUsers: builder.query({
-      query: () => "/users",
+      query: () => "/api/users",
       providesTags: ["users"],
     }),
     getSingleUser: builder.query({
-      query: (id) => `/users/${id}`,
+      query: (id) => `/api/users/${id}`,
       providesTags: ["user"],
     }),
     createUser: builder.mutation({
       query: (payload) => ({
-        url: "/users",
+        url: "/api/users",
         method: "POST",
         body: payload,
       }),
@@ -40,7 +42,7 @@ export const apiSlice = createApi({
     updateUser: builder.mutation({
       query: (payload) => {
         return {
-          url: `/users/${payload.id}`,
+          url: `/api/users/${payload.id}`,
           method: "PUT",
           body: payload.data,
         };
@@ -50,12 +52,12 @@ export const apiSlice = createApi({
 
     // products
     getProducts: builder.query({
-      query: () => "/products",
+      query: () => "/api/products",
       providesTags: ["products"],
     }),
     createProduct: builder.mutation({
       query: (payload) => ({
-        url: "/products",
+        url: "/api/products",
         method: "POST",
         body: payload,
       }),
@@ -64,16 +66,16 @@ export const apiSlice = createApi({
 
     // orders query
     getOrders: builder.query({
-      query: () => `/orders`,
+      query: () => `/api/orders`,
       providesTags: ["orders"],
     }),
     getSingleOrder: builder.query({
-      query: (id) => `/orders/${id}`,
-      providesTags: ["orders"],
+      query: (id) => `/api/orders/${id}`,
+      providesTags: ["order"],
     }),
     createOrder: builder.mutation({
       query: (payload) => ({
-        url: "/orders",
+        url: "/api/orders",
         method: "POST",
         body: payload,
       }),
@@ -82,16 +84,16 @@ export const apiSlice = createApi({
 
     // sushi query
     getSushi: builder.query({
-      query: () => "/sushi",
+      query: () => "/api/sushi",
       providesTags: ["sushis"],
     }),
     getSingleSushi: builder.query({
-      query: (id) => `/sushi/${id}`,
+      query: (id) => `/api/sushi/${id}`,
       providesTags: ["sushi"],
     }),
     updateSushi: builder.mutation({
       query: (payload) => ({
-        url: `/sushi/${payload.id}`,
+        url: `/api/sushi/${payload.id}`,
         method: "PUT",
         body: payload.data,
       }),
@@ -99,7 +101,7 @@ export const apiSlice = createApi({
     }),
     deleteSushi: builder.mutation({
       query: (id) => ({
-        url: `/sushi/${id}`,
+        url: `/api/sushi/${id}`,
         method: "DELETE",
         credentials: "include",
       }),
@@ -108,16 +110,16 @@ export const apiSlice = createApi({
 
     //  steaks query
     getSteaks: builder.query({
-      query: () => "/steaks",
+      query: () => "/api/steaks",
       providesTags: ["steaks"],
     }),
     getSingleSteak: builder.query({
-      query: (id) => `/steaks/${id}`,
+      query: (id) => `/api/steaks/${id}`,
       providesTags: ["steak"],
     }),
     updateSteak: builder.mutation({
       query: (payload) => ({
-        url: `/steaks/${payload.id}`,
+        url: `/api/steaks/${payload.id}`,
         method: "PUT",
         body: payload.data,
       }),
@@ -125,13 +127,13 @@ export const apiSlice = createApi({
     }),
     deleteSteak: builder.mutation({
       query: (id) => ({
-        url: `/steaks/${id}`,
+        url: `/api/steaks/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["steaks"],
     }),
     getTags: builder.query({
-      query: () => "/tags",
+      query: () => "/api/tags",
       providesTags: ["tags"],
     }),
     //lINE ITEMS
@@ -141,7 +143,7 @@ export const apiSlice = createApi({
     }),
     createLineItem: builder.mutation({
       query: (payload) => ({
-        url: "/lineitems",
+        url: "/api/lineitems",
         method: "POST",
         body: payload,
       }),
@@ -149,7 +151,7 @@ export const apiSlice = createApi({
     }),
     updateLineItem: builder.mutation({
       query: (payload) => ({
-        url: `/lineItems/${payload.id}`,
+        url: `/api/lineItems/${payload.id}`,
         method: "PUT",
         body: payload.data,
       }),
@@ -157,7 +159,7 @@ export const apiSlice = createApi({
     }),
     deleteLineItem: builder.mutation({
       query: (payload) => ({
-        url: `/lineItems/${payload}`,
+        url: `/api/lineItems/${payload}`,
         method: "DELETE",
       }),
       invalidatesTags: ["lineItems"],
