@@ -5,7 +5,7 @@ export default function ManageUsers() {
     return(<>
     <ul>
         <li>View/edit users</li>
-        <li>Delete users(?)</li>
+        <li>Delete users</li>
     </ul>
     </>)
 }
