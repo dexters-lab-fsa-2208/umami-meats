@@ -62,7 +62,7 @@ const Checkout = () => {
         </ProductsContainer>
         <TotalContainer>
             <h2>Total:</h2>
-            <Total>{Math.round(((usersCart ? usersCart : cart).reduce((prev, curr) => (curr.product.price * curr.product.qty) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
+            <Total>{Math.round(((usersCart ? usersCart : cart).reduce((prev, curr) => (curr.product.price * curr.qty) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
         </TotalContainer>
         <ThirdPartyPaymentMethodContainer>
             <button>Placeholder</button>
