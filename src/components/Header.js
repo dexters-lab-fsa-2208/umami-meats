@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Router from "next/router";
 import styled from "styled-components";
+import axios from "axios";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/user-slice";
@@ -9,13 +10,16 @@ import { storeUser, removeUser } from "../redux/reducers/user-slice";
 import { RemoveSSRFromComponent } from "../utils";
 
 import { clearUserCart } from "../redux/reducers/cart-slice";
-import { useGetProductsQuery } from "../redux/reducers/apiSlice";
+import {
+  useGetProductsQuery,
+  useCreateOrderMutation,
+} from "../redux/reducers/apiSlice";
+import { initializeCart } from "../redux/reducers/usersCart-slice";
 
 // react-icons
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
 import { BiLogIn, BiLogOut } from "react-icons/bi";
-
 
 const headerMainHeight = "4em";
 const headerTopHeight = "2em";
@@ -98,7 +102,7 @@ const SearchContainer = styled.div`
   width: 100%;
   height: 100%;
   top: ${headerMainHeight + headerTopHeight};
-  
+
   transition: background-color 0.2s;
   transition: opacity 0.2s;
   background-color: rgba(50, 50, 50, 0.4);
@@ -125,15 +129,15 @@ const SearchContainer = styled.div`
     * {
       padding: 0.3em 0.7em;
       &:nth-child(even) {
-        background-color: rgb(238,238,238);
+        background-color: rgb(238, 238, 238);
       }
     }
   }
-  
+
   &.hide {
     z-index: -100;
     opacity: 0;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(0, 0, 0, 0);
   }
 `;
 
@@ -157,12 +161,47 @@ function Header() {
   const { user, isLoggedIn } = useSelector((state) => state.user);
 
   const { data: products, isLoading } = useGetProductsQuery();
+  const [createNewOrder] = useCreateOrderMutation();
 
   const [isSearchOpen, toggleSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // check users orders after sign in,
+
+    const checkForCart = async () => {
+      const { data: blah } = await axios.get(`/api/users/${user.id}`);
+      const lastOrder = blah.orders[blah.orders.length - 1];
+      // if a user has 0 orders, create new order
+      // or if last order in orders is false (checked out already)
+      // last item in user orders shud always be the working order,
+      // previous orders should all have isCart === false
+      if (blah && (blah.orders.length === 0 || !lastOrder.isCart)) {
+        let { data } = await createNewOrder({
+          userId: user.id,
+
+          isCart: true,
+          address: "address of user",
+        });
+        // initialize the new order id and line items to redux store
+        // maybe somehow use apislice only depending on which has better preformance
+        dispatch(initializeCart({ ...data, lineItems: [] }));
+      }
+
+      // If the last order in the cart is still a cart, initialize the cartId into redux store
+      // for useage all around the app
+      if (user && blah.orders[0]?.isCart) {
+        // initialize the new order id and line items to redux store
+        // maybe somehow use apislice only depending on which has better preformance
+        console.log("DB to redux", blah);
+        dispatch(initializeCart(blah.orders[blah.orders.length - 1]));
+      }
+    };
+
+    user?.id ? checkForCart() : console.log("sign in stoopid");
+  }, []);
 
   let userStatusLink = "/login";
   if (typeof window !== "undefined") {
@@ -194,7 +233,7 @@ function Header() {
       inputRef.current.focus();
     } else if (e.target.tagName === "P") {
       searchRef.current.classList.add("hide");
-      
+
       setTimeout(() => {
         toggleSearch(false);
         setSearchTerm("");
@@ -267,9 +306,9 @@ function Header() {
             <h1>Sushi</h1>
           </Link>
 
-            <div className="headerIconButton" onClick={toggle}>
-              <FaSearch size="1.9em" />
-            </div>
+          <div className="headerIconButton" onClick={toggle}>
+            <FaSearch size="1.9em" />
+          </div>
         </div>
       </HeaderMain>
 
@@ -285,22 +324,23 @@ function Header() {
           value={searchTerm}
         ></input>
         <div className="searchProductList">
-        {!isLoading &&
-          products
-            .filter((product) => {
-              if (searchTerm === "") {
-                return false;
-              } else {
-                return product.name.toLowerCase().includes(searchTerm.toLowerCase());
-              }
-            }
-            )
-            .map((product) => (
-              <Link href={`/${product.type}/${product.id}`} key={product.id}>
-                <p onClick={toggle}>{product.name}</p>
-              </Link>
-            ))}
-            </div>
+          {!isLoading &&
+            products
+              .filter((product) => {
+                if (searchTerm === "") {
+                  return false;
+                } else {
+                  return product.name
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase());
+                }
+              })
+              .map((product) => (
+                <Link href={`/${product.type}/${product.id}`} key={product.id}>
+                  <p onClick={toggle}>{product.name}</p>
+                </Link>
+              ))}
+        </div>
       </SearchContainer>
     </HeaderContainer>
   );
