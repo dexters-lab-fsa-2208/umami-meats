@@ -1,58 +1,64 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import { useUpdateOrderMutation } from '../src/redux/reducers/apiSlice';
+import { useUpdateOrderMutation } from "../src/redux/reducers/apiSlice";
 
 const CheckoutContainer = styled.div`
-display: flex column;
-justify-content: center;
-text-align: center;
+  max-width: 675px;
+  margin: 2em auto;
+
+  display: flex column;
+  justify-content: center;
+  text-align: center;
 `;
 
 const ProductsContainer = styled.div`
-border-top: 1px solid black;
-`;
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.2);
+  font-size: 1.05em;
 
-const Product = styled.div`
-border-bottom: 1px solid black;
-display: flex;
-justify-content: space-between;
-padding: 5px 15px 5px 15px;
+  .product {
+    margin: 0.4em 0 0.1em;
+    padding: 0.5em 0.8em;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .lineItemPrice {
+        font-size: 1.12em;
+        /* font-weight: bold; */
+    }
+  }
+  hr {
+    width: 97%;
+    margin: auto;
+  }
 `;
 
 const TotalContainer = styled.div`
-// text-align: center;
+  margin: 1.1em 0 0.5em;
 `;
 
-const Total = styled.h2`
-
-`;
-
-const ThirdPartyPaymentMethodContainer = styled.div`
-display: flex;
-justify-content: space-around;
-`;
-
-const PaymentMethodContainer = styled.div`
-
+const ConfirmOrder = styled.div`
+  display: flex;
+  justify-content: space-around;
 `;
 
 const Checkout = () => {
+  const { cart } = useSelector((state) => state.cart);
+  const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
+  const [updateOrder] = useUpdateOrderMutation();
+  console.log(usersCart);
 
-    const { cart } = useSelector((state) => state.cart);
-    const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
-    const [updateOrder] = useUpdateOrderMutation();
-    console.log(usersCart);
+  const checkout = (id) => {
+    console.log(id);
+    updateOrder({ data: { isCart: false }, id });
+    //maybe redirect to home page
+  };
 
-    const checkout = (id) => {
-        console.log(id);
-        updateOrder({data: { isCart: false}, id});
-        //maybe redirect to home page
-    }
+  // const [total, setTotal] = useState(0)
 
-    // const [total, setTotal] = useState(0)
-
-	return (
+  return (
     <CheckoutContainer>
         <h2>Checkout</h2>
         <br></br>
@@ -72,15 +78,15 @@ const Checkout = () => {
             <h2>Total:</h2>
             <Total>{Math.round(((usersCart ? usersCart : cart).lineItems.reduce((prev, curr) => (curr.product.price * curr.qty) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
         </TotalContainer>
-        <ThirdPartyPaymentMethodContainer>
-            <button onClick={() => checkout(usersCart.id)}>Checkout</button>
-            
-        </ThirdPartyPaymentMethodContainer>
-        <PaymentMethodContainer>
-            
-        </PaymentMethodContainer>
+      <ConfirmOrder>
+          <button onClick={() => checkout(usersCart.id)}
+          className="mainButton"
+        >
+          Confirm Order
+        </button>
+      </ConfirmOrder>
     </CheckoutContainer>
-    );
+  );
 };
 
 export default Checkout;

@@ -147,8 +147,10 @@ function Cart() {
     <MainContainer>
       <h2>Your Cart</h2>
       <ProductsContainer>
+
         {(isLoggedIn ? usersCart : cart).lineItems?.map((product, idx) => (
           <div key={product.productId}>
+
             <Image src={product.product.img} alt="sushi" />
             <DetailsContainer>
               {" "}
