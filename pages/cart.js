@@ -152,7 +152,7 @@ function Cart() {
       <h2>Your Cart</h2>
       <ProductsContainer>
 
-        {(usersCart ? usersCart.lineItems : cart)?.map((product, idx) => (
+        {(usersCart ? usersCart : cart).lineItems?.map((product, idx) => (
           <div key={product.id}>
 
             <Image src={product.product.img} alt="sushi" />
@@ -259,7 +259,7 @@ function Cart() {
               </IncrementAndPrice>
             </DetailsContainer>
             {/* places a line below each item unless it is the last in the cart */}
-            {idx + 1 === (isLoggedIn ? usersCart.lineItems : cart).lineItems.length ? "" : <hr />}
+            {idx + 1 === (isLoggedIn ? usersCart : cart).lineItems.length ? "" : <hr />}
           </div>
         ))}
       </ProductsContainer>
@@ -301,7 +301,7 @@ function Cart() {
         {/* checkout button */}
         {isLoggedIn ? (
           <Link href={"/checkout"}>
-            <button className="mainButton">Checkout</button>
+            <button className="mainButton">Checkout Button</button>
           </Link>
         ) : (
           <Link href="/login">

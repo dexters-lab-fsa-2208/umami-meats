@@ -35,7 +35,7 @@ const cartSlice = createSlice({
           found = true;
         }
       });
-      !found && state.cart.push({userId : null, orderId: null, productId: action.payload.product.id, qty: action.payload.num, product: action.payload.product});
+      !found && state.cart.push(action.payload);
     },
     removeFromCart: (state, action) => {
       state.cart = state.cart.filter(
