@@ -14,7 +14,7 @@ const ErrorContainer = styled.div`
   }
 `;
 
-export default function ({ is500 }) {
+export default function Error({ is500 }) {
   const statusText = is500 ?
     "Sorry, but it seems there was an internal server error while processing your request" :
     "Sorry, but the item you are looking for could not be found!"
