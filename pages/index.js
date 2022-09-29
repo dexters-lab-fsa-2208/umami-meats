@@ -52,7 +52,7 @@ const CarouselButton = styled.button`
   position: absolute;
   width: 25px;
   height: 25px;
-  top: 16em;
+  top: 19em;
 
   display: flex;
   justify-content: center;
@@ -97,11 +97,17 @@ const ListContainer = styled.div`
   flex-flow: row wrap;
   justify-content: space-around;
 
+  ::after {
+    content: "";
+    flex: auto;
+  }
+
   margin: 0.5em;
 `;
 
 // SINGLE PRODUCT IN LIST
 const ListItemContainer = styled.div`
+  width: 160px;
   max-width: 160px;
   min-height: 250px;
 
@@ -215,9 +221,9 @@ export default function HomePage() {
               return (
                 <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
                   <ListItemContainer>
-                    <img src={itm.img} alt={itm.name} />
+                    <img src={itm.img} alt={itm.name || "product"} />
                     <p className="productName">{itm.name}</p>
-                    <p className="productPrice">${itm.price}</p>
+                    <p className="productPrice">${itm.price}/lb</p>
                   </ListItemContainer>
                 </Link>
               );
