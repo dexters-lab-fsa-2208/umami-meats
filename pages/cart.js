@@ -22,6 +22,10 @@ const MainContainer = styled.div`
   h3 {
     margin: 0.5em 0.5em 0.6em;
   }
+
+  #cartEmpty {
+    padding: 0 0.8em;
+  }
 `;
 
 const ProductsContainer = styled.div`
@@ -146,146 +150,150 @@ function Cart() {
   return (
     <MainContainer>
       <h2>Your Cart</h2>
-      <ProductsContainer>
-        {(isLoggedIn && isSuccess ? usersCart : cart).map((product, idx) => (<>
-          <div key={product.productId} className="singleProduct">
-            <Image src={product.product.img} alt="sushi" />
-            <DetailsContainer>
-              {" "}
-              <NameandX>
-                <p>{product.product.name}</p>
-                {isLoggedIn ? (
-                  <button
-                    onClick={() => handleRemoveLineItem(product)}
-                    className="secondaryButton xBtn"
-                  >
-                    X
-                  </button>
-                ) : (
-                  <button
-                    className="incrementButton"
-                    onClick={
-                      product.qty <= 1
-                        ? () => dispatch(removeFromCart(product.productId))
-                        : () =>
-                            dispatch(
-                              addToCart({
-                                orderId: null,
-                                productId: product.product.id,
-                                qty: -1,
-                                product: product.product,
-                              })
-                            )
-                    }
-                  >
-                    -
-                  </button>
-                )}
-              </NameandX>
-              <IncrementAndPrice>
-                <div className="incrementContainer incrementCart">
-                  {isLoggedIn ? (
-                    // If a user is logged in, access database
-                    <button
-                      className="incrementButton"
-                      onClick={
-                        product.qty <= 1
-                          ? () => handleRemoveLineItem(product)
-                          : () => handleUpdateItem(product, -1)
-                      }
-                    >
-                      -
-                    </button>
-                  ) : (
-                    <button
-                      className="incrementButton"
-                      onClick={
-                        product.qty <= 1
-                          ? () => dispatch(removeFromCart(product.productId))
-                          : () =>
-                              dispatch(
-                                addToCart({
-                                  orderId: null,
-                                  productId: product.product.id,
-                                  qty: -1,
-                                  product: product.product,
-                                })
-                              )
-                      }
-                    >
-                      -
-                    </button>
-                  )}
+      {(isLoggedIn && isSuccess ? usersCart : cart).length === 0 ? (
+        <p id="cartEmpty">Your cart is empty!</p>
+      ) : (
+        <>
+          <ProductsContainer>
+            {(isLoggedIn && isSuccess ? usersCart : cart).map(
+              (product, idx) => (
+                <div key={idx}>
+                  <div key={product.productId} className="singleProduct">
+                    <Image src={product.product.img} alt="sushi" />
+                    <DetailsContainer>
+                      {" "}
+                      <NameandX>
+                        <p>{product.product.name}</p>
+                        {isLoggedIn ? (
+                          <button
+                            onClick={() => handleRemoveLineItem(product)}
+                            className="secondaryButton xBtn"
+                          >
+                            X
+                          </button>
+                        ) : (
+                          <button
+                            className="secondaryButton xBtn"
+                            onClick={() =>
+                              dispatch(removeFromCart(product.productId))
+                            }
+                          >
+                            X
+                          </button>
+                        )}
+                      </NameandX>
+                      <IncrementAndPrice>
+                        <div className="incrementContainer incrementCart">
+                          {isLoggedIn ? (
+                            // If a user is logged in, access database
+                            <button
+                              className="incrementButton"
+                              onClick={
+                                product.qty <= 1
+                                  ? () => handleRemoveLineItem(product)
+                                  : () => handleUpdateItem(product, -1)
+                              }
+                            >
+                              -
+                            </button>
+                          ) : (
+                            <button
+                              className="incrementButton"
+                              onClick={
+                                product.qty <= 1
+                                  ? () =>
+                                      dispatch(
+                                        removeFromCart(product.productId)
+                                      )
+                                  : () =>
+                                      dispatch(
+                                        addToCart({
+                                          orderId: null,
+                                          productId: product.product.id,
+                                          qty: -1,
+                                          product: product.product,
+                                        })
+                                      )
+                              }
+                            >
+                              -
+                            </button>
+                          )}
 
-                  <p>{product.qty}</p>
-                  {isLoggedIn ? (
-                    <button
-                      className="incrementButton"
-                      onClick={() => handleUpdateItem(product, 1)}
-                    >
-                      +
-                    </button>
-                  ) : (
-                    <button
-                      className="incrementButton"
-                      onClick={() =>
-                        dispatch(
-                          addToCart({
-                            orderId: null,
-                            product: product.product,
-                            productId: product.product.id,
-                            qty: 1,
-                          })
-                        )
-                      }
-                    >
-                      +
-                    </button>
+                          <p>{product.qty}</p>
+                          {isLoggedIn ? (
+                            <button
+                              className="incrementButton"
+                              onClick={() => handleUpdateItem(product, 1)}
+                            >
+                              +
+                            </button>
+                          ) : (
+                            <button
+                              className="incrementButton"
+                              onClick={() =>
+                                dispatch(
+                                  addToCart({
+                                    orderId: null,
+                                    product: product.product,
+                                    productId: product.product.id,
+                                    qty: 1,
+                                  })
+                                )
+                              }
+                            >
+                              +
+                            </button>
+                          )}
+                        </div>
+                        <p className="cartPrice">
+                          $
+                          {Math.round(
+                            (product.product.price * product.qty +
+                              Number.EPSILON) *
+                              100
+                          ) / 100}
+                        </p>
+                        {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
+                      </IncrementAndPrice>
+                    </DetailsContainer>
+                    {/* places a line below each item unless it is the last in the cart */}
+                  </div>
+                  {!(idx + 1 === (isLoggedIn ? usersCart : cart).length) && (
+                    <hr />
                   )}
                 </div>
-                <p className="cartPrice">
+              )
+            )}
+          </ProductsContainer>
+
+          <Checkout>
+            <h3>Checkout</h3>
+            <div>
+              <div className="checkoutLine">
+                <p>Subtotal</p>
+                <p>
                   $
                   {Math.round(
-                    (product.product.price * product.qty + Number.EPSILON) * 100
+                    ((isLoggedIn ? usersCart : cart).reduce(
+                      (prev, curr) =>
+                        Number(curr.product.price) * Number(curr.qty) +
+                        Number(prev),
+                      0
+                    ) +
+                      Number.EPSILON) *
+                      100
                   ) / 100}
                 </p>
-                {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
-              </IncrementAndPrice>
-            </DetailsContainer>
-            {/* places a line below each item unless it is the last in the cart */}
-          </div>
-          {!(idx + 1 === (isLoggedIn ? usersCart : cart).length) && <hr />}
-          </>
-        ))}
-      </ProductsContainer>
-
-      <Checkout>
-        <h3>Checkout</h3>
-        <div>
-          <div className="checkoutLine">
-            <p>Subtotal</p>
-            <p>
-              $
-              {Math.round(
-                ((isLoggedIn ? usersCart : cart).reduce(
-                  (prev, curr) =>
-                    Number(curr.product.price) * Number(curr.qty) +
-                    Number(prev),
-                  0
-                ) +
-                  Number.EPSILON) *
-                  100
-              ) / 100}
-            </p>
-          </div>
-          <div className="checkoutLine">
-            <p>Shipping</p> <p>Calculated at Checkout</p>
-          </div>
-          {/* <CheckoutHeaders>
+              </div>
+              <div className="checkoutLine">
+                <p>Shipping</p> <p>Calculated at Checkout</p>
+              </div>
+              {/* <CheckoutHeaders>
               Tax<Total>$99.99</Total>
             </CheckoutHeaders> */}
-        </div>
-        {/* <PaymentMethodContainer>
+            </div>
+            {/* <PaymentMethodContainer>
             <CheckoutHeaders>
               Total<Total>$99.99</Total>
             </CheckoutHeaders>
@@ -293,17 +301,19 @@ function Cart() {
             <CheckoutButton>Credit Card</CheckoutButton>
           </PaymentMethodContainer> */}
 
-        {/* checkout button */}
-        {isLoggedIn ? (
-          <Link href={"/checkout"}>
-            <button className="mainButton">Temp Checkout Button</button>
-          </Link>
-        ) : (
-          <Link href="/login">
-            <button className="mainButton">Log In to Checkout!</button>
-          </Link>
-        )}
-      </Checkout>
+            {/* checkout button */}
+            {isLoggedIn ? (
+              <Link href={"/checkout"}>
+                <button className="mainButton">Checkout</button>
+              </Link>
+            ) : (
+              <Link href="/login">
+                <button className="mainButton">Log In to Checkout!</button>
+              </Link>
+            )}
+          </Checkout>
+        </>
+      )}
     </MainContainer>
   );
 }

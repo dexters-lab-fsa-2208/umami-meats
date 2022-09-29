@@ -77,27 +77,27 @@ const Checkout = () => {
       <h2>Checkout</h2>
       <br></br>
       <ProductsContainer>
-        {(usersCart ? usersCart : cart).map((product) => (
+        {(usersCart ? usersCart : cart).map((product, idx) => (
           <>
-            <Product>
+            <div className="product">
               <p>
                 {product.product.name} ({product.qty})
               </p>
               <p>
-                {Math.round(
+                {"$" + Math.round(
                   (product.product.price * product.qty + Number.EPSILON) * 100
                 ) / 100}
               </p>
               {/* {setTotal(total + (product.price * product.quantity))} */}
-            </Product>
-            <br></br>
+            </div>
+            {!(idx + 1 === (usersCart ? usersCart : cart).length) && <hr />}
           </>
         ))}
       </ProductsContainer>
       <TotalContainer>
-        <h2>Total:
+        <h2>{"Total: $" +
         
-          {Math.round(
+          Math.round(
             ((usersCart ? usersCart : cart).reduce(
               (prev, curr) => curr.product.price * curr.qty + prev,
               0
