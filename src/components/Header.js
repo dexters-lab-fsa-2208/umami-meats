@@ -167,17 +167,17 @@ function Header() {
   let userStatusLink = "/login";
   if (typeof window !== "undefined") {
     if (isLoggedIn) {
-      userStatusLink = "/account/view";
+      userStatusLink = "/account";
     } else if (localStorage.user && !user) {
       dispatch(storeUser(JSON.parse(localStorage.getItem("user"))));
-      userStatusLink = "/account/view";
+      userStatusLink = "/account";
     }
   }
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    localStorage.removeItem("persist:root");
     dispatch(removeUser());
+    localStorage.removeItem("persist:root");
     // clears the users cart in redux storage only on log out, workaround for removing persistence
 
     Router.push("/");
