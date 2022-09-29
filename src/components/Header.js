@@ -42,6 +42,8 @@ const HeaderTop = styled.div`
   }
 `;
 
+const mobileLogoTextWidth = "3.62em";
+
 const HeaderMain = styled.div`
   width: 100%;
   height: ${headerMainHeight};
@@ -77,6 +79,22 @@ const HeaderMain = styled.div`
   }
   .headerIconButton:active {
     background-color: #660000;
+  }
+  #headerLogo {
+    width: calc(${headerMainHeight} + ${mobileLogoTextWidth} + 1em);
+    padding-left: 0.5em;
+    /* border: 2px solid yellow; */
+
+    h1 {
+      font-size: 1.14em;
+      width: ${mobileLogoTextWidth};
+      margin: 0 0.5em 0 0.6em;
+      /* border: 1px solid blue; */
+    }
+  }
+
+  @media screen and (min-width: 800px) {
+    // should expand logo to be wider, maybe at smaller width?
   }
 `;
 
@@ -235,8 +253,9 @@ function Header() {
       <HeaderMain>
         <div>
           <Link href="/">
-            <div className="headerIconButton">
+            <div id="headerLogo" className="headerIconButton">
               <GiMeatCleaver size="2.4em" />
+              <h1>Umami Meats</h1>
             </div>
           </Link>
 
