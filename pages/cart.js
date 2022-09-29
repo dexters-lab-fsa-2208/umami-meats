@@ -113,18 +113,18 @@ const Checkout = styled.div`
 
 function Cart() {
   const { cart } = useSelector((state) => state.cart);
-  const { cart: usersCart, isLoading } = useSelector((state) => state.usersCart);
+  let { cart: usersCart, isLoading } = useSelector((state) => state.usersCart);
   const { isLoggedIn } = useSelector((state) => state.user);
-  const { data } = useGetSingleOrderQuery(
-    isLoggedIn ? usersCart.id : skipToken
-  );
+  // const { data } = useGetSingleOrderQuery(
+  //   isLoggedIn ? usersCart.id : skipToken
+  // );
 
   const [deleteLineItem] = useDeleteLineItemMutation();
   const [updateLineItem] = useUpdateLineItemMutation();
   const dispatch = useDispatch();
 
   const handleRemoveLineItem = async (payload) => {
-    console.log(payload);
+    console.log(usersCart, 'HERE', payload);
     dispatch(removeFromUsersCart(payload.productId));
     await deleteLineItem(payload.id);
   };
@@ -143,13 +143,17 @@ function Cart() {
     dispatch(addToUsersCart({ newData, num }));
   };
 
+  // useEffect(() => {
+  //   console.log(usersCart);
+  // },[usersCart])
+
   return (
     <MainContainer>
       <h2>Your Cart</h2>
       <ProductsContainer>
 
-        {(isLoggedIn ? usersCart : cart).lineItems?.map((product, idx) => (
-          <div key={product.productId}>
+        {(usersCart ? usersCart : cart).lineItems?.map((product, idx) => (
+          <div key={product.id}>
 
             <Image src={product.product.img} alt="sushi" />
             <DetailsContainer>
