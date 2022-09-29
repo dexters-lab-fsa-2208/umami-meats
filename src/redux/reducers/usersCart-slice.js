@@ -45,7 +45,7 @@ const usersCartSlice = createSlice({
       !found && state.cart.lineItems.push(action.payload.newData);
     },
     removeFromUsersCart: (state, action) => {
-      state.cart = state.cart.lineItems.filter(
+      state.cart.lineItems = state.cart.lineItems.filter(
         (item) => item.productId !== action.payload
       );
     },
