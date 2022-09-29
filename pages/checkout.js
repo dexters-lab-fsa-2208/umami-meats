@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import { useUpdateOrderMutation } from '../src/redux/reducers/apiSlice';
 
 const CheckoutContainer = styled.div`
 display: flex column;
@@ -40,7 +41,14 @@ const Checkout = () => {
 
     const { cart } = useSelector((state) => state.cart);
     const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
+    const [updateOrder] = useUpdateOrderMutation();
     console.log(usersCart);
+
+    const checkout = (id) => {
+        console.log(id);
+        updateOrder({data: { isCart: false}, id});
+        //maybe redirect to home page
+    }
 
     // const [total, setTotal] = useState(0)
 
@@ -65,8 +73,8 @@ const Checkout = () => {
             <Total>{Math.round(((usersCart ? usersCart : cart).reduce((prev, curr) => (curr.product.price * curr.qty) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
         </TotalContainer>
         <ThirdPartyPaymentMethodContainer>
-            <button>Placeholder</button>
-            <button>Placeholder</button>
+            <button onClick={() => checkout(usersCart[0].orderId)}>Checkout</button>
+            
         </ThirdPartyPaymentMethodContainer>
         <PaymentMethodContainer>
             

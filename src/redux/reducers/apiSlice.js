@@ -3,9 +3,9 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({
-    baseUrl: 
-    "http://localhost:3000",
-      // baseUrl: process.env.BASE_URL || "http://localhost:3000",
+    // baseUrl: 
+    // "https://umamimeats.herokuapp.com",
+      baseUrl: process.env.BASE_URL || "http://localhost:3000",
   }),
   tagTypes: [
     "users",
@@ -72,6 +72,14 @@ export const apiSlice = createApi({
     getSingleOrder: builder.query({
       query: (id) => `/api/orders/${id}`,
       providesTags: ["order"],
+    }),
+    updateOrder: builder.mutation({
+      query: (payload) => ({
+        url: `/api/orders/${payload.id}`,
+        method: "PUT",
+        body: payload.data,
+      }),
+      invalidatesTags: ["sushi"],
     }),
     createOrder: builder.mutation({
       query: (payload) => ({
@@ -176,6 +184,7 @@ export const {
   useCreateProductMutation,
   useGetOrdersQuery,
   useGetSingleOrderQuery,
+  useUpdateOrderMutation,
   useCreateOrderMutation,
   useGetSteaksQuery,
   useGetSingleSteakQuery,
