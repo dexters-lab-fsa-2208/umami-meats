@@ -57,7 +57,7 @@ const Checkout = () => {
         <h2>Checkout</h2>
         <br></br>
         <ProductsContainer>
-            {(usersCart ? usersCart : cart).map(product => (
+            {(usersCart ? usersCart : cart).lineItems.map(product => (
                 <>
                 <Product>
                 <p>{product.product.name} ({product.qty})</p>
@@ -70,10 +70,10 @@ const Checkout = () => {
         </ProductsContainer>
         <TotalContainer>
             <h2>Total:</h2>
-            <Total>{Math.round(((usersCart ? usersCart : cart).reduce((prev, curr) => (curr.product.price * curr.qty) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
+            <Total>{Math.round(((usersCart ? usersCart : cart).lineItems.reduce((prev, curr) => (curr.product.price * curr.qty) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
         </TotalContainer>
         <ThirdPartyPaymentMethodContainer>
-            <button onClick={() => checkout(usersCart[0].orderId)}>Checkout</button>
+            <button onClick={() => checkout(usersCart.id)}>Checkout</button>
             
         </ThirdPartyPaymentMethodContainer>
         <PaymentMethodContainer>
