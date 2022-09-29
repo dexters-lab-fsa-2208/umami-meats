@@ -301,7 +301,7 @@ function Cart() {
         {/* checkout button */}
         {isLoggedIn ? (
           <Link href={"/checkout"}>
-            <button className="mainButton">Temp Checkout Button</button>
+            <button className="mainButton">Checkout</button>
           </Link>
         ) : (
           <Link href="/login">
