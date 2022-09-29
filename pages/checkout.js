@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
-import { useUpdateOrderMutation } from "../src/redux/reducers/apiSlice";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  useCreateOrderMutation,
+  useUpdateOrderMutation,
+} from "../src/redux/reducers/apiSlice";
+import { initializeCart } from "../src/redux/reducers/usersCart-slice";
 
 const CheckoutContainer = styled.div`
   max-width: 675px;
@@ -47,13 +51,23 @@ const ConfirmOrder = styled.div`
 const Checkout = () => {
   const { cart } = useSelector((state) => state.cart);
   const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
+  const { user } = useSelector((state) => state.user);
   const [updateOrder] = useUpdateOrderMutation();
+  const [createNewOrder] = useCreateOrderMutation();
   console.log(usersCart);
 
-  const checkout = (id) => {
+  const dispatch = useDispatch();
+
+  const checkout = async (id) => {
     console.log(id);
-    updateOrder({ data: { isCart: false }, id });
+    await updateOrder({ data: { isCart: false }, id });
+    let { data } = await createNewOrder({
+      userId: user.id,
+      isCart: true,
+      address: "some address",
+    });
     //maybe redirect to home page
+    dispatch(initializeCart({ ...data, lineItems: [] }));
   };
 
   // const [total, setTotal] = useState(0)
@@ -61,45 +75,40 @@ const Checkout = () => {
   return (
     <CheckoutContainer>
       <h2>Checkout</h2>
+      <br></br>
       <ProductsContainer>
-        {(usersCart ? usersCart : cart).map((product, idx) => (
+        {(usersCart ? usersCart : cart).map((product) => (
           <>
-            <div className="product">
+            <Product>
               <p>
                 {product.product.name} ({product.qty})
               </p>
-              <p className="lineItemPrice">
-                ${Math.round(
+              <p>
+                {Math.round(
                   (product.product.price * product.qty + Number.EPSILON) * 100
                 ) / 100}
               </p>
               {/* {setTotal(total + (product.price * product.quantity))} */}
-            </div>
-            {!(idx + 1 === (usersCart ? usersCart : cart).length) && <hr />}
+            </Product>
+            <br></br>
           </>
         ))}
       </ProductsContainer>
       <TotalContainer>
-        <h2>
-          {"Total: $" +
-            Math.round(
-              ((usersCart ? usersCart : cart).reduce(
-                (prev, curr) => curr.product.price * curr.qty + prev,
-                0
-              ) +
-                Number.EPSILON) *
-                100
-            ) /
-              100}
+        <h2>Total:
+        
+          {Math.round(
+            ((usersCart ? usersCart : cart).reduce(
+              (prev, curr) => curr.product.price * curr.qty + prev,
+              0
+            ) +
+              Number.EPSILON) *
+              100
+          ) / 100}
         </h2>
       </TotalContainer>
       <ConfirmOrder>
-        <button
-          onClick={() => checkout(usersCart[0].orderId)}
-          className="mainButton"
-        >
-          Confirm Order
-        </button>
+        <button onClick={() => checkout(usersCart[0].orderId)} className="mainButton">Checkout</button>
       </ConfirmOrder>
     </CheckoutContainer>
   );

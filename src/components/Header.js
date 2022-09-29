@@ -196,6 +196,7 @@ function Header() {
     const checkForCart = async () => {
       const { data: blah } = await axios.get(`/api/users/${user.id}`);
       const lastOrder = blah.orders[blah.orders.length - 1];
+
       // if a user has 0 orders, create new order
       // or if last order in orders is false (checked out already)
       // last item in user orders shud always be the working order,
