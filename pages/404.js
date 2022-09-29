@@ -1,6 +1,6 @@
 import React from "react";
 import { Error } from "../src/components";
 
-export default function () {
+export default function notFound() {
   return <Error />;
 }
