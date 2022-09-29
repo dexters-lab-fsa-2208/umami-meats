@@ -21,7 +21,6 @@ import axios from "axios";
 const customGray = "rgba(120, 120, 120, 0.1)";
 
 const HomePageContainer = styled.div`
-
   @media screen and (min-width: 1000px) {
     .carouselItem > img {
       border-left: 1px solid ${customGray};
@@ -148,47 +147,9 @@ const ListItemContainer = styled.div`
 export default function HomePage() {
   const { data, isLoading } = useGetProductsQuery();
   const { user, isLoggedIn } = useSelector((state) => state.user);
-  // skipToken is a parameter provided by RTK to conditionally query data based on condition passed
-  // in our case, it will be if a user is Logged in (skip if false)
 
   const [createNewOrder] = useCreateOrderMutation();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    // check users orders after sign in,
-
-    const checkForCart = async () => {
-      const { data: blah } = await axios.get(`/api/users/${user.id}`);
-      const lastOrder = blah.orders[blah.orders.length - 1];
-      // if a user has 0 orders, create new order
-      // or if last order in orders is false (checked out already)
-      // last item in user orders shud always be the working order,
-      // previous orders should all have isCart === false
-      if (blah && (blah.orders.length === 0 || !lastOrder.isCart)) {
-        let { data } = await createNewOrder({
-          userId: user.id,
-
-          isCart: true,
-          address: "address of user",
-        });
-        // initialize the new order id and line items to redux store
-        // maybe somehow use apislice only depending on which has better preformance
-        dispatch(initializeCart({ ...data, lineItems: [] }));
-      }
-
-      // If the last order in the cart is still a cart, initialize the cartId into redux store
-      // for useage all around the app
-      if (user && blah.orders[0]?.isCart) {
-        // initialize the new order id and line items to redux store
-        // maybe somehow use apislice only depending on which has better preformance
-        console.log("DB to redux", blah);
-        dispatch(initializeCart(blah.orders[blah.orders.length - 1]));
-      }
-    };
-
-    user?.id ? checkForCart() : console.log("sign in stoopid");
-  }, []);
-
 
   const [carouselIdx, setCarouselIdx] = React.useState(0);
 
@@ -229,7 +190,7 @@ export default function HomePage() {
                   }}
                 >
                   {/* <>{itm.name}</> */}
-                  <img src={itm.img} alt={itm.name || "product"}/>
+                  <img src={itm.img} alt={itm.name || "product"} />
                 </div>
               </Link>
             ))}
@@ -246,7 +207,7 @@ export default function HomePage() {
               return (
                 <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
                   <ListItemContainer>
-                    <img src={itm.img} alt={itm.name}/>
+                    <img src={itm.img} alt={itm.name} />
                     <p className="productName">{itm.name}</p>
                     <p className="productPrice">${itm.price}</p>
                   </ListItemContainer>
