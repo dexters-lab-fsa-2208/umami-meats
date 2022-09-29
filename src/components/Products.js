@@ -110,9 +110,10 @@ export default function Products({ products, isLoading }) {
   const [filtered, setFiltered] = useState(false);
   const [currentFilter, setCurrentFilter] = useState("");
 
-  const { cart } = useSelector((state) => state.cart);
-  const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
   const { isLoggedIn, user } = useSelector((state) => state.user);
+  const { cart } = useSelector((state) => state.cart);
+  const { cart: usersCart } = useSelector((state) => state.usersCart);
+
 
   const { data: tags, isSuccess } = useGetTagsQuery();
   const [createLineItem] = useCreateLineItemMutation();
@@ -120,6 +121,7 @@ export default function Products({ products, isLoading }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log(usersCart)
     setFilteredProducts(products);
   }, [products]);
 
@@ -139,14 +141,14 @@ export default function Products({ products, isLoading }) {
 
   // if a user is logged in
   const updateOrAddLineItem = (payload, num) => {
-    console.log(usersCart);
+    console.log('PAYLOAD', payload);
     let newData = { ...payload };
     // keeping track of previous quantity
     let prevQty;
     // find out if the item exists in our redux store
     // if it does, we are able to call PUT
     // if it dosent, we are calling POST
-    const existingItem = usersCart.find(
+    const existingItem = usersCart.lineItems.find(
       (item) => item.productId === payload.productId
     );
     // setting the previous quantity to the quantity of the exisiting
@@ -160,7 +162,8 @@ export default function Products({ products, isLoading }) {
       await updateLineItem({
         id: existingItem.id,
         data: {
-          orderId: cartId,
+          id: existingItem.id,
+          orderId: usersCart.id,
           productId: payload.productId,
           qty: (prevQty += num),
         },
@@ -170,10 +173,11 @@ export default function Products({ products, isLoading }) {
 
     // add line item and sending it to redux store
     const add = async () => {
-      console.log("creating");
+      console.log("creating", usersCart);
       let { data } = await createLineItem(payload);
       // clone data to make it muteable so we can add product and add into redux store
       newData = { ...data, product: payload.product };
+      console.log(newData);
       dispatch(addToUsersCart({ newData, num }));
     };
 
@@ -230,7 +234,7 @@ export default function Products({ products, isLoading }) {
                   onClick={() =>
                     updateOrAddLineItem(
                       {
-                        orderId: cartId,
+                        orderId: usersCart.id,
                         productId: product.id,
                         qty: 1,
                         product: product,
@@ -239,7 +243,7 @@ export default function Products({ products, isLoading }) {
                     )
                   }
                 >
-                  Add To Cart
+                  Add To Carts
                 </button>
               ) : (
                 <button

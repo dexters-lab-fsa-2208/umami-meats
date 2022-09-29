@@ -11,6 +11,7 @@ import { clearUserCart } from "../redux/reducers/cart-slice";
 import {
   useGetProductsQuery,
   useCreateOrderMutation,
+  useGetSingleUserQuery,
 } from "../redux/reducers/apiSlice";
 import { initializeCart } from "../redux/reducers/usersCart-slice";
 
@@ -184,9 +185,14 @@ function Header() {
 
   const { data: products, isLoading, isError } = useGetProductsQuery();
   const [createNewOrder] = useCreateOrderMutation();
+  // const { data: myUser } = useGetSingleUserQuery(user.id);
 
   const [isSearchOpen, toggleSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  // const { data: blah } = useGetSingleUserQuery(user?.id)
+
+
+  // const [getUser] = useGetSingleUserQuery();
 
   const dispatch = useDispatch();
 
@@ -195,35 +201,39 @@ function Header() {
 
     const checkForCart = async () => {
       const { data: blah } = await axios.get(`/api/users/${user.id}`);
-      const lastOrder = blah.orders[blah.orders.length - 1];
+      // const lineItems = blah.orders.find(order => order.isCart === true).lineItems;
+      
+      const lastOrder = blah.orders.find(order => order.isCart === true);
       // if a user has 0 orders, create new order
       // or if last order in orders is false (checked out already)
       // last item in user orders shud always be the working order,
       // previous orders should all have isCart === false
-      if (blah && (blah.orders.length === 0 || !lastOrder.isCart)) {
+      if (blah?.orders.length === 0 || !lastOrder) {
+        console.log(blah)
         let { data } = await createNewOrder({
           userId: user.id,
 
           isCart: true,
           address: "address of user",
         });
+        console.log(data)
         // initialize the new order id and line items to redux store
         // maybe somehow use apislice only depending on which has better preformance
-        dispatch(initializeCart({ ...data, lineItems: [] }));
+        dispatch(initializeCart({...data, lineItems: []}));
       }
 
       // If the last order in the cart is still a cart, initialize the cartId into redux store
       // for useage all around the app
-      if (user && blah.orders[0]?.isCart) {
+      else if (lastOrder && blah.orders.length > 0) {
         // initialize the new order id and line items to redux store
         // maybe somehow use apislice only depending on which has better preformance
-        console.log("DB to redux", blah);
-        dispatch(initializeCart(blah.orders[blah.orders.length - 1]));
+        console.log("DB to redux", blah, lastOrder);
+        dispatch(initializeCart(lastOrder));
       }
     };
 
     user?.id ? checkForCart() : console.log("sign in stoopid");
-  }, []);
+  }, [isLoggedIn]);
 
   let userStatusLink = "/login";
   if (typeof window !== "undefined") {
@@ -299,14 +309,14 @@ function Header() {
           <Link href="/cart">
             <LinkContainer>
               <FaShoppingCart />
-              <p>{`Cart (${usersCart.length})`}</p>
+              <p>{`Cart (${usersCart.lineItems?.length})`}</p>
             </LinkContainer>
           </Link>
         ) : (
           <Link href="/cart">
             <LinkContainer>
               <FaShoppingCart />
-              <p>{`Cart (${cart.length})`}</p>
+              <p>{`Cart (${cart.lineItems?.length})`}</p>
             </LinkContainer>
           </Link>
         )}

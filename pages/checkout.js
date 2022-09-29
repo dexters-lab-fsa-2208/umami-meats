@@ -60,42 +60,26 @@ const Checkout = () => {
 
   return (
     <CheckoutContainer>
-      <h2>Checkout</h2>
-      <ProductsContainer>
-        {(usersCart ? usersCart : cart).map((product, idx) => (
-          <>
-            <div className="product">
-              <p>
-                {product.product.name} ({product.qty})
-              </p>
-              <p className="lineItemPrice">
-                ${Math.round(
-                  (product.product.price * product.qty + Number.EPSILON) * 100
-                ) / 100}
-              </p>
-              {/* {setTotal(total + (product.price * product.quantity))} */}
-            </div>
-            {!(idx + 1 === (usersCart ? usersCart : cart).length) && <hr />}
-          </>
-        ))}
-      </ProductsContainer>
-      <TotalContainer>
-        <h2>
-          {"Total: $" +
-            Math.round(
-              ((usersCart ? usersCart : cart).reduce(
-                (prev, curr) => curr.product.price * curr.qty + prev,
-                0
-              ) +
-                Number.EPSILON) *
-                100
-            ) /
-              100}
-        </h2>
-      </TotalContainer>
+        <h2>Checkout</h2>
+        <br></br>
+        <ProductsContainer>
+            {(usersCart ? usersCart : cart).lineItems.map(product => (
+                <>
+                <Product>
+                <p>{product.product.name} ({product.qty})</p>
+                <p>{Math.round((product.product.price * product.qty + Number.EPSILON) * 100) / 100}</p>
+                {/* {setTotal(total + (product.price * product.quantity))} */}
+                </Product>
+                <br></br>
+                </>
+            ))}
+        </ProductsContainer>
+        <TotalContainer>
+            <h2>Total:</h2>
+            <Total>{Math.round(((usersCart ? usersCart : cart).lineItems.reduce((prev, curr) => (curr.product.price * curr.qty) + prev,0) + Number.EPSILON) * 100) / 100}</Total>
+        </TotalContainer>
       <ConfirmOrder>
-        <button
-          onClick={() => checkout(usersCart[0].orderId)}
+          <button onClick={() => checkout(usersCart.id)}
           className="mainButton"
         >
           Confirm Order
