@@ -147,8 +147,8 @@ function Cart() {
     <MainContainer>
       <h2>Your Cart</h2>
       <ProductsContainer>
-        {(isLoggedIn && isSuccess ? usersCart : cart).map((product, idx) => (
-          <div key={product.productId}>
+        {(isLoggedIn && isSuccess ? usersCart : cart).map((product, idx) => (<>
+          <div key={product.productId} className="singleProduct">
             <Image src={product.product.img} alt="sushi" />
             <DetailsContainer>
               {" "}
@@ -253,8 +253,9 @@ function Cart() {
               </IncrementAndPrice>
             </DetailsContainer>
             {/* places a line below each item unless it is the last in the cart */}
-            {idx + 1 === (isLoggedIn ? usersCart : cart).length ? "" : <hr />}
           </div>
+          {!(idx + 1 === (isLoggedIn ? usersCart : cart).length) && <hr />}
+          </>
         ))}
       </ProductsContainer>
 

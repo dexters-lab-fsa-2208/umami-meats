@@ -64,8 +64,7 @@ const ProductsContainer = styled.div`
 // SINGLE PRODUCT IN LIST
 const Product = styled.div`
   width: 175px;
-  max-width: 65%;
-  min-width: 175px;
+  max-width: 175px;
   min-height: 225px;
 
   background-color: rgb(230, 230, 230);
@@ -200,7 +199,7 @@ export default function Products({ products, isLoading }) {
                   {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
                 </p>
               ))}
-          <p onClick={(e) => tagFilter("clear")}>Clear filters</p>
+          <p onClick={(e) => tagFilter("clear")}>Clear</p>
         </TagContainer>
         {
           //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE

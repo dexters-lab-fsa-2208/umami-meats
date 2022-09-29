@@ -3,12 +3,10 @@ import Link from "next/link";
 import Router from "next/router";
 import styled from "styled-components";
 import axios from "axios";
+import { RemoveSSRFromComponent } from "../utils";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/user-slice";
-
-import { RemoveSSRFromComponent } from "../utils";
-
 import { clearUserCart } from "../redux/reducers/cart-slice";
 import {
   useGetProductsQuery,
@@ -21,7 +19,7 @@ import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";
 import { GiMeatCleaver } from "react-icons/gi";
 import { BiLogIn, BiLogOut } from "react-icons/bi";
 
-const headerMainHeight = "4em";
+const headerMainHeight = "7em";
 const headerTopHeight = "2em";
 
 const HeaderContainer = styled.div`
@@ -46,26 +44,33 @@ const HeaderTop = styled.div`
     margin: auto 0;
   }
   p {
+    margin-top: 0.27em;
     padding: 0 0.4em 0.15em;
   }
 `;
 
+// const mobileLogoTextWidth = "3.62em";
+
 const HeaderMain = styled.div`
+  margin-top: -1px;
   width: 100%;
   height: ${headerMainHeight};
   background-color: #8b0000;
 
-  @media screen and (min-width: 1000px) {
+  @media screen and (min-width: 750px) {
     background-color: #7b0000;
 
     > div {
-      width: 1000px;
+      width: 750px;
       margin: auto;
       background-color: #8b0000;
     }
   }
 
   > div {
+    h1 {
+      margin-top: 0.13em;
+    }
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -73,7 +78,7 @@ const HeaderMain = styled.div`
 
   .headerIconButton {
     background-color: #7b0000;
-    width: ${headerMainHeight};
+    width: calc(${headerMainHeight} - 0.5em);
     height: ${headerMainHeight};
 
     display: flex;
@@ -83,6 +88,40 @@ const HeaderMain = styled.div`
   .headerIconButton:active {
     background-color: #660000;
   }
+  /* #headerLogo {
+    width: calc(${headerMainHeight} + ${mobileLogoTextWidth});
+    padding-left: 0.25em;
+
+    h1 {
+      font-size: 1em;
+      width: ${mobileLogoTextWidth};
+      margin: 0 0.4em 0 0.5em;
+    }
+  } */
+  .productType {
+    font-size: 1.4em;
+    padding: 0 0.2em;
+    /* margin: 0 0.8em; */
+  }
+
+  #headerMainCenter {
+    text-align: center;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+
+    #siteTitle {
+      width: fit-content;
+      margin: 0.05em auto 0.15em;
+      font-size: 2.1em;
+      flex: 2 2 200%;
+      border-bottom: 1px solid white;
+    }
+  }
+
+  @media screen and (min-width: 800px) {
+    // should expand logo to be wider, maybe at smaller width?
+  }
 `;
 
 const LinkContainer = styled.div`
@@ -90,18 +129,14 @@ const LinkContainer = styled.div`
   align-items: center;
 `;
 
-// const CartCounter = styled.div`
-//   position: relative;
-// `;
-
 const searchBarWidth = "15em";
-const searchTransition = "0.2s";
 
 const SearchContainer = styled.div`
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 6em);
   top: ${headerMainHeight + headerTopHeight};
+  z-index: 50;
 
   transition: background-color 0.2s;
   transition: opacity 0.2s;
@@ -141,26 +176,13 @@ const SearchContainer = styled.div`
   }
 `;
 
-// const SearchContainer = styled.div`
-// position: absolute;
-// display: flex column;
-// // z-index: 2;
-// color: black;
-// // margin-top: 6em;
-// justify-content: center;
-// align-items: center;
-// text-align: center;
-// background-color: white;
-// width: 100%;
-// `;
-
 //COMPONENT STARTS HERE
 function Header() {
   const { cart } = useSelector((state) => state.cart);
   const { cart: usersCart } = useSelector((state) => state.usersCart);
   const { user, isLoggedIn } = useSelector((state) => state.user);
 
-  const { data: products, isLoading } = useGetProductsQuery();
+  const { data: products, isLoading, isError } = useGetProductsQuery();
   const [createNewOrder] = useCreateOrderMutation();
 
   const [isSearchOpen, toggleSearch] = useState(false);
@@ -245,7 +267,7 @@ function Header() {
   // also need to allow user to exit out by clicking elsewhere
   return (
     <HeaderContainer>
-      <HeaderTop>
+      <HeaderTop className="hfLinks">
         {isLoggedIn ? (
           <>
             {/* account link - displayed as email */}
@@ -293,18 +315,25 @@ function Header() {
       <HeaderMain>
         <div>
           <Link href="/">
-            <div className="headerIconButton">
+            <div /*id="headerLogo"*/ className="headerIconButton">
               <GiMeatCleaver size="2.4em" />
+              {/* <h1>Umami Meats</h1> */}
             </div>
           </Link>
 
-          <Link href="/steaks">
-            <h1>Steaks</h1>
-          </Link>
+          <div id="headerMainCenter">
+            <Link href="/">
+              <h1 id="siteTitle">Umami Meats</h1>
+            </Link>
 
-          <Link href="/sushi">
-            <h1>Sushi</h1>
-          </Link>
+            <Link href="/steaks">
+              <h1 className="productType">Steaks</h1>
+            </Link>
+
+            <Link href="/sushi">
+              <h1 className="productType">Sushi</h1>
+            </Link>
+          </div>
 
           <div className="headerIconButton" onClick={toggle}>
             <FaSearch size="1.9em" />
@@ -325,6 +354,7 @@ function Header() {
         ></input>
         <div className="searchProductList">
           {!isLoading &&
+            !isError &&
             products
               .filter((product) => {
                 if (searchTerm === "") {
