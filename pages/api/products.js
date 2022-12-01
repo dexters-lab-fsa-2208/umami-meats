@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       console.log(products)
       res.json(products);
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      res.status(500).send(err);
     }
   }
     if (req.method === 'POST') {
