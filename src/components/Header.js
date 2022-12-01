@@ -50,7 +50,7 @@ const HeaderTop = styled.div`
   }
 `;
 
-// const mobileLogoTextWidth = "3.62em";
+const mobileLogoTextWidth = "3.62em";
 
 const HeaderMain = styled.div`
   margin-top: -1px;
