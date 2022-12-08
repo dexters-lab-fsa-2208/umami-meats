@@ -1,24 +1,26 @@
-const Sequelize = require("sequelize");
+const Sequelize = require('sequelize');
+const pg = require('pg');
 
 const config = {};
 
 if (process.env.QUIET) {
-  config.logging = false;
+	config.logging = false;
 }
 
 const db = new Sequelize({
-  database: "testdbfordeploy",
-  username: "postgres",
-  password: "password",
-  host: "testdb.czw8tftookde.us-east-1.rds.amazonaws.com",
-  port: 5432,
-  dialect: "postgres",
-  dialectOptions: {
-    ssl: {
-      require: true, // This will help, but cause error
-      rejectUnauthorized: false // This will fix error
-    }
-  },
+	database: 'testdbfordeploy',
+	username: 'postgres',
+	password: 'password',
+	host: 'testdb.czw8tftookde.us-east-1.rds.amazonaws.com',
+	port: 5432,
+	dialect: 'postgres',
+	dialectModule: pg,
+	dialectOptions: {
+		ssl: {
+			require: true, // This will help, but cause error
+			rejectUnauthorized: false, // This will fix error
+		},
+	},
 });
 
 // const db = new Sequelize(
