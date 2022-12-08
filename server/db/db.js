@@ -15,12 +15,12 @@ const db = new Sequelize({
 	port: 5432,
 	dialect: 'postgres',
 	dialectModule: pg,
-	dialectOptions: {
-		ssl: {
-			require: true, // This will help, but cause error
-			rejectUnauthorized: false, // This will fix error
-		},
-	},
+	// dialectOptions: {
+	// 	ssl: {
+	// 		require: true, // This will help, but cause error
+	// 		rejectUnauthorized: false, // This will fix error
+	// 	},
+	// },
 });
 
 // const db = new Sequelize(
