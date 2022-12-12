@@ -102,8 +102,6 @@ const Product = styled.div`
   }
 `;
 
-const TagName = styled.div``;
-
 // COMPONENT STARTS HERE
 export default function Products({ products, isLoading }) {
   const [filteredProducts, setFilteredProducts] = useState([]);

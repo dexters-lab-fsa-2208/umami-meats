@@ -12,7 +12,7 @@ export default function SingleSteakView() {
   if (response.isLoading) {
     return <Loading />;
   } else if (response.isError) {
-    return <Error type={500}/>;
+    return <Error type={500} />;
   } else {
     return (
       <motion.div

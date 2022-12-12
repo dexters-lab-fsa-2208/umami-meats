@@ -94,7 +94,7 @@ const CarouselButton = styled.button`
 const ListContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-around;
+  justify-content: space-between;
 
   ::after {
     content: "";

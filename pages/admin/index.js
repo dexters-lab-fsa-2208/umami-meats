@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
 import authService from "../../src/services/auth.service";
 import { RemoveSSRFromComponent } from "../../src/utils";
 import { Loading } from "../../src/components";
@@ -27,7 +26,6 @@ const AdminToolsContainer = styled.div`
       }
     }
   }
-  /* margin: 1em; */
 
   h2 {
     text-align: center;
