@@ -191,7 +191,6 @@ function Header() {
   const [searchTerm, setSearchTerm] = useState("");
   // const { data: blah } = useGetSingleUserQuery(user?.id)
 
-
   // const [getUser] = useGetSingleUserQuery();
 
   const dispatch = useDispatch();
@@ -202,24 +201,22 @@ function Header() {
     const checkForCart = async () => {
       const { data: blah } = await axios.get(`/api/users/${user.id}`);
       // const lineItems = blah.orders.find(order => order.isCart === true).lineItems;
-      
-      const lastOrder = blah.orders.find(order => order.isCart === true);
+
+      const lastOrder = blah.orders.find((order) => order.isCart === true);
       // if a user has 0 orders, create new order
       // or if last order in orders is false (checked out already)
       // last item in user orders shud always be the working order,
       // previous orders should all have isCart === false
       if (blah?.orders.length === 0 || !lastOrder) {
-        console.log(blah)
         let { data } = await createNewOrder({
           userId: user.id,
 
           isCart: true,
           address: "address of user",
         });
-        console.log(data)
         // initialize the new order id and line items to redux store
-        // maybe somehow use apislice only depending on which has better preformance
-        dispatch(initializeCart({...data, lineItems: []}));
+        // maybe somehow use apislice only depending on which has better performance
+        dispatch(initializeCart({ ...data, lineItems: [] }));
       }
 
       // If the last order in the cart is still a cart, initialize the cartId into redux store
@@ -227,12 +224,11 @@ function Header() {
       else if (lastOrder && blah.orders.length > 0) {
         // initialize the new order id and line items to redux store
         // maybe somehow use apislice only depending on which has better preformance
-        console.log("DB to redux", blah, lastOrder);
         dispatch(initializeCart(lastOrder));
       }
     };
 
-    user?.id ? checkForCart() : console.log("sign in stoopid");
+    user?.id && checkForCart();
   }, [isLoggedIn]);
 
   let userStatusLink = "/login";

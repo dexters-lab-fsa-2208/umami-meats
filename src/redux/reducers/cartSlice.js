@@ -12,7 +12,6 @@ export const fetchUsersCartThunk = createAsyncThunk(
   async (id) => {
     try {
       let data = await fetchUsersCart(id);
-      console.log("inside thunk", data);
       return data;
     } catch (err) {
       throw new Error(err);
@@ -49,7 +48,6 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUsersCartThunk.fulfilled, (state, action) => {
-      console.log("inside reducer", action.payload);
       state.usersCart = action.payload.lineItems;
     });
   },

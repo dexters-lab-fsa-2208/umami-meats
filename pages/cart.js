@@ -2,18 +2,18 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import Link from "next/link";
-import { addToCart, removeFromCart } from "../src/redux/reducers/cart-slice";
+import { addToCart, removeFromCart } from "../src/redux/reducers/cartSlice";
 import { useDispatch } from "react-redux";
 import {
   useUpdateLineItemMutation,
   useDeleteLineItemMutation,
-  useGetSingleOrderQuery,
+  // useGetSingleOrderQuery,
 } from "../src/redux/reducers/apiSlice";
 import {
   addToUsersCart,
   removeFromUsersCart,
-} from "../src/redux/reducers/usersCart-slice";
-import { skipToken } from "@reduxjs/toolkit/dist/query";
+} from "../src/redux/reducers/usersCartSlice";
+// import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 const MainContainer = styled.div`
   margin: 0.9em;
@@ -124,7 +124,6 @@ function Cart() {
   const dispatch = useDispatch();
 
   const handleRemoveLineItem = async (payload) => {
-    console.log(usersCart, 'HERE', payload);
     dispatch(removeFromUsersCart(payload.productId));
     await deleteLineItem(payload.id);
   };
@@ -142,10 +141,6 @@ function Cart() {
     });
     dispatch(addToUsersCart({ newData, num }));
   };
-
-  // useEffect(() => {
-  //   console.log(usersCart);
-  // },[usersCart])
 
   return (
     <MainContainer>

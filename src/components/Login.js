@@ -2,9 +2,9 @@ import React, { useRef, useState } from "react";
 import Router from "next/router";
 import Link from "next/link";
 import styled from "styled-components";
-import authService from "../services/auth.service";
+import authService from "../services/authService";
 import { useDispatch } from "react-redux";
-import { fetchUserThunk } from "../redux/reducers/user-slice";
+import { fetchUserThunk } from "../redux/reducers/userSlice";
 import { useGetSingleOrderQuery } from "../redux/reducers/apiSlice";
 
 const LoginFormContainer = styled.div`
@@ -70,7 +70,6 @@ const Login = () => {
     } catch (err) {
       console.log("Failed to sign in");
       console.error(err);
-      // setError("Failed to sign in");
     }
     // setLoading(false);
   }

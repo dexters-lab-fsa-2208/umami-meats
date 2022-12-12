@@ -93,7 +93,6 @@ function SingleItemView({ type, data }) {
     // find out if the item exists in our redux store
     // if it does, we are able to call PUT
     // if it dosent, we are calling POST
-    console.log(usersCart);
     const existingItem = usersCart.lineItems.find(
       ({ productId }) => productId === payload.productId
     );
@@ -104,7 +103,6 @@ function SingleItemView({ type, data }) {
 
     // update line item and sending it to redux store
     const update = async () => {
-      console.log("editing");
       await updateLineItem({
         id: existingItem.id,
         data: {
@@ -119,7 +117,6 @@ function SingleItemView({ type, data }) {
 
     // add line item and sending it to redux store
     const add = async () => {
-      console.log("creating");
       let { data } = await createLineItem(payload);
       newData = { ...data, product: payload.product };
       dispatch(addToUsersCart({ newData, currentQty }));
@@ -128,7 +125,6 @@ function SingleItemView({ type, data }) {
     // if the lineitem found has an id (meaning it exists in our DB)
     // update it, if not, add new line item
     existingItem && existingItem.id ? update() : add();
-    console.log("checking my cart", usersCart);
   };
 
   return (

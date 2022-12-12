@@ -8,8 +8,8 @@ import {
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { Loading } from "./";
-import { addToUsersCart } from "../redux/reducers/usersCart-slice";
-import { addToCart } from "../redux/reducers/cart-slice";
+import { addToUsersCart } from "../redux/reducers/usersCartSlice";
+import { addToCart } from "../redux/reducers/cartSlice";
 
 const BodyContainer = styled.div`
   display: flex;
@@ -121,7 +121,6 @@ export default function Products({ products, isLoading }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(usersCart)
     setFilteredProducts(products);
   }, [products]);
 
@@ -141,7 +140,6 @@ export default function Products({ products, isLoading }) {
 
   // if a user is logged in
   const updateOrAddLineItem = (payload, num) => {
-    console.log('PAYLOAD', payload);
     let newData = { ...payload };
     // keeping track of previous quantity
     let prevQty;
@@ -158,7 +156,6 @@ export default function Products({ products, isLoading }) {
     // update line item and sending it to redux store
 
     const update = async () => {
-      console.log("editing");
       await updateLineItem({
         id: existingItem.id,
         data: {
@@ -173,11 +170,9 @@ export default function Products({ products, isLoading }) {
 
     // add line item and sending it to redux store
     const add = async () => {
-      console.log("creating", usersCart);
       let { data } = await createLineItem(payload);
       // clone data to make it muteable so we can add product and add into redux store
       newData = { ...data, product: payload.product };
-      console.log(newData);
       dispatch(addToUsersCart({ newData, num }));
     };
 

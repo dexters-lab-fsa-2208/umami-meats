@@ -4,7 +4,6 @@ import axios from "axios";
 const fetchCart = async (id) => {
   // const { data } = await axios.get(`/api/orders/${id}`);
   const { data } = await axios.get(`/api/users/${id}`);
-  console.log("line 6", data);
   return data;
 };
 
@@ -13,7 +12,6 @@ export const fetchCartThunk = createAsyncThunk(
   async (id) => {
     try {
       const { data } = await fetchCart(id);
-      console.log("line 15", data);
       return data;
     } catch (error) {
       throw new Error(Error);
@@ -29,12 +27,10 @@ const usersCartSlice = createSlice({
   },
   reducers: {
     initializeCart: (state, action) => {
-      console.log("initializing", action.payload);
       state.id = action.payload.id;
       state.cart = action.payload;
     },
     addToUsersCart: (state, action) => {
-      console.log("adding item", action.payload);
       let found = false;
       state.cart.lineItems.map((obj, idx) => {
         if (obj?.productId === action.payload.newData.productId) {
@@ -56,7 +52,6 @@ const usersCartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchCartThunk.fulfilled, (state, action) => {
-      console.log("inside reducer", action.payload);
       state.cartId = action.payload.id;
       state.cart = action.payload.order;
     });

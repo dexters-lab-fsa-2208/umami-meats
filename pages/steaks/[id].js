@@ -8,7 +8,6 @@ export default function SingleSteakView() {
   const router = useRouter();
   const { id } = router.query;
   const response = useGetSingleSteakQuery(id);
-  console.log(response)
 
   if (response.isLoading) {
     return <Loading />;

@@ -6,27 +6,23 @@ export default async function handler(req, res) {
     try {
       const orders = await Order.findAll({
         include: [
-            {
-                model: LineItem,
-                include: Product
-            }
-        ]
+          {
+            model: LineItem,
+            include: Product,
+          },
+        ],
       });
-      console.log(orders)
       res.json(orders);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
-  if (req.method === 'POST') {
+  if (req.method === "POST") {
     try {
-      console.log(req.body);
       const order = await Order.create(req.body);
       res.status(201).json(order);
-    }
-    catch (err) {
+    } catch (err) {
       res.status(500).send(err);
     }
   }
-
 }
