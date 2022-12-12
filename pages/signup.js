@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import Router from "next/router";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import authService from "../src/services/auth.service";
+import authService from "../src/services/authService";
 
 const SignInFormContainer = styled.div`
   margin: 1em;

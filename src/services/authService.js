@@ -49,7 +49,6 @@ class AuthService {
         lastName,
         address,
       });
-      console.log(user);
       const cart = await axios.post("api/orders", {
         userId: user.id,
         isCart: true,
