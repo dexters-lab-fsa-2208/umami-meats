@@ -3,7 +3,7 @@ import "../src/styles.css";
 // redux
 import { Provider } from "react-redux";
 import { apiSlice } from "../src/redux/reducers/apiSlice";
-import { store, persistor } from "../src/redux/store/store";
+import { store, persistor } from "../src/redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import styled from "styled-components";
 import { Header, Footer } from "../src/components";

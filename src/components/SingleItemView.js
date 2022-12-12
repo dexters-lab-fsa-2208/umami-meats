@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../redux/reducers/cart-slice";
-import { addToUsersCart } from "../redux/reducers/usersCart-slice";
+import { addToCart } from "../redux/reducers/cartSlice";
+import { addToUsersCart } from "../redux/reducers/usersCartSlice";
 
 import {
   useCreateLineItemMutation,

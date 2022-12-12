@@ -3,7 +3,7 @@ import axios from "axios";
 
 const fetchCart = async (id) => {
   // const { data } = await axios.get(`/api/orders/${id}`);
-  const {data} = await axios.get(`/api/users/${id}`)
+  const { data } = await axios.get(`/api/users/${id}`);
   console.log("line 6", data);
   return data;
 };

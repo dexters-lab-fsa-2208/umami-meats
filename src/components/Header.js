@@ -6,14 +6,14 @@ import axios from "axios";
 import { RemoveSSRFromComponent } from "../utils";
 // redux
 import { useSelector, useDispatch } from "react-redux";
-import { storeUser, removeUser } from "../redux/reducers/user-slice";
-import { clearUserCart } from "../redux/reducers/cart-slice";
+import { storeUser, removeUser } from "../redux/reducers/userSlice";
+import { clearUserCart } from "../redux/reducers/cartSlice";
 import {
   useGetProductsQuery,
   useCreateOrderMutation,
   useGetSingleUserQuery,
 } from "../redux/reducers/apiSlice";
-import { initializeCart } from "../redux/reducers/usersCart-slice";
+import { initializeCart } from "../redux/reducers/usersCartSlice";
 
 // react-icons
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa";

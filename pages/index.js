@@ -6,16 +6,15 @@ import Link from "next/link";
 import {
   useCreateOrderMutation,
   useGetProductsQuery,
-  useGetSingleUserQuery,
+  // useGetSingleUserQuery,
 } from "../src/redux/reducers/apiSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { skipToken } from "@reduxjs/toolkit/query";
-import { initializeCart } from "../src/redux/reducers/usersCart-slice";
+// import { skipToken } from "@reduxjs/toolkit/query";
+// import { initializeCart } from "../src/redux/reducers/usersCart-slice";
 import { Loading, Error } from "../src/components";
 // design
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import axios from "axios";
 
 // need to clean up this CSS/styled-components
 const customGray = "rgba(120, 120, 120, 0.1)";

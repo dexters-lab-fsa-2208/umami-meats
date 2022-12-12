@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { apiSlice } from "../reducers/apiSlice";
-import cartSlice from "../reducers/cart-slice";
-import userSlice from "../reducers/user-slice";
-import usersCartSlice from "../reducers/usersCart-slice";
+import { apiSlice } from "./reducers/apiSlice";
+import cartSlice from "./reducers/cartSlice";
+import userSlice from "./reducers/userSlice";
+import usersCartSlice from "./reducers/usersCartSlice";
 import loggingMiddleware from "redux-logger";
 //redux persist
 import {
