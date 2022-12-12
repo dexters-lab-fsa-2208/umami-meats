@@ -15,7 +15,7 @@ const FooterContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  
+
   * {
     margin: auto 0;
   }
@@ -23,7 +23,7 @@ const FooterContainer = styled.div`
     padding: 0 0.4em 0.15em;
     margin-top: 0.27em;
     :hover {
-        color: lightgray;    
+      color: lightgray;
     }
   }
 `;
@@ -34,21 +34,21 @@ const LinkContainer = styled.div`
 `;
 
 export default function Footer() {
-  let isAdmin = useSelector(state => state.user.user?.admin);
+  let isAdmin = useSelector((state) => state.user.user?.admin);
   if (typeof window !== "undefined" && localStorage.user) {
     isAdmin = isAdmin || JSON.parse(localStorage.user).isAdmin;
   }
 
   return (
     <FooterContainer className="hfLinks">
-      {isAdmin &&
+      {isAdmin && (
         <Link href="/admin">
           <LinkContainer>
             <FaWrench />
             <p>Administrator Tools</p>
           </LinkContainer>
         </Link>
-      }
+      )}
 
       <Link href="/contact">
         <LinkContainer>
