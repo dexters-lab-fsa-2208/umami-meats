@@ -136,7 +136,7 @@ function SingleItemView({ type, data }) {
               <i>{"Availability: " + printAvailability()}</i>
             </p>
             <ProductContainerTop>
-              <img src={data.img} alt={data.name || "product"} />
+              <img src={`/images/${data.name}.jpg`} alt={data.name || "product"} />
 
               <ProductInfoRight>
                 <div>

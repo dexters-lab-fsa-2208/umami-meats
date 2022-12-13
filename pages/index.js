@@ -219,7 +219,10 @@ export default function HomePage() {
                   }}
                 >
                   {/* <>{itm.name}</> */}
-                  <img src={itm.img} alt={itm.name || "product"} />
+                  <img
+                    src={`images/${itm.name}.jpg`}
+                    alt={itm.name || "product"}
+                  />
                 </div>
               </Link>
             ))}
@@ -236,7 +239,10 @@ export default function HomePage() {
               return (
                 <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
                   <ListItemContainer>
-                    <img src={itm.img} alt={itm.name || "product"} />
+                    <img
+                      src={`/images/${itm.name}.jpg`}
+                      alt={itm.name || "product"}
+                    />
                     <p className="productName">{itm.name}</p>
                     <p className="productPrice">${itm.price}/lb</p>
                   </ListItemContainer>

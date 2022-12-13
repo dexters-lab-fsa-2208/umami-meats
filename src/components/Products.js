@@ -137,7 +137,6 @@ export default function Products({ products, isLoading }) {
   const { cart } = useSelector((state) => state.cart);
   const { cart: usersCart } = useSelector((state) => state.usersCart);
 
-
   const { data: tags, isSuccess } = useGetTagsQuery();
   const [createLineItem] = useCreateLineItemMutation();
   const [updateLineItem] = useUpdateLineItemMutation();
@@ -217,7 +216,11 @@ export default function Products({ products, isLoading }) {
             tags
               .filter((tag) => tag.tagType === products[0].type)
               .map((tag) => (
-                <p onClick={(e) => tagFilter(tag.tagName)} key={tag.id} className={currentFilter === tag.tagName ? "selected" : ""}>
+                <p
+                  onClick={(e) => tagFilter(tag.tagName)}
+                  key={tag.id}
+                  className={currentFilter === tag.tagName ? "selected" : ""}
+                >
                   {tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)}
                 </p>
               ))}
@@ -237,7 +240,10 @@ export default function Products({ products, isLoading }) {
           {(filtered ? filteredProducts : products).map((product) => (
             <Product key={product.id}>
               <Link href={`${product.type}/${product.id}`}>
-                <img src={product.img} alt={product.name || "product"}/>
+                <img
+                  src={`/images/${product.name}.jpg`}
+                  alt={product.name || "product"}
+                />
               </Link>
               <Link href={`${product.type}/${product.id}`}>
                 <p className="productName">{product.name}</p>
