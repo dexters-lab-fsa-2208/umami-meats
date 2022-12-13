@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import styled from "styled-components";
-import authService from "../../src/services/auth.service";
+import authService from "../../src/services/authService";
 import { RemoveSSRFromComponent } from "../../src/utils";
 import { Loading } from "../../src/components";
 import {
