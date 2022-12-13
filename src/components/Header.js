@@ -30,6 +30,7 @@ const HeaderContainer = styled.div`
   p {
     :hover {
       color: lightgray;
+      cursor: pointer;
     }
   }
 `;
@@ -85,20 +86,14 @@ const HeaderMain = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  .headerIconButton:active {
-    background-color: #660000;
-  }
-  /* #headerLogo {
-    width: calc(${headerMainHeight} + ${mobileLogoTextWidth});
-    padding-left: 0.25em;
 
-    h1 {
-      font-size: 1em;
-      width: ${mobileLogoTextWidth};
-      margin: 0 0.4em 0 0.5em;
+    &:hover {
+      cursor: pointer;
     }
-  } */
+    &:active {
+      background-color: #660000;
+    }
+  }
   .productType {
     font-size: 1.4em;
     padding: 0 0.2em;
@@ -119,10 +114,6 @@ const HeaderMain = styled.div`
       border-bottom: 1px solid white;
     }
   }
-
-  @media screen and (min-width: 800px) {
-    // should expand logo to be wider, maybe at smaller width?
-  }
 `;
 
 const LinkContainer = styled.div`
@@ -131,7 +122,6 @@ const LinkContainer = styled.div`
 `;
 
 const searchBarWidth = "15em";
-
 const SearchContainer = styled.div`
   position: absolute;
   width: 100%;
@@ -189,7 +179,7 @@ function Header() {
 
   const [isSearchOpen, toggleSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  // const { data: blah } = useGetSingleUserQuery(user?.id)
+  // const { data: userData } = useGetSingleUserQuery(user?.id)
 
   // const [getUser] = useGetSingleUserQuery();
 
@@ -199,15 +189,15 @@ function Header() {
     // check users orders after sign in,
 
     const checkForCart = async () => {
-      const { data: blah } = await axios.get(`/api/users/${user.id}`);
-      // const lineItems = blah.orders.find(order => order.isCart === true).lineItems;
+      const { data: userData } = await axios.get(`/api/users/${user.id}`);
+      // const lineItems = userData.orders.find(order => order.isCart === true).lineItems;
 
-      const lastOrder = blah.orders.find((order) => order.isCart === true);
+      const lastOrder = userData.orders.find((order) => order.isCart === true);
       // if a user has 0 orders, create new order
       // or if last order in orders is false (checked out already)
       // last item in user orders shud always be the working order,
       // previous orders should all have isCart === false
-      if (blah?.orders.length === 0 || !lastOrder) {
+      if (userData?.orders.length === 0 || !lastOrder) {
         let { data } = await createNewOrder({
           userId: user.id,
 
@@ -221,7 +211,7 @@ function Header() {
 
       // If the last order in the cart is still a cart, initialize the cartId into redux store
       // for useage all around the app
-      else if (lastOrder && blah.orders.length > 0) {
+      else if (lastOrder && userData.orders.length > 0) {
         // initialize the new order id and line items to redux store
         // maybe somehow use apislice only depending on which has better preformance
         dispatch(initializeCart(lastOrder));

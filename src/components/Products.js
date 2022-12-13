@@ -39,9 +39,15 @@ const TagContainer = styled.div`
   }
   p {
     width: 100%;
+    &:hover {
+      cursor: pointer;
+    }
   }
   > .selected {
     text-decoration: underline;
+    &:hover {
+      cursor: auto;
+    }
   }
   /* this targets the 'clear' filter */
   * {
@@ -67,8 +73,10 @@ const ProductsContainer = styled.div`
 
   .productListHeader {
     flex-basis: 100%;
+    height: 1.3em;
+    padding-bottom: 0em;
     text-align: center;
-    margin: 0.4em auto 0.2em;
+    margin: 0.4em auto 0;
   }
 
   /* if anyone sees this, i'm sorry */
@@ -91,26 +99,25 @@ const Product = styled.div`
   width: 175px;
   max-width: 175px;
   min-height: 225px;
-
-  background-color: rgb(230, 230, 230);
-  box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.43);
-
   margin: 0.5em 0.7em 0.5em 1em;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
+  background-color: rgb(230, 230, 230);
+  box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.43);
+
   img {
-    /* using 'height' alone does not make some images the required height */
     min-height: 150px;
     max-height: 150px;
     width: 150px;
-
     object-fit: cover;
     margin: 0.7em auto 0.15em;
-
     box-shadow: 1px 1px 6px rgba(100, 100, 100, 0.31);
+    &:hover {
+      cursor: pointer;
+    }
   }
   p {
     text-align: center;
@@ -118,12 +125,19 @@ const Product = styled.div`
     max-width: 75%;
     margin: 0.15em auto;
 
+    &.productName:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
     &.productPrice {
       color: red;
     }
   }
   button {
     margin: 0.15em auto 0.7em;
+    &:hover {
+      cursor: pointer;
+    }
   }
 `;
 

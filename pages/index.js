@@ -1,8 +1,5 @@
 import React, { useEffect } from "react";
-//next
 import Link from "next/link";
-// can maybe use <picture></picture> to remove 'img' error from next.js
-// redux
 import {
   useCreateOrderMutation,
   useGetProductsQuery,
@@ -16,7 +13,6 @@ import { Loading, Error } from "../src/components";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
-// need to clean up this CSS/styled-components
 const customGray = "rgba(120, 120, 120, 0.1)";
 
 const HomePageContainer = styled.div`
@@ -26,6 +22,9 @@ const HomePageContainer = styled.div`
       border-right: 1px solid ${customGray};
       border-bottom: 1px solid rgba(120, 120, 120, 0.25);
       box-shadow: 1px 1px 7px rgba(120, 120, 120, 0.5);
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 
@@ -62,10 +61,11 @@ const CarouselButton = styled.button`
   border: 0;
 
   :hover {
+    cursor: pointer;
     background-color: rgba(0, 0, 0, 0.8);
     color: rgba(255, 255, 255, 1);
-    transition: background-color 500ms linear;
-    transition: color 500ms linear;
+    transition: background-color 300ms linear;
+    transition: color 200ms linear;
   }
 
   &#leftBtn {
@@ -140,11 +140,12 @@ const ListItemContainer = styled.div`
     min-height: 130px;
     max-height: 130px;
     width: 130px;
-
+    margin: 0.4em auto 0;
     object-fit: cover;
     box-shadow: 1px 1px 6px rgba(100, 100, 100, 0.31);
-
-    margin: 0.4em auto 0;
+    &:hover {
+      cursor: pointer;
+    }
   }
   p {
     text-align: center;
@@ -155,6 +156,10 @@ const ListItemContainer = styled.div`
       font-size: 1em;
       font-weight: bold;
       margin: auto;
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
     &.productPrice {
       font-size: 0.85em;
