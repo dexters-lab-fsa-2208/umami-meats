@@ -80,28 +80,44 @@ const CarouselButton = styled.button`
     padding: 0;
   }
 
-  @media screen and (min-width: 800px) {
+  @media screen and (min-width: 950px) {
     &#leftBtn {
-      left: calc(50% - 400px);
+      left: calc(50% - 475px);
     }
     &#rightBtn {
-      right: calc(50% - 400px);
+      right: calc(50% - 475px);
     }
   }
 `;
 
 // PRODUCTS CONTAINER
+// product width is 160px + 1.2em
 const ListContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-between;
-
+  justify-content: flex-start;
+  margin: 9px auto;
   ::after {
     content: "";
     flex: auto;
   }
 
-  margin: 0.5em;
+  /* if anyone sees this, i'm sorry */
+  @media screen and (min-width: 914px) {
+    max-width: calc(calc(160px + 1.2em) * 5);
+  }
+  @media screen and (max-width: 914px) and (min-width: 717px) {
+    max-width: calc(calc(160px + 1.2em) * 4);
+  }
+  @media screen and (max-width: 717px) and (min-width: 537px) {
+    max-width: calc(calc(160px + 1.2em) * 3);
+  }
+  @media screen and (max-width: 537px) and (min-width: 358px) {
+    max-width: calc(calc(160px + 1.2em) * 2);
+  }
+  @media screen and (max-width: 358px) {
+    max-width: calc(calc(160px + 1.2em) * 1);
+  }
 `;
 
 // SINGLE PRODUCT IN LIST
@@ -113,7 +129,7 @@ const ListItemContainer = styled.div`
   margin: 0.6em;
   padding-bottom: 0.5em;
   background-color: rgb(230, 230, 230);
-  box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.43);
+  box-shadow: 1px 1px 8px rgba(100, 100, 100, 0.35);
 
   flex: 1 1 auto;
   display: flex;
@@ -182,7 +198,7 @@ export default function HomePage() {
   if (isLoading) {
     return <Loading />;
   } else if (error) {
-    return <Error is500={error.status === 500}/>
+    return <Error is500={error.status === 500} />;
   } else
     return (
       <motion.div

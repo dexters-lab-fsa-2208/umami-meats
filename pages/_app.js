@@ -13,7 +13,7 @@ import { AnimatePresence } from "framer-motion";
 const MainContainer = styled.div`
   position: relative;
   min-height: 100vh;
-  padding-bottom: 2em;
+  /* padding-bottom: 2em; */
   * {
     margin: 0;
     user-select: none;
@@ -21,7 +21,7 @@ const MainContainer = styled.div`
 `;
 
 const PageContainer = styled.div`
-  max-width: 800px;
+  max-width: 950px;
   margin: auto;
 `;
 

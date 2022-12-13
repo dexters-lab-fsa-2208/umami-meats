@@ -12,20 +12,25 @@ import { addToUsersCart } from "../redux/reducers/usersCartSlice";
 import { addToCart } from "../redux/reducers/cartSlice";
 
 const BodyContainer = styled.div`
+  width: fit-content;
+  margin: 0 auto;
   display: flex;
+
+  @media screen and (max-width: 528px) {
+    width: 100%;
+    max-width: 365px;
+  }
 `;
 
 // TAGS
 const TagContainer = styled.div`
   min-width: 6em;
   height: 21em;
-  margin: 1.1em 1em;
-  margin-right: 0.3em;
+  margin: 1.1em 0.3em 1.1em 1em;
   padding: 0.3em 0 2em;
 
   display: flex;
   flex-direction: column;
-
   border-right: 1px solid rgb(200, 200, 200);
 
   .tagsHeader {
@@ -46,18 +51,38 @@ const TagContainer = styled.div`
       font-size: 0.94em;
     }
   }
+
+  @media screen and (max-width: 528px) {
+    font-size: 95%;
+  }
 `;
 
 // PRODUCTS CONTAINER
+// individual products are 175px + 1.7em width
 const ProductsContainer = styled.div`
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: flex-start;
 
   .productListHeader {
-    flex: 2 2 200%;
+    flex-basis: 100%;
     text-align: center;
     margin: 0.4em auto 0.2em;
+  }
+
+  /* if anyone sees this, i'm sorry */
+  @media screen and (max-width: 924px) and (min-width: 732px) {
+    max-width: calc(calc(175px + 1.7em) * 3);
+    margin-right: 0.5em;
+  }
+  @media screen and (max-width: 732px) and (min-width: 528px) {
+    max-width: calc(calc(175px + 1.7em) * 2);
+    margin-right: 0.4em;
+  }
+  @media screen and (max-width: 528px) {
+    max-width: calc(calc(175px + 1.7em) * 1);
+    margin-left: 25px;
   }
 `;
 
@@ -70,7 +95,7 @@ const Product = styled.div`
   background-color: rgb(230, 230, 230);
   box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.43);
 
-  margin: 0.5em;
+  margin: 0.5em 0.7em 0.5em 1em;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -236,7 +261,7 @@ export default function Products({ products, isLoading }) {
                     )
                   }
                 >
-                  Add To Carts
+                  Add To Cart
                 </button>
               ) : (
                 <button
