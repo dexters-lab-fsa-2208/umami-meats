@@ -6,7 +6,6 @@ import { useUpdateOrderMutation } from "../src/redux/reducers/apiSlice";
 const CheckoutContainer = styled.div`
   max-width: 675px;
   margin: 2em auto;
-
   display: flex column;
   justify-content: center;
   text-align: center;
@@ -16,17 +15,15 @@ const ProductsContainer = styled.div`
   background-color: rgb(230, 230, 230);
   box-shadow: 1px 1px 7px rgba(100, 100, 100, 0.2);
   font-size: 1.05em;
-
   .product {
     margin: 0.4em 0 0.1em;
     padding: 0.5em 0.8em;
-
     display: flex;
     justify-content: space-between;
     align-items: center;
     .lineItemPrice {
-      font-size: 1.12em;
-      /* font-weight: bold; */
+        font-size: 1.12em;
+        /* font-weight: bold; */
     }
   }
   hr {
