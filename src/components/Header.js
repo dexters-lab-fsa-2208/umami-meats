@@ -155,6 +155,9 @@ const SearchContainer = styled.div`
       &:nth-child(even) {
         background-color: rgb(238, 238, 238);
       }
+      &:hover {
+      color: #6E6E6E;
+      }
     }
   }
 

@@ -13,6 +13,7 @@ import { Loading } from "./";
 const MainProductContainer = styled.div`
   max-width: 100%;
   margin: 0 1.1em;
+  padding: 0 12px;
   overflow-wrap: break-word;
 
   > p {
@@ -26,6 +27,7 @@ const MainProductContainer = styled.div`
     font-style: normal;
     text-align: justify;
     margin: 1.5em auto 0;
+    padding: 0 15px;
   }
 `;
 const ProductContainerTop = styled.div`
