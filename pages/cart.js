@@ -7,13 +7,13 @@ import { useDispatch } from "react-redux";
 import {
   useUpdateLineItemMutation,
   useDeleteLineItemMutation,
-  // useGetSingleOrderQuery,
+  useGetSingleOrderQuery,
 } from "../src/redux/reducers/apiSlice";
 import {
   addToUsersCart,
   removeFromUsersCart,
 } from "../src/redux/reducers/usersCartSlice";
-// import { skipToken } from "@reduxjs/toolkit/dist/query";
+import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 const MainContainer = styled.div`
   margin: 0.9em;
@@ -108,11 +108,10 @@ const Checkout = styled.div`
   }
 `;
 
-// COMPONENT STARTS HERE
-// Remove item from cart
-
 function Cart() {
   const { cart } = useSelector((state) => state.cart);
+  console.log(cart);
+
   let { cart: usersCart, isLoading } = useSelector((state) => state.usersCart);
   const { isLoggedIn } = useSelector((state) => state.user);
   // const { data } = useGetSingleOrderQuery(
@@ -147,10 +146,10 @@ function Cart() {
       <h2>Your Cart</h2>
       <ProductsContainer>
 
-        {(usersCart ? usersCart : cart).lineItems?.map((product, idx) => (
+        {(usersCart?.length ? usersCart.lineItems : cart)?.map((product, idx) => (
           <div key={product.id}>
 
-            <Image src={product.product.img} alt="sushi" />
+            <Image src={`/images/${product.product.name}.jpg`} alt={product.product.name} />
             <DetailsContainer>
               {" "}
               <NameandX>
@@ -254,7 +253,7 @@ function Cart() {
               </IncrementAndPrice>
             </DetailsContainer>
             {/* places a line below each item unless it is the last in the cart */}
-            {idx + 1 === (isLoggedIn ? usersCart : cart).lineItems.length ? "" : <hr />}
+            {idx + 1 === (isLoggedIn ? usersCart.lineItems : cart).length ? "" : <hr />}
           </div>
         ))}
       </ProductsContainer>

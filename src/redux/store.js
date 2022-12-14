@@ -1,11 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { setupListeners } from "@reduxjs/toolkit/query";
-import { apiSlice } from "./reducers/apiSlice";
-import cartSlice from "./reducers/cartSlice";
-import userSlice from "./reducers/userSlice";
-import usersCartSlice from "./reducers/usersCartSlice";
-import loggingMiddleware from "redux-logger";
-//redux persist
+// import { setupListeners } from "@reduxjs/toolkit/query";
+import { apiSlice, userSlice, usersCartSlice, cartSlice } from "./reducers";
 import {
   persistReducer,
   persistStore,
@@ -18,6 +13,7 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
+import loggingMiddleware from "redux-logger";
 
 const persistConfig = {
   key: "root",
@@ -41,8 +37,10 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat([apiSlice.middleware, thunk]),
+    })
+      .concat([apiSlice.middleware, thunk])
+      .concat(loggingMiddleware),
 });
 
-setupListeners(store.dispatch);
+// setupListeners(store.dispatch);
 export const persistor = persistStore(store);
