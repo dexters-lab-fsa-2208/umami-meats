@@ -7,11 +7,11 @@ import { RemoveSSRFromComponent } from "../utils";
 // redux
 import { useSelector, useDispatch } from "react-redux";
 import { storeUser, removeUser } from "../redux/reducers/userSlice";
-import { clearUserCart } from "../redux/reducers/cartSlice";
+// import { clearUserCart } from "../redux/reducers/cartSlice";
 import {
   useGetProductsQuery,
   useCreateOrderMutation,
-  useGetSingleUserQuery,
+  // useGetSingleUserQuery,
 } from "../redux/reducers/apiSlice";
 import { initializeCart } from "../redux/reducers/usersCartSlice";
 
@@ -22,14 +22,13 @@ import { BiLogIn, BiLogOut } from "react-icons/bi";
 
 const headerMainHeight = "7em";
 const headerTopHeight = "2em";
-
 const HeaderContainer = styled.div`
   color: white;
   height: ${headerMainHeight + headerTopHeight};
   h1,
   p {
-    :hover {
-      color: lightgray;
+    &:hover {
+      color: #f0f0f0;
       cursor: pointer;
     }
   }
@@ -50,8 +49,7 @@ const HeaderTop = styled.div`
     padding: 0 0.4em 0.15em;
   }
 `;
-
-const mobileLogoTextWidth = "3.62em";
+// const mobileLogoTextWidth = "3.62em";
 
 const HeaderMain = styled.div`
   margin-top: -1px;
@@ -242,7 +240,7 @@ function Header() {
   const searchRef = useRef();
   const inputRef = useRef();
 
-  const toggle = (e) => {
+  const handleToggleSearch = (e) => {
     const target = e.target.tagName;
     if (target === "DIV" || target === "svg" || target === "path") {
       toggleSearch(!isSearchOpen);
@@ -291,21 +289,18 @@ function Header() {
             </Link>
           </>
         )}
-        {isLoggedIn && usersCart ? (
-          <Link href="/cart">
-            <LinkContainer>
-              <FaShoppingCart />
-              <p>{`Cart (${usersCart.lineItems?.length})`}</p>
-            </LinkContainer>
-          </Link>
-        ) : (
-          <Link href="/cart">
-            <LinkContainer>
-              <FaShoppingCart />
-              <p>{`Cart (${cart.length})`}</p>
-            </LinkContainer>
-          </Link>
-        )}
+
+        <Link href="/cart">
+          <LinkContainer>
+            <FaShoppingCart />
+            <p>
+              {`Cart (${(isLoggedIn && usersCart
+                ? usersCart.lineItems
+                : cart
+              ).reduce((total, itm) => total + itm.qty, 0)})`}
+            </p>
+          </LinkContainer>
+        </Link>
       </HeaderTop>
 
       <HeaderMain>
@@ -331,13 +326,17 @@ function Header() {
             </Link>
           </div>
 
-          <div className="headerIconButton" onClick={toggle}>
+          <div className="headerIconButton" onClick={handleToggleSearch}>
             <FaSearch size="1.9em" />
           </div>
         </div>
       </HeaderMain>
 
-      <SearchContainer className="hide" ref={searchRef} onClick={toggle}>
+      <SearchContainer
+        className="hide"
+        ref={searchRef}
+        onClick={handleToggleSearch}
+      >
         <input
           type="text"
           className="search"
@@ -361,9 +360,9 @@ function Header() {
                     .includes(searchTerm.toLowerCase());
                 }
               })
-              .map((product) => (
-                <Link href={`/${product.type}/${product.id}`} key={product.id}>
-                  <p onClick={toggle}>{product.name}</p>
+              .map((product, idx) => (
+                <Link href={`/${product.type}/${product.id}`} key={idx}>
+                  <p onClick={handleToggleSearch}>{product.name}</p>
                 </Link>
               ))}
         </div>

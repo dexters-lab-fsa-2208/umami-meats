@@ -18,12 +18,14 @@ const MainProductContainer = styled.div`
   > p {
     text-align: center;
     font-style: italic;
-    margin: 0.4em;
+    margin: 0.8em auto;
+    max-width: 750px;
   }
   .desc {
+    width: fit-content;
     font-style: normal;
     text-align: justify;
-    margin-top: 0.8em;
+    margin: 1.5em auto 0;
   }
 `;
 const ProductContainerTop = styled.div`
@@ -147,7 +149,7 @@ function SingleItemView({ type, data }) {
                 </div>
 
                 <BuyProductContainer>
-                  <div className="incrementContainer">
+                  <div className="incrementContainer incrementSingleItemContainer">
                     <button
                       onClick={() => incrementAmt(-1)}
                       className="incrementButton"
@@ -200,7 +202,7 @@ function SingleItemView({ type, data }) {
               </ProductInfoRight>
             </ProductContainerTop>
 
-            <p className="desc productDesc ">{data.desc}</p>
+            <p className="desc productDesc">{data.desc}</p>
           </MainProductContainer>
         </>
       ) : (
