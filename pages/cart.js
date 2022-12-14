@@ -117,11 +117,23 @@ function Cart() {
   const [updateLineItem] = useUpdateLineItemMutation();
   const dispatch = useDispatch();
 
-  const handleRemoveLineItem = async (payload) => {
-    console.log(payload);
-    // if (confirm()
-    dispatch(removeFromUsersCart(payload.productId));
-    await deleteLineItem(payload.id);
+  const removeLineItem = async (payload) => {
+    if (
+      !confirm(
+        `Are you sure you want to remove ${payload.qty} pound${
+          payload.qty > 1 ? "s" : ""
+        } of ${payload.product.name} from your cart?`
+      )
+    ) {
+      return;
+    }
+
+    if (isLoggedIn) {
+      dispatch(removeFromUsersCart(payload.productId));
+      await deleteLineItem(payload.id);
+    } else {
+      dispatch(removeFromCart(payload.productId));
+    }
   };
 
   const handleUpdateItem = async (payload, num) => {
@@ -157,23 +169,12 @@ function Cart() {
                     {" "}
                     <NameandX>
                       <p>{product.product.name}</p>
-                      {isLoggedIn ? (
-                        <button
-                          onClick={() => handleRemoveLineItem(product)}
-                          className="secondaryButton xBtn"
-                        >
-                          X
-                        </button>
-                      ) : (
-                        <button
-                          className="secondaryButton xBtn"
-                          onClick={() =>
-                            dispatch(removeFromCart(product.productId))
-                          }
-                        >
-                          X
-                        </button>
-                      )}
+                      <button
+                        className="secondaryButton xBtn"
+                        onClick={() => removeLineItem(product)}
+                      >
+                        X
+                      </button>
                     </NameandX>
                     <IncrementAndPrice>
                       <div className="incrementContainer incrementCart">
@@ -183,7 +184,7 @@ function Cart() {
                             className="incrementButton"
                             onClick={
                               product.qty <= 1
-                                ? () => handleRemoveLineItem(product)
+                                ? () => removeLineItem(product)
                                 : () => handleUpdateItem(product, -1)
                             }
                           >
@@ -194,8 +195,7 @@ function Cart() {
                             className="incrementButton"
                             onClick={
                               product.qty <= 1
-                                ? () =>
-                                    dispatch(removeFromCart(product.productId))
+                                ? () => removeLineItem(product)
                                 : () =>
                                     dispatch(
                                       addToCart({
@@ -238,12 +238,7 @@ function Cart() {
                         )}
                       </div>
                       <p className="cartPrice">
-                        $
-                        {Math.round(
-                          (product.product.price * product.qty +
-                            Number.EPSILON) *
-                            100
-                        ) / 100}
+                        {`$${(product.product.price * product.qty).toFixed(2)}`}
                       </p>
                       {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
                     </IncrementAndPrice>
@@ -262,14 +257,12 @@ function Cart() {
             <div>
               <div className="checkoutLine">
                 <p>Subtotal</p>
-                <p>{`$${
-                  Math.round(
-                    (isLoggedIn ? usersCart.lineItems : cart).reduce(
-                      (total, itm) => itm.qty * itm.product.price + total,
-                      0
-                    ) * 100
-                  ) / 100
-                }`}</p>
+                <p>{`$${(isLoggedIn ? usersCart.lineItems : cart)
+                  .reduce(
+                    (total, itm) => itm.qty * itm.product.price + total,
+                    0
+                  )
+                  .toFixed(2)}`}</p>
               </div>
               <div className="checkoutLine">
                 <p>Shipping</p> <p>Calculated at Checkout</p>
