@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const fetchCart = async (id) => {
-  // const { data } = await axios.get(`/api/orders/${id}`);
   const { data } = await axios.get(`/api/users/${id}`);
   return data;
 };

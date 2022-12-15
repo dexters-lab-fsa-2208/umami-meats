@@ -298,7 +298,7 @@ function Header() {
             <FaShoppingCart />
             <p>
               {`Cart (${(isLoggedIn && usersCart
-                ? usersCart.lineItems
+                ? (usersCart.lineItems || [])
                 : cart
               ).reduce((total, itm) => total + itm.qty, 0)})`}
             </p>

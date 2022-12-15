@@ -71,13 +71,9 @@ const ProductsContainer = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
 
-  .productListHeader {
+  /* .productListHeader {
     flex-basis: 100%;
-    height: 1.3em;
-    padding-bottom: 0em;
-    text-align: center;
-    margin: 0.4em auto 0;
-  }
+  } */
 
   /* if anyone sees this, i'm sorry */
   @media screen and (max-width: 924px) and (min-width: 732px) {
@@ -91,6 +87,17 @@ const ProductsContainer = styled.div`
   @media screen and (max-width: 528px) {
     max-width: calc(calc(175px + 1.7em) * 1);
     margin-left: 25px;
+  }
+`;
+
+const ProductListHeader = styled.h2`
+  height: 1.3em;
+  padding-bottom: 0em;
+  text-align: center;
+  margin: 0.4em auto 0;
+
+  @media screen and (max-width: 528px) {
+    padding-left: 37px;
   }
 `;
 
@@ -148,7 +155,7 @@ export default function Products({ products, isLoading }) {
   const [currentFilter, setCurrentFilter] = useState("");
 
   const { isLoggedIn, user } = useSelector((state) => state.user);
-  const { cart } = useSelector((state) => state.cart);
+  // const { cart } = useSelector((state) => state.cart);
   const { cart: usersCart } = useSelector((state) => state.usersCart);
 
   const { data: tags, isSuccess } = useGetTagsQuery();
@@ -243,66 +250,68 @@ export default function Products({ products, isLoading }) {
         {
           //TODO CHANGE PRODUCTS && TO ISLOADING ? BY MOVING TERNARY HERE
         }
-        <ProductsContainer>
-          <h2 className="productListHeader">
+        <div>
+          <ProductListHeader>
             {"Our "}
             {products &&
               products.length &&
               products[0].type.charAt(0).toUpperCase() +
                 products[0].type.slice(1)}
-          </h2>
-          {(filtered ? filteredProducts : products).map((product) => (
-            <Product key={product.id}>
-              <Link href={`${product.type}/${product.id}`}>
-                <img
-                  src={`/images/${product.name}.jpg`}
-                  alt={product.name || "product"}
-                />
-              </Link>
-              <Link href={`${product.type}/${product.id}`}>
-                <p className="productName">{product.name}</p>
-              </Link>
-              <p className="productPrice">{product.price + "/lb"}</p>
+          </ProductListHeader>
+          <ProductsContainer>
+            {(filtered ? filteredProducts : products).map((product) => (
+              <Product key={product.id}>
+                <Link href={`${product.type}/${product.id}`}>
+                  <img
+                    src={`/images/${product.name}.jpg`}
+                    alt={product.name || "product"}
+                  />
+                </Link>
+                <Link href={`${product.type}/${product.id}`}>
+                  <p className="productName">{product.name}</p>
+                </Link>
+                <p className="productPrice">{product.price + "/lb"}</p>
 
-              {/* if a user is logged in, onClick will post new line items
+                {/* if a user is logged in, onClick will post new line items
               if user is not logged in, dispatch to redux store */}
-              {isLoggedIn ? (
-                <button
-                  className="secondaryButton"
-                  onClick={() =>
-                    updateOrAddLineItem(
-                      {
-                        orderId: usersCart.id,
-                        productId: product.id,
-                        qty: 1,
-                        product: product,
-                      },
-                      1
-                    )
-                  }
-                >
-                  Add To Cart
-                </button>
-              ) : (
-                <button
-                  className="secondaryButton"
-                  onClick={() =>
-                    dispatch(
-                      addToCart({
-                        orderId: null,
-                        productId: product.id,
-                        qty: 1,
-                        product: product,
-                      })
-                    )
-                  }
-                >
-                  Add To Cart
-                </button>
-              )}
-            </Product>
-          ))}
-        </ProductsContainer>
+                {isLoggedIn ? (
+                  <button
+                    className="secondaryButton"
+                    onClick={() =>
+                      updateOrAddLineItem(
+                        {
+                          orderId: usersCart.id,
+                          productId: product.id,
+                          qty: 1,
+                          product: product,
+                        },
+                        1
+                      )
+                    }
+                  >
+                    Add To Cart
+                  </button>
+                ) : (
+                  <button
+                    className="secondaryButton"
+                    onClick={() =>
+                      dispatch(
+                        addToCart({
+                          orderId: null,
+                          productId: product.id,
+                          qty: 1,
+                          product: product,
+                        })
+                      )
+                    }
+                  >
+                    Add To Cart
+                  </button>
+                )}
+              </Product>
+            ))}
+          </ProductsContainer>
+        </div>
       </BodyContainer>
     );
 }

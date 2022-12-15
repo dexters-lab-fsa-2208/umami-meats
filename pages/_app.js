@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import "../src/styles.css";
-// redux
+import Head from "next/head";
 import { Provider } from "react-redux";
 import { apiSlice } from "../src/redux/reducers/apiSlice";
 import { store, persistor } from "../src/redux/store";
@@ -29,6 +29,9 @@ function App({ Component, pageProps }) {
   return (
     <Provider api={apiSlice} store={store}>
       <PersistGate loading={null} persistor={persistor}>
+        <Head>
+          <title>Umami Meats</title>
+        </Head>
         <MainContainer>
           <Header />
           <PageContainer>

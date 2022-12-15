@@ -24,6 +24,7 @@ const FooterContainer = styled.div`
     margin-top: 0.27em;
     :hover {
       color: lightgray;
+      cursor: pointer;
     }
   }
 `;
