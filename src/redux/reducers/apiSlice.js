@@ -6,7 +6,7 @@ export const apiSlice = createApi({
     baseUrl:
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
-        : "https://umamimeats.vercel.app",
+        : "https://umami-meats.vercel.app",
   }),
   tagTypes: [
     "users",

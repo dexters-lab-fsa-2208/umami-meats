@@ -1,29 +1,26 @@
 const Sequelize = require("sequelize");
 const pg = require("pg");
 
-const config = {
-	host: "postgres://localhost/dexter",
-  port: 5432,
-  dialect: "postgres",
-  dialectModule: pg,
-  dialectOptions: {
-    ssl: process.env.DATABASE_URL
-      ? {
-          require: true,
-          rejectUnauthorized: false,
-        }
-      : false,
-  },
-  logging: false,
-};
-
-if (process.env.DATABASE_URL) {
-	config.database = process.env.DB_NAME;
-	config.username = process.env.DB_USER;
-	config.password = process.env.DB_PASS;
-	config.host = process.env.DB_HOST;
-}
-
-const db = new Sequelize("postgres://localhost/dexter", config);
+const db =
+  process.env.NODE_ENV === "development"
+    ? new Sequelize("postgres://localhost/dexter", {
+        dialect: "postgres",
+        logging: false,
+      })
+    : new Sequelize({
+        database: "testdbfordeploy",
+        username: "postgres",
+        password: "password",
+        host: "testdb.czw8tftookde.us-east-1.rds.amazonaws.com",
+        port: 5432,
+        dialect: "postgres",
+        dialectModule: pg,
+        dialectOptions: {
+          ssl: {
+            require: true,
+            rejectUnauthorized: false,
+          },
+        },
+      });
 
 module.exports = db;
