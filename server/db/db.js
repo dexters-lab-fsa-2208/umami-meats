@@ -7,7 +7,7 @@ const config = {
   dialect: "postgres",
   dialectModule: pg,
   dialectOptions: {
-    ssl: process.env.DATABASE_URL
+    ssl: process.env.DB_NAME
       ? {
           require: true,
           rejectUnauthorized: false,
