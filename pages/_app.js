@@ -1,9 +1,9 @@
 import "../styles/globals.css";
 import "../src/styles.css";
-// redux
+import Head from "next/head";
 import { Provider } from "react-redux";
 import { apiSlice } from "../src/redux/reducers/apiSlice";
-import { store, persistor } from "../src/redux/store/store";
+import { store, persistor } from "../src/redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import styled from "styled-components";
 import { Header, Footer } from "../src/components";
@@ -13,7 +13,7 @@ import { AnimatePresence } from "framer-motion";
 const MainContainer = styled.div`
   position: relative;
   min-height: 100vh;
-  padding-bottom: 2em;
+  /* padding-bottom: 2em; */
   * {
     margin: 0;
     user-select: none;
@@ -21,7 +21,7 @@ const MainContainer = styled.div`
 `;
 
 const PageContainer = styled.div`
-  max-width: 800px;
+  max-width: 950px;
   margin: auto;
 `;
 
@@ -29,6 +29,9 @@ function App({ Component, pageProps }) {
   return (
     <Provider api={apiSlice} store={store}>
       <PersistGate loading={null} persistor={persistor}>
+        <Head>
+          <title>Umami Meats</title>
+        </Head>
         <MainContainer>
           <Header />
           <PageContainer>

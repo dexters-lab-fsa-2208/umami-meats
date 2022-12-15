@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { SingleItemView, Loading, Error } from "../../src/components/";
 import { useGetSingleSushiQuery } from "../../src/redux/reducers/apiSlice";
@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function SingleSushiView() {
   const router = useRouter();
-  const { id } = router.query;
+  const [id] = useState(router.query.id);
   const { data } = useGetSingleSushiQuery(id);
 
   if (data === undefined) {
