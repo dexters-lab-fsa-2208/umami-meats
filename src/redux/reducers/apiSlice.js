@@ -4,8 +4,9 @@ export const apiSlice = createApi({
   reducerPath: "apiSlice",
   baseQuery: fetchBaseQuery({
     baseUrl:
-      // "http://localhost:3000"
-      "https://umami-meats.vercel.app"
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://umamimeats.vercel.app",
   }),
   tagTypes: [
     "users",
