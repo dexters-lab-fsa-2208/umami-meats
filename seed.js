@@ -1,11 +1,5 @@
-const { db, User, Product, Order, LineItem, Tag } = require("./server/db");
-const {
-  users,
-  products,
-  orders,
-  tags,
-  lineItems,
-} = require("./server/seedData");
+const { db, User, Product, Tag } = require("./server/db");
+const { users, products, tags } = require("./server/seedData");
 
 const seed = async () => {
   try {
@@ -20,22 +14,11 @@ const seed = async () => {
         User.create(user);
       })
     );
-
     await Promise.all(
       products.map((product) => {
         Product.create(product);
       })
     );
-    // await Promise.all(
-    //     orders.map((order) => {
-    // 		Order.create(order);
-    // 	})
-    // );
-    // await Promise.all(
-    // 	lineItems.map((lineItem) => {
-    // 		LineItem.create(lineItem);
-    // 	})
-    // );
   } catch (e) {
     console.log(e);
   }
