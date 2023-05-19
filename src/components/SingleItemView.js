@@ -111,7 +111,7 @@ function SingleItemView({ type, data }) {
         id: existingItem.id,
         data: {
           id: existingItem.id,
-          orderId: cartId,
+          orderId: usersCart.id,
           productId: payload.productId,
           qty: (prevQty += payload.qty),
         },
@@ -140,7 +140,10 @@ function SingleItemView({ type, data }) {
               <i>{"Availability: " + printAvailability()}</i>
             </p>
             <ProductContainerTop>
-              <img src={`/images/${data.name}.jpg`} alt={data.name || "product"} />
+              <img
+                src={`/images/${data.name}.jpg`}
+                alt={data.name || "product"}
+              />
 
               <ProductInfoRight>
                 <div>
@@ -174,7 +177,7 @@ function SingleItemView({ type, data }) {
                       className="mainButton"
                       onClick={() =>
                         updateOrAddLineItem({
-                          orderId: cartId,
+                          orderId: usersCart.id,
                           productId: data.id,
                           qty: currentQty,
                           product: data,
