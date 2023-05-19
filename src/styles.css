@@ -1,13 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Scope+One&family=Vollkorn+SC&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Scope+One&family=Vollkorn+SC&display=swap'); */
+@font-face {
+  font-family: "Vollkorn SC";
+  src: url("../public/fonts/VollkornSC-Regular.ttf");
+}
+@font-face {
+  font-family: "Scope One";
+  src: url("../public/fonts/ScopeOne-Regular.ttf");
+}
 
 body {
-  font-family: 'Vollkorn SC', sans-serif;
+  font-family: "Vollkorn SC", sans-serif;
 }
 body .hfLinks {
-  font-family: 'Scope One', serif;
+  font-family: "Scope One", serif;
 }
 body .productDesc {
-  font-family: Arial sans-serif;
+  font-family: "Scope One", serif;
 }
 
 /* MAIN BUTTONS */
@@ -30,6 +38,7 @@ body .productDesc {
 .mainButton:hover,
 .secondaryButton:hover {
   background-color: #d12121;
+  cursor: pointer;
 }
 .mainButton:active,
 .secondaryButton:active {
@@ -64,6 +73,10 @@ body .productDesc {
   border-radius: 3px;
   margin-bottom: 1em;
 }
+.incrementSingleItemContainer {
+  border-radius: 10px;
+  box-shadow: 1px 1px 8px rgba(0, 0, 0, 0.17);
+}
 .incrementContainer > * {
   width: 32px;
   height: 32px;
@@ -83,6 +96,7 @@ body .productDesc {
 }
 .incrementButton:hover {
   background-color: rgb(213, 213, 213);
+  cursor: pointer;
 }
 .incrementButton:active {
   background-color: rgb(197, 197, 197);
@@ -104,6 +118,7 @@ body .productDesc {
 }
 .incrementCart > button:hover {
   background-color: rgb(208, 208, 208);
+  cursor: pointer;
 }
 .incrementCart > button:active {
   background-color: rgb(190, 190, 190);

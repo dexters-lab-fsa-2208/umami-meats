@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../redux/reducers/cart-slice";
-import { addToUsersCart } from "../redux/reducers/usersCart-slice";
+import { addToCart } from "../redux/reducers/cartSlice";
+import { addToUsersCart } from "../redux/reducers/usersCartSlice";
 
 import {
   useCreateLineItemMutation,
@@ -13,17 +13,21 @@ import { Loading } from "./";
 const MainProductContainer = styled.div`
   max-width: 100%;
   margin: 0 1.1em;
+  padding: 0 12px;
   overflow-wrap: break-word;
 
   > p {
     text-align: center;
     font-style: italic;
-    margin: 0.4em;
+    margin: 0.8em auto;
+    max-width: 750px;
   }
   .desc {
+    width: fit-content;
     font-style: normal;
     text-align: justify;
-    margin-top: 0.8em;
+    margin: 1.5em auto 0;
+    padding: 0 15px;
   }
 `;
 const ProductContainerTop = styled.div`
@@ -93,7 +97,6 @@ function SingleItemView({ type, data }) {
     // find out if the item exists in our redux store
     // if it does, we are able to call PUT
     // if it dosent, we are calling POST
-    console.log(usersCart);
     const existingItem = usersCart.lineItems.find(
       ({ productId }) => productId === payload.productId
     );
@@ -104,7 +107,6 @@ function SingleItemView({ type, data }) {
 
     // update line item and sending it to redux store
     const update = async () => {
-      console.log("editing");
       await updateLineItem({
         id: existingItem.id,
         data: {
@@ -119,7 +121,6 @@ function SingleItemView({ type, data }) {
 
     // add line item and sending it to redux store
     const add = async () => {
-      console.log("creating");
       let { data } = await createLineItem(payload);
       newData = { ...data, product: payload.product };
       dispatch(addToUsersCart({ newData, currentQty }));
@@ -128,7 +129,6 @@ function SingleItemView({ type, data }) {
     // if the lineitem found has an id (meaning it exists in our DB)
     // update it, if not, add new line item
     existingItem && existingItem.id ? update() : add();
-    console.log("checking my cart", usersCart);
   };
 
   return (
@@ -140,7 +140,7 @@ function SingleItemView({ type, data }) {
               <i>{"Availability: " + printAvailability()}</i>
             </p>
             <ProductContainerTop>
-              <img src={data.img} alt={data.name || "product"} />
+              <img src={`/images/${data.name}.jpg`} alt={data.name || "product"} />
 
               <ProductInfoRight>
                 <div>
@@ -151,7 +151,7 @@ function SingleItemView({ type, data }) {
                 </div>
 
                 <BuyProductContainer>
-                  <div className="incrementContainer">
+                  <div className="incrementContainer incrementSingleItemContainer">
                     <button
                       onClick={() => incrementAmt(-1)}
                       className="incrementButton"
@@ -204,7 +204,7 @@ function SingleItemView({ type, data }) {
               </ProductInfoRight>
             </ProductContainerTop>
 
-            <p className="desc productDesc ">{data.desc}</p>
+            <p className="desc productDesc">{data.desc}</p>
           </MainProductContainer>
         </>
       ) : (

@@ -2,12 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import { RemoveSSRFromComponent } from "../../src/utils";
-import { useSelector } from "react-redux";
 import { useGetSingleUserQuery } from "../../src/redux/reducers/apiSlice";
 
 const MainContainer = styled.div`
-	max-width: 770px;
-	margin: 0 auto;
+  max-width: 770px;
+  margin: 0 auto;
 `;
 
 const AccountDetails = styled.div`
@@ -18,7 +17,7 @@ const AccountDetails = styled.div`
   align-items: center;
 
   button {
-	height: fit-content;
+    height: fit-content;
   }
 `;
 
@@ -26,6 +25,7 @@ const LineDivider = styled.hr`
   margin: 0 auto;
   width: 92%;
 `;
+
 const PreviousOrders = styled.div`
   margin: 1em;
   h2 {
@@ -70,7 +70,6 @@ function ViewAccount() {
   const { data: dbUser, isLoading } = useGetSingleUserQuery(user.id);
   if (!isLoading) {
     orders = dbUser.orders;
-    console.log(orders);
   }
 
   return (
@@ -137,7 +136,7 @@ function ViewAccount() {
           )}
         </div>
       </PreviousOrders>
-	</MainContainer>
+    </MainContainer>
   );
 }
 

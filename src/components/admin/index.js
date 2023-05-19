@@ -4,10 +4,4 @@ import ManageUsers from "./ManageUsers";
 import ToolList from "./ToolList";
 import UpdateFeatured from "./UpdateFeatured";
 
-export {
-  ManageProducts,
-  ManagePromos,
-  ManageUsers,
-  ToolList,
-  UpdateFeatured,
-};
+export { ManageProducts, ManagePromos, ManageUsers, ToolList, UpdateFeatured };

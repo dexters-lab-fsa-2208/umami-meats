@@ -37,26 +37,74 @@ export default function Contact() {
       exit={{ opacity: 0 }}
     >
       <MainContainer>
-        <h3 id="view">View this project on Github</h3>
+        <a
+          href="https://github.com/dexters-lab-fsa-2208/umami-meats"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h3 id="view">View this project on Github</h3>
+        </a>
         <hr />
         <TeamContainer>
           <h3>Contributors to this project</h3>
           <div className="groupMember">
             <p>Jake Lohman</p>
             <p>
-              <a href="https://github.com/l-ohman">Github</a>
+              <a
+                href="https://github.com/l-ohman"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Github
+              </a>
+              {" | "}
+              <a
+                href="https://www.linkedin.com/in/jake-lohman/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                LinkedIn
+              </a>
             </p>
           </div>
           <div className="groupMember">
             <p>Danny Margolin</p>
             <p>
-              <a href="https://github.com/DannyMExe">Github</a>
+              <a
+                href="https://github.com/DannyMExe"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Github
+              </a>
+              {" | "}
+              <a
+                href="https://www.linkedin.com/in/danny-margolin/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                LinkedIn
+              </a>
             </p>
           </div>
           <div className="groupMember">
             <p>Brandon Yoon</p>
             <p>
-              <a href="https://github.com/byoon97">Github</a>
+              <a
+                href="https://github.com/byoon97"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Github
+              </a>
+              {" | "}
+              <a
+                href="https://www.linkedin.com/in/byoon888/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                LinkedIn
+              </a>
             </p>
           </div>
         </TeamContainer>
