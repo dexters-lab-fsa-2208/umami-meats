@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useUpdateOrderMutation } from "../src/redux/reducers/apiSlice";
+import { initializeCart } from "../src/redux/reducers/usersCartSlice";
 
 const CheckoutContainer = styled.div`
   max-width: 675px;
@@ -22,8 +23,8 @@ const ProductsContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     .lineItemPrice {
-        font-size: 1.12em;
-        /* font-weight: bold; */
+      font-size: 1.12em;
+      /* font-weight: bold; */
     }
   }
   hr {
@@ -46,8 +47,6 @@ const Checkout = () => {
   const { cart: usersCart, cartId } = useSelector((state) => state.usersCart);
   const [updateOrder] = useUpdateOrderMutation();
 
-	const dispatch = useDispatch();
-
   const checkout = async (id) => {
     updateOrder({ data: { isCart: false }, id });
     // let { data } = await createNewOrder({
@@ -55,7 +54,7 @@ const Checkout = () => {
     // 	isCart: true,
     // 	address: 'some address',
     // });
-    dispatch(initializeCart({ ...data, lineItems: [] }));
+    // dispatch(initializeCart({ ...data, lineItems: [] }));
     //maybe redirect to home page
   };
 
