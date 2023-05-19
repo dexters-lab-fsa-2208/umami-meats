@@ -176,10 +176,6 @@ const ListItemContainer = styled.div`
 
 export default function HomePage() {
   const { data, isLoading, error } = useGetProductsQuery();
-  const { user, isLoggedIn } = useSelector((state) => state.user);
-
-  const [createNewOrder] = useCreateOrderMutation();
-  const dispatch = useDispatch();
 
   const [carouselIdx, setCarouselIdx] = React.useState(0);
 
