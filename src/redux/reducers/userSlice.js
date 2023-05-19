@@ -21,8 +21,8 @@ export const fetchUserThunk = createAsyncThunk(
 const userSlice = createSlice({
   name: "userSlice",
   initialState: {
-    user: undefined,
     isLoggedIn: false,
+    user: null,
   },
   reducers: {
     storeUser: (state, action) => {

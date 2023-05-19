@@ -5,42 +5,39 @@ export default async function handler(req, res) {
   const { id } = req.query;
   if (req.method === "GET") {
     try {
-        const { id } = req.query;
+      const { id } = req.query;
       const steak = await Product.findOne({
         where: {
-            id: id,
-            type: "steaks"
+          id: id,
+          type: "steaks",
         },
         include: [
-            {
-                model: Tag
-            }
-        ]
+          {
+            model: Tag,
+          },
+        ],
       });
-      console.log(steak)
       res.json(steak);
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
   //TODO: FIND STATUS CODE & CHECK REQ.PARAMS || REQ.BODY
-  if (req.method === 'DELETE') {
+  if (req.method === "DELETE") {
     try {
       const steak = await Product.findByPk(id);
       steak.destroy();
       res.status(204).json(steak);
-    }
-    catch (err) {
+    } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }
-  if (req.method === 'PUT') {
+  if (req.method === "PUT") {
     try {
       const steak = await Product.findByPk(id);
       steak.update(req.body);
       res.json(steak);
-    }
-    catch (err) {
+    } catch (err) {
       res.status(500).json({ error: err.message });
     }
   }

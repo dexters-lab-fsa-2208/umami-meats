@@ -1,41 +1,31 @@
-const Sequelize = require('sequelize');
-const pg = require('pg');
+const Sequelize = require("sequelize");
+const pg = require("pg");
 
-const config = {};
+let db;
 
-if (process.env.QUIET) {
-	config.logging = false;
+const config = {
+  port: 5432,
+  dialect: "postgres",
+  dialectModule: pg,
+  dialectOptions: {
+    ssl: process.env.DB_NAME
+      ? {
+          require: true,
+          rejectUnauthorized: false,
+        }
+      : false,
+  },
+  // logging: false,
+};
+
+if (process.env.DB_NAME) {
+  config.database = process.env.DB_NAME;
+  config.username = process.env.DB_USER;
+  config.password = process.env.DB_PASS;
+  config.host = process.env.DB_HOST;
+  db = new Sequelize(config);
+} else {
+  db = new Sequelize("postgres://localhost/dexter", config);
 }
-
-const db = new Sequelize({
-	database: 'testdbfordeploy',
-	username: 'postgres',
-	password: 'password',
-	host: 'testdb.czw8tftookde.us-east-1.rds.amazonaws.com',
-	port: 5432,
-	dialect: 'postgres',
-	dialectModule: pg,
-	// dialectOptions: {
-	// 	ssl: {
-	// 		require: true, // This will help, but cause error
-	// 		rejectUnauthorized: false, // This will fix error
-	// 	},
-	// },
-});
-
-// const db = new Sequelize(
-//   process.env.DATABASE_URL || "postgres://localhost/dexter",
-//   {
-//     dialect: "postgres",
-//     dialectOptions: {
-//       ssl: process.env.DATABASE_URL ? {
-//         require: true,
-//         rejectUnauthorized: false,
-//       } : false,
-
-//     },
-//     logging: false,
-//   }
-// );
 
 module.exports = db;

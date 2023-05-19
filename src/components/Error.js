@@ -15,20 +15,20 @@ const ErrorContainer = styled.div`
 `;
 
 export default function Error({ is500 }) {
-  const statusText = is500 ?
-    "Sorry, but it seems there was an internal server error while processing your request" :
-    "Sorry, but the item you are looking for could not be found!"
+  const statusText = is500
+    ? "Sorry, but it seems there was an internal server error while processing your request"
+    : "Sorry, but the item you are looking for could not be found!";
 
   return (
     <ErrorContainer id="errorContainer">
       <p>{statusText}</p>
-      {!is500 &&
-      <Link href="/">
-        <p className="returnHome">
-          Return to <u>home page</u>
-        </p>
-      </Link>
-      }
+      {!is500 && (
+        <Link href="/">
+          <p className="returnHome">
+            Return to <u>home page</u>
+          </p>
+        </Link>
+      )}
     </ErrorContainer>
   );
 }
