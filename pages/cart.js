@@ -13,6 +13,8 @@ import {
   addToUsersCart,
   removeFromUsersCart,
 } from "../src/redux/reducers/usersCartSlice";
+import { loadStripe } from "@stripe/stripe-js";
+
 // import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 const MainContainer = styled.div`
@@ -103,6 +105,10 @@ const Checkout = styled.div`
   }
 `;
 
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
+
 function Cart() {
   const { cart } = useSelector((state) => state.cart);
   const { cart: usersCart, isLoading } = useSelector(
@@ -116,6 +122,20 @@ function Cart() {
   const [deleteLineItem] = useDeleteLineItemMutation();
   const [updateLineItem] = useUpdateLineItemMutation();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Check to see if this is a redirect back from Checkout
+    const query = new URLSearchParams(window.location.search);
+    if (query.get("success")) {
+      console.log("Order placed! You will receive an email confirmation.");
+    }
+
+    if (query.get("canceled")) {
+      console.log(
+        "Order canceled -- continue to shop around and checkout when you’re ready."
+      );
+    }
+  }, []);
 
   const removeLineItem = async (payload) => {
     if (
@@ -271,7 +291,14 @@ function Cart() {
 
             {/* checkout button */}
             {isLoggedIn ? (
-              <Link href={"/checkout"}>
+              <Link
+                href={{
+                  pathname: "/checkout/api/checkout_sessions",
+                  query: encodeURIComponent(
+                    JSON.stringify(usersCart.lineItems)
+                  ),
+                }}
+              >
                 <button className="mainButton">Checkout</button>
               </Link>
             ) : (
