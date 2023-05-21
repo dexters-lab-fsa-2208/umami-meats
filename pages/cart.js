@@ -14,6 +14,7 @@ import {
   removeFromUsersCart,
 } from "../src/redux/reducers/usersCartSlice";
 import { loadStripe } from "@stripe/stripe-js";
+import Loading from "../src/components/Loading";
 
 // import { skipToken } from "@reduxjs/toolkit/dist/query";
 
@@ -184,146 +185,160 @@ function Cart() {
 
   return (
     <MainContainer>
-      <h2>Your Cart</h2>
-      {(isLoggedIn ? usersCart.lineItems : cart).length === 0 ? (
-        <p id="cartEmpty">Your cart is empty!</p>
+      {isLoading ? (
+        <Loading />
       ) : (
         <>
-          <ProductsContainer>
-            {(isLoggedIn ? usersCart.lineItems : cart)?.map((product, idx) => (
-              <div key={idx}>
-                <div className="singleProduct">
-                  <Image
-                    src={`/images/${product.product.name}.jpg`}
-                    alt={product.product.name}
-                  />
-                  <DetailsContainer>
-                    {" "}
-                    <NameandX>
-                      <p>{product.product.name}</p>
-                      <button
-                        className="secondaryButton xBtn"
-                        onClick={() => removeLineItem(product)}
-                      >
-                        X
-                      </button>
-                    </NameandX>
-                    <IncrementAndPrice>
-                      <div className="incrementContainer incrementCart">
-                        {isLoggedIn ? (
-                          // If a user is logged in, access database
-                          <button
-                            className="incrementButton"
-                            onClick={
-                              product.qty <= 1
-                                ? () => removeLineItem(product)
-                                : () => handleUpdateItem(product, -1)
-                            }
-                          >
-                            -
-                          </button>
-                        ) : (
-                          <button
-                            className="incrementButton"
-                            onClick={
-                              product.qty <= 1
-                                ? () => removeLineItem(product)
-                                : () =>
+          <h2>Your Cart</h2>
+          {(isLoggedIn ? usersCart.lineItems : cart)?.length === 0 ? (
+            <p id="cartEmpty">Your cart is empty!</p>
+          ) : (
+            <>
+              <ProductsContainer>
+                {(isLoggedIn ? usersCart.lineItems : cart)?.map(
+                  (product, idx) => (
+                    <div key={idx}>
+                      <div className="singleProduct">
+                        <Image
+                          src={`/images/${product.product.name}.jpg`}
+                          alt={product.product.name}
+                        />
+                        <DetailsContainer>
+                          {" "}
+                          <NameandX>
+                            <p>{product.product.name}</p>
+                            <button
+                              className="secondaryButton xBtn"
+                              onClick={() => removeLineItem(product)}
+                            >
+                              X
+                            </button>
+                          </NameandX>
+                          <IncrementAndPrice>
+                            <div className="incrementContainer incrementCart">
+                              {isLoggedIn ? (
+                                // If a user is logged in, access database
+                                <button
+                                  className="incrementButton"
+                                  onClick={
+                                    product.qty <= 1
+                                      ? () => removeLineItem(product)
+                                      : () => handleUpdateItem(product, -1)
+                                  }
+                                >
+                                  -
+                                </button>
+                              ) : (
+                                <button
+                                  className="incrementButton"
+                                  onClick={
+                                    product.qty <= 1
+                                      ? () => removeLineItem(product)
+                                      : () =>
+                                          dispatch(
+                                            addToCart({
+                                              orderId: null,
+                                              productId: product.product.id,
+                                              qty: -1,
+                                              product: product.product,
+                                            })
+                                          )
+                                  }
+                                >
+                                  -
+                                </button>
+                              )}
+
+                              <p>{product.qty}</p>
+                              {isLoggedIn ? (
+                                <button
+                                  className="incrementButton"
+                                  onClick={() => handleUpdateItem(product, 1)}
+                                >
+                                  +
+                                </button>
+                              ) : (
+                                <button
+                                  className="incrementButton"
+                                  onClick={() =>
                                     dispatch(
                                       addToCart({
                                         orderId: null,
-                                        productId: product.product.id,
-                                        qty: -1,
                                         product: product.product,
+                                        productId: product.product.id,
+                                        qty: 1,
                                       })
                                     )
-                            }
-                          >
-                            -
-                          </button>
-                        )}
-
-                        <p>{product.qty}</p>
-                        {isLoggedIn ? (
-                          <button
-                            className="incrementButton"
-                            onClick={() => handleUpdateItem(product, 1)}
-                          >
-                            +
-                          </button>
-                        ) : (
-                          <button
-                            className="incrementButton"
-                            onClick={() =>
-                              dispatch(
-                                addToCart({
-                                  orderId: null,
-                                  product: product.product,
-                                  productId: product.product.id,
-                                  qty: 1,
-                                })
-                              )
-                            }
-                          >
-                            +
-                          </button>
-                        )}
+                                  }
+                                >
+                                  +
+                                </button>
+                              )}
+                            </div>
+                            <p className="cartPrice">
+                              {`$${(
+                                product.product.price * product.qty
+                              ).toFixed(2)}`}
+                            </p>
+                            {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
+                          </IncrementAndPrice>
+                        </DetailsContainer>
                       </div>
-                      <p className="cartPrice">
-                        {`$${(product.product.price * product.qty).toFixed(2)}`}
-                      </p>
-                      {/* {(product.quantity <= 0) && dispatch(removeFromCart(product))} */}
-                    </IncrementAndPrice>
-                  </DetailsContainer>
+
+                      {/* places a line below each item unless it is the last in the cart */}
+                      {idx + 1 !==
+                        (isLoggedIn ? usersCart.lineItems : cart).length && (
+                        <hr />
+                      )}
+                    </div>
+                  )
+                )}
+              </ProductsContainer>
+
+              <Checkout>
+                <h3>Checkout</h3>
+                <div>
+                  <div className="checkoutLine">
+                    <p>Subtotal</p>
+                    <p>{`$${(isLoggedIn ? usersCart.lineItems : cart)
+                      ?.reduce(
+                        (total, itm) => itm.qty * itm.product.price + total,
+                        0
+                      )
+                      .toFixed(2)}`}</p>
+                  </div>
+                  <div className="checkoutLine">
+                    <p>Shipping</p> <p>Calculated at Checkout</p>
+                  </div>
                 </div>
 
-                {/* places a line below each item unless it is the last in the cart */}
-                {idx + 1 !==
-                  (isLoggedIn ? usersCart.lineItems : cart).length && <hr />}
-              </div>
-            ))}
-          </ProductsContainer>
-
-          <Checkout>
-            <h3>Checkout</h3>
-            <div>
-              <div className="checkoutLine">
-                <p>Subtotal</p>
-                <p>{`$${(isLoggedIn ? usersCart.lineItems : cart)
-                  .reduce(
-                    (total, itm) => itm.qty * itm.product.price + total,
-                    0
-                  )
-                  .toFixed(2)}`}</p>
-              </div>
-              <div className="checkoutLine">
-                <p>Shipping</p> <p>Calculated at Checkout</p>
-              </div>
-            </div>
-
-            {/* checkout button */}
-            {isLoggedIn ? (
-              // <Link href={"/checkout"}>
-              <form action="/api/checkout_sessions" method="POST">
-                <section>
-                  <input
-                    type="hidden"
-                    name="data"
-                    value={JSON.stringify(usersCart.lineItems)}
-                    readOnly
-                  ></input>
-                  <button type="submit" role="link" className="mainButton">
-                    Checkout
-                  </button>
-                </section>
-              </form>
-            ) : (
-              // </Link>
-              <Link href="/login">
-                <button className="secondaryButton">Log In to Checkout!</button>
-              </Link>
-            )}
-          </Checkout>
+                {/* checkout button */}
+                {isLoggedIn ? (
+                  // <Link href={"/checkout"}>
+                  <form action="/api/checkout_sessions" method="POST">
+                    <section>
+                      <input
+                        type="hidden"
+                        name="data"
+                        value={JSON.stringify(usersCart.lineItems)}
+                        readOnly
+                      ></input>
+                      <button type="submit" role="link" className="mainButton">
+                        Checkout
+                      </button>
+                    </section>
+                  </form>
+                ) : (
+                  // </Link>
+                  <Link href="/login">
+                    <button className="secondaryButton">
+                      Log In to Checkout!
+                    </button>
+                  </Link>
+                )}
+              </Checkout>
+            </>
+          )}
         </>
       )}
     </MainContainer>

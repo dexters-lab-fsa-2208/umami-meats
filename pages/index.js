@@ -180,19 +180,6 @@ export default function HomePage() {
   const { data, isLoading, error } = useGetProductsQuery();
 
   const [carouselIdx, setCarouselIdx] = useState(0);
-  const [confirm, setConfirm] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const router = useRouter();
-  const { success, canceled } = router.query;
-
-  const handleOrderConfirmation = () => {
-    // Perform actions for order confirmation, then open the modal
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
   const carouselScroll = (idx) => {
     if (carouselIdx <= 0 && idx < 0) {
@@ -210,12 +197,6 @@ export default function HomePage() {
       return () => clearInterval(interval);
     }
   }, []);
-  //bum
-  useEffect(() => {
-    if (success === "true" || canceled === "true") {
-      handleOrderConfirmation();
-    }
-  }, [success, canceled]);
 
   if (isLoading) {
     return <Loading />;
@@ -229,9 +210,6 @@ export default function HomePage() {
         exit={{ opacity: 0 }}
       >
         <HomePageContainer>
-          {isModalOpen && (
-            <ConfirmationModal onClose={handleCloseModal} success canceled />
-          )}
           <CarouselContainer>
             {data.map((itm, idx) => (
               <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>

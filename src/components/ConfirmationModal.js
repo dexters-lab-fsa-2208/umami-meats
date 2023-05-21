@@ -19,6 +19,8 @@ const ModalContent = styled.div`
   padding: 20px;
   border-radius: 4px;
   margin-inline: 25px;
+
+  color: black;
 `;
 
 const ModalTitle = styled.div`
