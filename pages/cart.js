@@ -13,6 +13,8 @@ import {
   addToUsersCart,
   removeFromUsersCart,
 } from "../src/redux/reducers/usersCartSlice";
+import { loadStripe } from "@stripe/stripe-js";
+
 // import { skipToken } from "@reduxjs/toolkit/dist/query";
 
 const MainContainer = styled.div`
@@ -102,6 +104,36 @@ const Checkout = styled.div`
     align-items: center;
   }
 `;
+
+// const CheckoutForm = styled.form`
+//   section {
+//     background: #ffffff;
+//     display: flex;
+//     flex-direction: column;
+//     width: 400px;
+//     height: 112px;
+//     border-radius: 6px;
+//     justify-content: space-between;
+//   }
+//   button {
+//     height: 36px;
+//     background: #556cd6;
+//     border-radius: 4px;
+//     color: white;
+//     border: 0;
+//     font-weight: 600;
+//     cursor: pointer;
+//     transition: all 0.2s ease;
+//     box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+//   }
+//   button:hover {
+//     opacity: 0.8;
+//   }
+// `;
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+);
 
 function Cart() {
   const { cart } = useSelector((state) => state.cart);
@@ -271,10 +303,22 @@ function Cart() {
 
             {/* checkout button */}
             {isLoggedIn ? (
-              <Link href={"/checkout"}>
-                <button className="mainButton">Checkout</button>
-              </Link>
+              // <Link href={"/checkout"}>
+              <form action="/api/checkout_sessions" method="POST">
+                <section>
+                  <input
+                    type="hidden"
+                    name="data"
+                    value={JSON.stringify(usersCart.lineItems)}
+                    readOnly
+                  ></input>
+                  <button type="submit" role="link" className="mainButton">
+                    Checkout
+                  </button>
+                </section>
+              </form>
             ) : (
+              // </Link>
               <Link href="/login">
                 <button className="secondaryButton">Log In to Checkout!</button>
               </Link>
