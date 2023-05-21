@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   useCreateOrderMutation,
@@ -12,6 +12,8 @@ import { Loading, Error } from "../src/components";
 // design
 import styled from "styled-components";
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
+import ConfirmationModal from "../src/components/ConfirmationModal";
 
 const customGray = "rgba(120, 120, 120, 0.1)";
 
@@ -177,7 +179,20 @@ const ListItemContainer = styled.div`
 export default function HomePage() {
   const { data, isLoading, error } = useGetProductsQuery();
 
-  const [carouselIdx, setCarouselIdx] = React.useState(0);
+  const [carouselIdx, setCarouselIdx] = useState(0);
+  const [confirm, setConfirm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+  const { success, canceled } = router.query;
+
+  const handleOrderConfirmation = () => {
+    // Perform actions for order confirmation, then open the modal
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const carouselScroll = (idx) => {
     if (carouselIdx <= 0 && idx < 0) {
@@ -194,7 +209,13 @@ export default function HomePage() {
       let interval = setInterval(() => carouselScroll(1), 5000);
       return () => clearInterval(interval);
     }
-  });
+  }, []);
+  //bum
+  useEffect(() => {
+    if (success === "true" || canceled === "true") {
+      handleOrderConfirmation();
+    }
+  }, [success, canceled]);
 
   if (isLoading) {
     return <Loading />;
@@ -208,6 +229,9 @@ export default function HomePage() {
         exit={{ opacity: 0 }}
       >
         <HomePageContainer>
+          {isModalOpen && (
+            <ConfirmationModal onClose={handleCloseModal} success canceled />
+          )}
           <CarouselContainer>
             {data.map((itm, idx) => (
               <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
