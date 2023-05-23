@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   useGetProductsQuery,
@@ -8,10 +8,17 @@ import {
 import Link from "next/link";
 import ToggleSwitch from "../tools/ToggleSwitch";
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ListContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
-  justify-content: flex-start;
+  justify-content: center;
   margin: 9px auto;
   ::after {
     content: "";
@@ -51,6 +58,7 @@ const ListItemContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
 
   img {
     min-height: 130px;
@@ -88,61 +96,66 @@ const ListItemContainer = styled.div`
   button {
     margin: 0.15em auto 0.7em;
   }
+  input {
+    max-width: 100%;
+    margin-block: 5px;
+    text-overflow: ellipsis;
+  }
 `;
 
 export default function UpdateFeatured() {
   const { data, isLoading, error } = useGetProductsQuery();
   const [updateSteak] = useUpdateSteakMutation();
   const [updateSushi] = useUpdateSushiMutation();
+  const [isSaved, setIsSaved] = useState(false);
 
-  const handleSave = async (item) => {
+  const handleUpdate = async (item, bool, message) => {
+    console.log(message);
     item.type === "sushi"
       ? await updateSushi({
           id: item.id,
-          data: { featuredStatus: !item.featuredStatus },
+          data: { featuredStatus: bool, featuredMessage: message },
         })
       : await updateSteak({
           id: item.id,
-          data: { featuredStatus: !item.featuredStatus },
+          data: { featuredStatus: bool, featuredMessage: message },
         });
   };
 
-  // await updateParlay({
-  //   id: parlay.id,
-  //   payload: {
-  //     isActive: false,
-  //     status: "completed",
-  //     result: "lost",
-  //   },
-  // });
+  const handleSave = () => {
+    setIsSaved(true);
+  };
 
   return (
-    <>
-      <ul>
-        <li>Edit main featured items</li>
-        <ListContainer>
-          {data
-            ?.sort((a, b) => a.name.localeCompare(b.name))
-            .map((itm) => {
-              console.log(itm);
-              return (
-                <ListItemContainer key={itm.id}>
-                  <img
-                    src={`/images/${itm.name}.jpg`}
-                    alt={itm.name || "product"}
-                  />
-                  <Link href={`/${itm.type}/${itm.id}`}>
-                    <p className="productName">{itm.name}</p>
-                  </Link>
-                  <ToggleSwitch item={itm} />
-                  <p className="productPrice">${itm.price}/lb</p>
-                  <button onClick={() => handleSave(itm)}>Save</button>
-                </ListItemContainer>
-              );
-            })}
-        </ListContainer>
-        <li>Edit secondary featured items</li>
-      </ul>
-    </>
+    <Container>
+      <button className="mainButton" onClick={() => handleSave()}>
+        Save Changes
+      </button>
+      <ListContainer>
+        {[...data]
+          ?.sort((a, b) => a.name.localeCompare(b.name))
+          .map((itm) => {
+            console.log(itm);
+            return (
+              <ListItemContainer key={itm.id}>
+                <img
+                  src={`/images/${itm.name}.jpg`}
+                  alt={itm.name || "product"}
+                />
+                <Link href={`/${itm.type}/${itm.id}`}>
+                  <p className="productName">{itm.name}</p>
+                </Link>
+                <ToggleSwitch
+                  item={itm}
+                  handleUpdate={handleUpdate}
+                  isSaved={isSaved}
+                  setIsSaved={setIsSaved}
+                />
+                <p className="productPrice">${itm.price}/lb</p>
+              </ListItemContainer>
+            );
+          })}
+      </ListContainer>
+    </Container>
   );
 }
