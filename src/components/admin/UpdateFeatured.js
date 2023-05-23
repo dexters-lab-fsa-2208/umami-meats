@@ -7,7 +7,6 @@ import {
 } from "../../redux/reducers/apiSlice";
 import Link from "next/link";
 import ToggleSwitch from "../tools/ToggleSwitch";
-import { AiFillEdit } from "react-icons/Ai";
 import EditModal from "../Modals/EditModal";
 
 const Container = styled.div`
