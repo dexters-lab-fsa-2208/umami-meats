@@ -1,5 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
+import {
+  useGetProductsQuery,
+  useUpdateSteakMutation,
+  useUpdateSushiMutation,
+} from "../../redux/reducers/apiSlice";
+import Link from "next/link";
 
 export default function ManageProducts() {
   return (

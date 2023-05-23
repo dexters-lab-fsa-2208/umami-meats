@@ -7,6 +7,8 @@ import {
 } from "../../redux/reducers/apiSlice";
 import Link from "next/link";
 import ToggleSwitch from "../tools/ToggleSwitch";
+import { AiFillEdit } from "react-icons/Ai";
+import EditModal from "../Modals/EditModal";
 
 const Container = styled.div`
   display: flex;
@@ -101,6 +103,12 @@ const ListItemContainer = styled.div`
     margin-block: 5px;
     text-overflow: ellipsis;
   }
+
+  .editContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
 `;
 
 export default function UpdateFeatured() {
@@ -108,17 +116,18 @@ export default function UpdateFeatured() {
   const [updateSteak] = useUpdateSteakMutation();
   const [updateSushi] = useUpdateSushiMutation();
   const [isSaved, setIsSaved] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState({});
 
-  const handleUpdate = async (item, bool, message) => {
-    console.log(message);
+  const handleUpdate = async (item, updated) => {
     item.type === "sushi"
       ? await updateSushi({
           id: item.id,
-          data: { featuredStatus: bool, featuredMessage: message },
+          data: updated,
         })
       : await updateSteak({
           id: item.id,
-          data: { featuredStatus: bool, featuredMessage: message },
+          data: updated,
         });
   };
 
@@ -126,11 +135,22 @@ export default function UpdateFeatured() {
     setIsSaved(true);
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <Container>
       <button className="mainButton" onClick={() => handleSave()}>
         Save Changes
       </button>
+      {isModalOpen && (
+        <EditModal
+          onClose={handleCloseModal}
+          item={selectedItem}
+          onSave={handleUpdate}
+        />
+      )}
       <ListContainer>
         {[...data]
           ?.sort((a, b) => a.name.localeCompare(b.name))
@@ -142,16 +162,27 @@ export default function UpdateFeatured() {
                   src={`/images/${itm.name}.jpg`}
                   alt={itm.name || "product"}
                 />
+
                 <Link href={`/${itm.type}/${itm.id}`}>
                   <p className="productName">{itm.name}</p>
                 </Link>
+
                 <ToggleSwitch
                   item={itm}
                   handleUpdate={handleUpdate}
                   isSaved={isSaved}
                   setIsSaved={setIsSaved}
                 />
+
                 <p className="productPrice">${itm.price}/lb</p>
+                <button
+                  onClick={() => {
+                    setIsModalOpen(true);
+                    setSelectedItem(itm);
+                  }}
+                >
+                  Edit
+                </button>
               </ListItemContainer>
             );
           })}

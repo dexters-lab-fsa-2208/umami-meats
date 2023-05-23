@@ -13,7 +13,7 @@ import { Loading, Error } from "../src/components";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import ConfirmationModal from "../src/components/ConfirmationModal";
+import ConfirmationModal from "../src/components/Modals/ConfirmationModal";
 
 const customGray = "rgba(120, 120, 120, 0.1)";
 
