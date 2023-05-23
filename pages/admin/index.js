@@ -13,7 +13,7 @@ import {
 } from "../../src/components/admin";
 
 const AdminToolsContainer = styled.div`
-  max-width: 700px;
+  /* max-width: 700px; */
   margin: 1.2em auto;
 
   &#noAccess {

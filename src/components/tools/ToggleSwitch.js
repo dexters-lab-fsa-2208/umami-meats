@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   useUpdateSteakMutation,
   useUpdateSushiMutation,
@@ -6,6 +6,7 @@ import {
 import styled from "styled-components";
 
 const SwitchContainer = styled.label`
+  right: 0;
   display: inline-block;
   width: 40px;
   height: 24px;
@@ -42,19 +43,37 @@ const HiddenInput = styled.input.attrs({ type: "checkbox" })`
   opacity: 0;
 `;
 
-const ToggleSwitch = ({ item: { featuredStatus, id } }) => {
-  const [isChecked, setIsChecked] = useState(featuredStatus);
+const ToggleSwitch = ({ item, handleUpdate, isSaved, setIsSaved }) => {
+  const [isChecked, setIsChecked] = useState(item.featuredStatus);
+  // console.log(item.featuredMessage);
+  const messageRef = useRef(item.featuredMessage);
 
   const handleToggle = () => {
     setIsChecked((prevState) => !prevState);
   };
 
+  useEffect(() => {
+    if (isSaved) {
+      handleUpdate(item, isChecked, messageRef.current.value);
+      setIsSaved(false);
+    }
+  }, [isSaved]);
+
   return (
-    <SwitchContainer>
-      <HiddenInput checked={isChecked} onChange={handleToggle} />
-      <Track isChecked={isChecked} />
-      <Thumb isChecked={isChecked} />
-    </SwitchContainer>
+    <>
+      <SwitchContainer>
+        <HiddenInput checked={isChecked} onChange={() => handleToggle()} />
+        <Track isChecked={isChecked} />
+        <Thumb isChecked={isChecked} />
+      </SwitchContainer>
+      <input
+        hidden={!isChecked}
+        type="textarea"
+        ref={messageRef}
+        placeholder={item.featuredMessage}
+        // defaultValue={messageRef.current.value}
+      />
+    </>
   );
 };
 

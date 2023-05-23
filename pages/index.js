@@ -253,6 +253,7 @@ export default function HomePage() {
                     />
                     <p className="productName">{itm.name}</p>
                     <p className="productPrice">${itm.price}/lb</p>
+                    <p>{itm.featuredMessage}</p>
                   </ListItemContainer>
                 </Link>
               );
