@@ -1,10 +1,14 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { Product } from "../../server/db";
+import { Product } from "../../../server/db";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
-      const products = await Product.findAll();
+      const products = await Product.findAll({
+        where: {
+          featuredStatus: true,
+        },
+      });
       res.json(products);
     } catch (err) {
       res.status(501).json({ error: err.message });

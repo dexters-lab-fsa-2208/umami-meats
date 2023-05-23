@@ -21,6 +21,7 @@ export const apiSlice = createApi({
     "product",
     "tags",
     "lineItems",
+    "featured",
   ],
   endpoints: (builder) => ({
     // users
@@ -55,6 +56,10 @@ export const apiSlice = createApi({
     getProducts: builder.query({
       query: () => "/api/products",
       providesTags: ["products"],
+    }),
+    getFeaturedProducts: builder.query({
+      query: () => "/api/products/featured",
+      providesTags: ["featured"],
     }),
     createProduct: builder.mutation({
       query: (payload) => ({
@@ -182,6 +187,7 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useGetProductsQuery,
+  useGetFeaturedProductsQuery,
   useCreateProductMutation,
   useGetOrdersQuery,
   useGetSingleOrderQuery,
