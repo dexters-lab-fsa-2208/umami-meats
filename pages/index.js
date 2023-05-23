@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  useCreateOrderMutation,
   useGetProductsQuery,
+  useGetFeaturedProductsQuery,
   // useGetSingleUserQuery,
 } from "../src/redux/reducers/apiSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -178,6 +178,11 @@ const ListItemContainer = styled.div`
 
 export default function HomePage() {
   const { data, isLoading, error } = useGetProductsQuery();
+  const {
+    data: featured,
+    isLoading: featuredLoading,
+    error: featuredError,
+  } = useGetFeaturedProductsQuery();
 
   const [carouselIdx, setCarouselIdx] = useState(0);
 
@@ -238,7 +243,7 @@ export default function HomePage() {
           </CarouselButton>
 
           <ListContainer>
-            {data?.map((itm) => {
+            {featured?.map((itm) => {
               return (
                 <Link href={`/${itm.type}/${itm.id}`} key={itm.id}>
                   <ListItemContainer>

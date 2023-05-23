@@ -58,15 +58,8 @@ const Checkout = () => {
   const { success, canceled } = router.query;
 
   const checkout = async (id) => {
-    console.log(id);
+    // New order made in header
     updateOrder({ data: { isCart: false }, id });
-    // let { data } = await createNewOrder({
-    // 	userId: user.id,
-    // 	isCart: true,
-    // 	address: 'some address',
-    // });
-    // dispatch(initializeCart({ ...data, lineItems: [] }));
-    //maybe redirect to home page
   };
 
   const handleOrderConfirmation = async () => {
@@ -111,7 +104,6 @@ const Checkout = () => {
                   (product.product.price * product.qty + Number.EPSILON) * 100
                 ) / 100}
               </p>
-              {/* {setTotal(total + (product.price * product.quantity))} */}
             </div>
             <br></br>
           </>
@@ -128,24 +120,6 @@ const Checkout = () => {
             100
         ) / 100}
       </TotalContainer>
-      {/* <ConfirmOrder>
-        <button onClick={() => checkout(usersCart.id)} className="mainButton">
-          Confirm Order
-        </button>
-        <form action="/api/checkout_sessions" method="POST">
-          <section>
-            <input
-              type="hidden"
-              name="data"
-              value={JSON.stringify(usersCart.lineItems)}
-              readOnly
-            ></input>
-            <button type="submit" role="link" className="mainButton">
-              Checkout
-            </button>
-          </section>
-        </form>
-      </ConfirmOrder> */}
     </CheckoutContainer>
   );
 };
