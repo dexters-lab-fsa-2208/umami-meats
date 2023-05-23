@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useUpdateOrderMutation } from "../src/redux/reducers/apiSlice";
 import { initializeCart } from "../src/redux/reducers/usersCartSlice";
 import { loadStripe } from "@stripe/stripe-js";
-import ConfirmationModal from "../src/components/ConfirmationModal";
+import ConfirmationModal from "../src/components/Modals/ConfirmationModal";
 import { useRouter } from "next/router";
 
 const CheckoutContainer = styled.div`
