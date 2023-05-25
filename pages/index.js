@@ -176,6 +176,14 @@ const ListItemContainer = styled.div`
   }
 `;
 
+const Featured = styled.h4`
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2%;
+`;
+
 export default function HomePage() {
   const { data, isLoading, error } = useGetProductsQuery();
   const {
@@ -241,7 +249,7 @@ export default function HomePage() {
           <CarouselButton onClick={() => carouselScroll(1)} id="rightBtn">
             {">"}
           </CarouselButton>
-
+          <Featured>Our Featured Products</Featured>
           <ListContainer>
             {featured?.map((itm) => {
               return (
