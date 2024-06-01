@@ -23,6 +23,7 @@ if (process.env.DB_NAME) {
   config.username = process.env.DB_USER;
   config.password = process.env.DB_PASS;
   config.host = process.env.DB_HOST;
+  config.port = '6543';
   db = new Sequelize(config);
 } else {
   db = new Sequelize("postgres://localhost/dexter", config);
